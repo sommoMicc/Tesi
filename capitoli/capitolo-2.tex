@@ -23,8 +23,13 @@ L'azienda offre un ampio ventaglio di prodotti, che coinvolgono diverse piattafo
 
 \subsection{Web}
 In WebPD, la realizzazione di prodotti basati su piattaforma Web avviene, a livello di backend, utilizzando come linguaggio di programmazione PHP (versione 5 o 7). Molto spesso, per i progetti più complessi, viene usato il framework \textit{Codeigniter} (versione 3), che agevola l'implementazione del design pattern MVC e fornisce numerosi strumenti per facilitare (dunque accellerare) lo sviluppo. Codeigniter, tra le altre cose, infatti, implementa una serie di classi che facilitano l'esecuzione ed il debug delle query, oltre ad un meccanismo che permette di salvarle in cache (aumentando notevolmente le prestazioni del prodotto).\\
-Per quanto riguarda il frontend, invece, viene utilizzato HTML5, CSS3 e Javascript (jQuery), senza usare framework che implementino Single Page Application (come React.js o Angular).\\
-Come server web, infine, vengono usati \textit{Apache2}, in caso di hosting su piattaforma Linux, o  \textit{IIS}, in caso di hosting su piattaforma Windows.\\
+\begin{figure}[!h] 
+	\centering 
+	\includegraphics[width=1.0\columnwidth]{azienda/codeigniter_flow} 
+	\caption{Flow chart di un'applicazione creata con Codeigniter}
+\end{figure}\\
+Per quanto riguarda il frontend, invece, viene utilizzato HTML5, CSS3 e Javascript (jQuery), senza usare framework che implementino Single Page Application (come React.js o Angular).\\\\\
+Come server web, infine, vengono usati \textit{Apache2}, in caso di hosting su piattaforma Linux, o  \textit{IIS}, in caso di hosting su piattaforma Windows.\\\\
 Per la realizzazione di siti web semplici, dove per semplici si intende senza esigenze di svolgimento di operazioni complesse, viene prediletto l'utilizzo di CMS, quali Wordpress (nel caso di blog, vetrine o forum) e OpenChart (nel caso di siti di e-commerce).
 
 \subsubsection{DBMS}
@@ -36,6 +41,11 @@ Per lo sviluppo di prodotti software, WebPD si appoggia a due DBMS: \textit{Micr
 \subsection{Mobile}
 Il know-how accumulato da WebPD nella realizzazione di applicazioni web ha portato all'adozione del framework \textit{Cordova} per la creazione di applicazioni mobile, il quale offre la possibilità di creare app ibride cross platform utilizzando HTML/CSS e Javascript. Tali applicazioni, grazie ad alcune interfacce messe a disposizione da Cordova, possono accedere alle funzionalità native del dispositivo, come fotocamera, storage o sensoristica varia (accellerometro, giroscopio e GPS, se presenti).
 
+\begin{figure}[!h] 
+	\centering 
+	\includegraphics[width=0.6\columnwidth]{azienda/cordova_architettura} 
+	\caption{Schema dell'architettura di un'app basata su Cordova}
+\end{figure}
 
 \subsection{Desktop}
 Delphi ? C++
