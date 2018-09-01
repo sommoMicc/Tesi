@@ -63,8 +63,13 @@ Java, di contro, viene usato quando si ha l'esigenza di creare applicazioni cros
 \subsection{Ciclo di vita}
 In WebPD, la \textit{way-of-working} inerente al ciclo di vita del software aderisce al \textit{modello Evolutivo}.\\
 L'adozione di tale modello deriva (principalmente) dall'esigenza di dover adattarsi alla mutevolezza dei requisiti. È un dato di fatto, purtroppo, che molto spesso neanche il cliente stesso sa di preciso che cosa vuole, quindi solo "toccando con mano" l'istanza del suo pensiero esso sa dire se effettivamente è quello che fa per lui o no.\\
+\begin{figure}[!h] 
+	\centering 
+	\includegraphics[width=0.6\columnwidth]{azienda/modello_evolutivo} 
+	\caption{Schema del modello evolutivo. URL: \url{https://bit.ly/2N49cUI} }
+\end{figure}\\
 Questo problema viene affrontato dal modello evolutivo, prevedendo che non venga effettuato solo un unico rilascio, ma che vengano creati prototipi, istanze di un sottoinsieme di requisiti del progetto, sottomessi poi al cliente. L'esito della valutazione dei prototipi può portare ad una rivisitazione dei requisiti inerenti alle funzionalità contenute in essi.\\
-Nello specifico, il modello prevede le seguenti fasi :\\
+Nello specifico, il modello prevede le seguenti fasi :
 \begin{enumerate}
 	\item \textbf{Analisi e progettazione}, che viene fatta solo all'inizio del progetto e non si ripete;
 	\item Per ogni prototipo:
@@ -74,4 +79,6 @@ Nello specifico, il modello prevede le seguenti fasi :\\
 			\item \textbf{Validazione} del prototipo appena sviluppato e, in base ai feedback del cliente, un'eventuale \textbf{revisione dei requisiti}.
 		\end{enumerate}
 	\item \textbf{Rilascio} della versione finale, corrispondente all'ultimo prototipo accettato dal proponente.
-\end{enumerate} 
+\end{enumerate}
+Il modello evolutivo, inoltre, prevede la possibilità di avere più canali di sviluppo (ad esempio stabile, alpha, beta ecc.), utili per poter "sperimentare" nuove funzionalità senza andare ad intaccare la versione stabile del software.\\
+Il problema principale di questo modello è che i tempi di sviluppo possono allungarsi notevolmente. La validazione da parte del cliente, infatti, è un'operazione che può richiedere molto tempo, durante il quale lo sviluppo non può proseguire. Inoltre, in caso di un cliente molto "indeciso", il numero di prototipi può aumentare in modo esponenziale, rischiando quindi che gli \glspl{incremento} si trasformino in \glspl{iterazione}.
