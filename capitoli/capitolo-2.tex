@@ -121,4 +121,10 @@ Per avere una più immediata visualizzazione dell'andamento dei \textit{task}, a
 \end{figure}
 
 
-\subsubsection{Prova}
+\subsubsection{Gestione di versione}
+WebPD, come strumento di versionamento, utilizza il software \textit{Git}, probabilmente il più utilizzato nel suo campo. Le motivazioni che hanno portato all'adozione di Git al posto del suo "antagonista" \textit{Subversion} (SVN) sono le seguenti:
+\begin{itemize}
+	\item Decentralizzazione del repository: a differenza di Subversion, l'architettura di Git prevede che vi sia una copia dell'intero repository in ciascun client, in modo da poter effettuare \textit{commit} anche in assenza di una connessione verso il server (cosa non possibile con SVN);
+	\item Velocità: le operazioni di commit sono molto spesso più veloci su Git in quanto vengono effettuate sulla copia locale del repository, ed é possibile poi inviarle al repository remoto (tramite \textit{push}) in un secondo momento, anche in blocco.
+	\item Miglior gestione di branch e tag: in SVN, branch e tag sono copie dell'intero progetto (che quindi possono aumentare molto lo spazio richiesto dal repository sul server), mentre in Git sono semplicemente dei riferimenti ad una determinata commit.
+\end{itemize}
