@@ -23,3 +23,49 @@ La problematica maggiore, comunque, erano (e lo sono tuttora) gli accordi presi 
 	\includegraphics[width=.9\columnwidth]{stage/webcola_crociereregalo} 
 	\caption{Screenshot della versione di CrociereRegalo sviluppata da WebCola}
 \end{figure}\\
+Dal 2015 fino ad luglio 2018, WebPD è riuscita a creare un Booking Engine che interagisse con \Gls{api} e \glspl{webservice} forniti da Costa e MSC, permettendo di acquistare una crociera, pagando tramite un payment gateway fornito dal consorzio TVB (Triveneto Bassilichi). La soluzione realizzata, però, aveva grossi problemi di prestazioni (ad esempio la homepage del sito aveva un tempo di risposta medio di 7 secondi, a cui poi doveva essere sommato il tempo di download della risposta, rendering grafico ed esecuzione del codice Javascript presente) e mancava di alcune funzionalità, come la possibilità di vendere tariffe \textit{vuoto per pieno}. Esse non sono altro posti (cabine) acquistati da un'agenzia viaggi (nel caso in esame, Primarete) ad un prezzo scontato e rivenduti poi ai privati.
+\\
+Premesso ciò, lo stage ha avuto come obiettivo il completamento e l'ampliamento delle funzionalità offerte dal Booking Engine alla base di CrociereRegalo. Più nello specifico, lo stage si proponeva di svolgere le seguenti attività: 
+\begin{enumerate}
+	\item Studio del funzionamento del Booking Engine, comprendente la presa di confidenza con il framework PHP \textit{Codeigniter} e con il DBMS \textit{Microsoft SQL Server};
+	\item Ottimizzazione, tramite tool di SQL Server, dei database alla base del Booking Engine, attraverso la creazione guidata di indici per ottimizzare i tempi di esecuzione delle query più complesse;
+	\item Ottimizzazione, tramite l'utilizzo delle funzionalità di caching delle query presente in Codeigniter, del tempo di caricamento delle varie pagine del sito (con particolare attenzione alla homepage);
+	\item Integrazione delle tariffe \textit{vuoto per pieno} nel flusso di prenotazione;
+	\item Aggiunta della possibilità di prenotare crociere Royal Caribbean, Celebrity e Azamara, tramite l'integrazione dei \glspl{webservice} forniti da Fibos, partner informatico di Royal Caribbean (e delle sue controllate Celebrity e Azamara);
+	\item Restyling della homepage e di alcune pagine secondarie del sito, secondo i suggerimenti forniti dalla ditta che si occupa di ottimizzazione SEO.	
+\end{enumerate}
+
+\section{Aspettative aziendali}
+In fase di definizione contenutistica dello stage, i punti sopra descritti sono stati distribuiti in obiettivi aventi tre livelli di priorità, tenendo conto anche del numero di ore ridotto (circa 300) a disposizione dello stagista, identificati dalle seguenti sigle:
+\begin{itemize}
+	\item \textbf{Ob} per i requisiti obbligatori, vincolanti in quanto obiettivo primario richiesto dal committente;
+	\item \textbf{D} per i requisiti desiderabili, non vincolanti o strettamente necessari, ma dal riconoscibile valore aggiunto;
+	\item \textbf{Op} per i requisiti opzionali, rappresentanti valore aggiunto non strettamente competitivo.
+\end{itemize}
+
+\begin{tabularx}{\textwidth}{|X|X|}
+	\hline
+	\multicolumn{2}{|c|}{\textbf{Obbligatori}}\\
+	\hline
+	Ob1 & Interazione con il database SQL Server attraverso le librerie del framework Codeigniter\\
+	\hline
+	Ob2 & Realizzazione integrazione flat-file di un nuovo fornitore con il Data Exchange del Booking Engine\\
+	\hline
+	Ob3 & Aggiunta prodotti e tariffe del nuovo fornitore ai risultati della ricerca lato Front-End del Booking Engine\\
+	\hline
+	Ob4 & Esecuzione test e redazione documentazione sul lavoro svolto\\
+	\hline
+	\hline
+	\multicolumn{2}{|c|}{\textbf{Desiderabili}}\\
+	\hline
+	D1 & Realizzazione del registro carichi/scarichi tariffe “vuoto per pieno” come	funzionalità lato Back-End del Booking Engine\\
+	\hline
+	D2 & Interrogazione web-service in tempo reale per sincronizzare prezzi e disponibilità del nuovo fornitore con il Data Exchange\\
+	\hline
+	D3 & Realizzazione conferma prenotazione al fornitore come funzionalità lato Front-End del Booking Engine\\
+	\hline
+	\multicolumn{2}{|c|}{\textbf{Opzionali}}\\
+	\hline
+	Op1 & Analisi e realizzazione di nuove funzionalità\\
+	\hline
+\end{tabularx}

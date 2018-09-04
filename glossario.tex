@@ -4,8 +4,6 @@
 %**************************************************************
 \renewcommand{\acronymname}{Acronimi e abbreviazioni}
 
-\newacronym[description={\glslink{apig}{Application Program Interface}}]
-    {api}{API}{Application Program Interface}
 
 \newacronym[description={\glslink{umlg}{Unified Modeling Language}}]
     {uml}{UML}{Unified Modeling Language}
@@ -41,4 +39,24 @@
 	description={Un ambiente di sviluppo integrato (in lingua inglese integrated development environment ovvero IDE, anche integrated design environment o integrated debugging environment, rispettivamente ambiente integrato di progettazione e ambiente integrato di debugging), in informatica, è un software che, in fase di programmazione, aiuta i programmatori nello sviluppo del codice sorgente di un programma.\\ \\
 	Spesso l'IDE aiuta lo sviluppatore segnalando errori di sintassi del codice direttamente in fase di scrittura, oltre a tutta una serie di strumenti e funzionalità di supporto alla fase di sviluppo e debugging.},
 	plural=iterazioni
+}
+
+
+\newglossaryentry{api}
+{
+	name=\glslink{api}{api},
+	text=API,
+	sort=API,
+	description={acronimo di Application Programming Interface. Serie di convenzioni adottate dagli sviluppatori di software per definire il modo con il quale va richiamata una determinata funzione di un'applicazione. L'impiego di API comuni ha lo scopo di rendere più omogenea l'interfaccia e di facilitare l'interazione di programmi che diversamente risulterebbero molto differenti e distanti fra loro.},
+	plural=API
+}
+
+
+\newglossaryentry{webservice}
+{
+	name=\glslink{webservice}{webservice},
+	text=WebService,
+	sort=WebService,
+	description={Un WebService é un sistema software progettato per supportare interazioni macchina-macchina su una rete. It has an interface described in a machine-processable format (specifically WSDL). Other systems interact with the Web service in a manner prescribed by its description using SOAP messages, typically conveyed using HTTP with an XML serialization in conjunction with other Web-related standards},
+	plural=WebServices
 }
