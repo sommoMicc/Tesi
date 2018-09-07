@@ -26,6 +26,7 @@ La problematica maggiore, comunque, si sono rivelati gli accordi presi con le va
 Dal 2015 fino ad luglio 2018, WebPD è riuscita a creare un Booking Engine che interagisse con \Gls{api} e \glspl{webservice} forniti da Costa e MSC, permettendo di acquistare una crociera, pagando tramite un payment gateway fornito dal consorzio TVB (Triveneto Bassilichi). La soluzione realizzata, però, aveva grossi problemi di prestazioni (ad esempio la homepage del sito aveva un tempo di risposta medio di 7 secondi, a cui poi doveva essere sommato il tempo di download della risposta, rendering grafico ed esecuzione del codice Javascript presente) e mancava di alcune funzionalità, come la possibilità di vendere tariffe \textit{vuoto per pieno}. Esse non sono altro posti (cabine) acquistati da un'agenzia viaggi (nel caso in esame, Primarete) ad un prezzo scontato e rivenduti poi ai privati.
 \\
 Premesso ciò, lo stage ha come obiettivo il completamento e l'ampliamento delle funzionalità offerte dal Booking Engine alla base di CrociereRegalo. Più nello specifico, lo stage si propone di svolgere le attività descritte in seguito.
+
 \subsection{Studio di funzionamento del Booking Engine}
 La parte introduttiva dello stage si pone come obiettivo quello di analizzare e capire il funzionamento del Booking Engine. Infatti, essendo quest'ultimo realizzato tramite il framework \textit{Codeigniter}, esso gode di una struttura delle classi particolare, come anche lo è il modo in cui vengono gestiti gli URL. Inoltre, avendo come DBMS il software \textit{Microsoft SQL Server}, il linguaggio utilizzato per le interazioni con il database è \textit{Transact SQL}, un dialetto di \textit{SQL}, con il quale é necessario prendere confidenza.
 
@@ -36,14 +37,22 @@ Come accennato precedentemente, il Booking Engine ha grossi problemi di prestazi
 	\item Valutare se implementare o meno (e in caso positivo, farlo) un meccanismo di caching dei risultati delle query, in modo da diminuire le interrogazioni al database il più possibile.
 \end{enumerate}
 
+\begin{figure}[!h] 
+	\centering 
+	\includegraphics[width=.9\columnwidth]{stage/tuning_query} 
+	\caption{Screenshot del tool Database Tuning Engine Advisor utilizzato per l'ottimizzazione delle query}
+\end{figure}
+
 \subsection{Integrazione delle tariffe vuoto per pieno}
 Il partner Primarete ha espresso l'esigenza di poter vendere le proprie tariffe \textit{vuoto per pieno} attraverso il Booking Engine. Come specificato precedentemente, esse sono dei gruppi di cabine acquistate "al buio" da un'agenzia viaggio ad un prezzo scontato (in quanto ne vengono acquistate più di una in blocco), che poi verranno rivendute dall'agenzia stessa ai clienti. Ovviamente, il guadagno dell'agenzia viaggi è rappresentato dalla differenza tra il prezzo di vendita della cabina e quello di acquisto.\\
-Il problema è che le cabine associate al vuoto per pieno, agli occhi dei Web Service delle varie compagnie di crociera, risultano prenotate, quindi non disponibili: è necessario modificare il flusso di prenotazione del Booking Engine permettendo di inserirvi anche i gruppi di cabine acquistate tramite tariffa vuoto per pieno, oltre a quelle ancora effettivamente disponibili.
-\begin{enumerate}
-	\item Integrazione delle tariffe \textit{vuoto per pieno} nel flusso di prenotazione, intervenendo sia a livello backend che frontend del Booking Engine;
-	\item Aggiunta della possibilità di prenotare crociere Royal Caribbean, Celebrity e Azamara, tramite l'integrazione dei \glspl{webservice} forniti da Fibos, partner informatico di Royal Caribbean (e delle sue controllate Celebrity e Azamara). Anche in questo caso, l'intervento deve avvenire sia a livello frontend che backend;
-	\item Restyling della homepage e di alcune pagine secondarie del sito, secondo i suggerimenti forniti dalla ditta che si occupa di ottimizzazione SEO.	
-\end{enumerate}
+Il problema è che le cabine associate al vuoto per pieno, agli occhi dei \glspl{webservice} delle varie compagnie di crociera, risultano prenotate, quindi non disponibili: è necessario modificare il flusso di prenotazione del Booking Engine permettendo di inserirvi anche i gruppi di cabine acquistate tramite tariffa vuoto per pieno, oltre a quelle ancora effettivamente disponibili; tale modifica dovrà essere fatta sia a livello backend che frontend.
+
+\subsection{Aggiunta delle tariffe di un nuovo fornitore}
+La versione di CrociereRegalo sviluppata da WebCola integrava, oltre alle crociere di MSC e Costa, anche quelle di Royal Caribbean (e controllate, ovvero Celebrity e Azamara). Lo stage, quindi, si prefigge di ripristinare questa funzionalità anche sulla nuova versione del \textit{Booking Engine} CrociereRegalo reintroducendo nel flusso di prenotazione le crociere del gruppo Royal, tramite l'integrazione dei \glspl{webservice} forniti da IST (Fibos). Tale integrazione comporterà modifiche sia alla parte frontend che alla parte backend del \textit{Booking Engine}
+
+
+\subsection{Altri interventi minori}
+La fase conclusiva dello stage si prefigge di svolgere interventi minori su CrociereRegalo, per migliorarne la \gls{seo} ed in generale l'accessibilità, soprattutto dai dispositivi mobili.
 
 \section{Aspettative aziendali}
 In fase di definizione contenutistica dello stage, i punti sopra descritti sono stati distribuiti in obiettivi aventi tre livelli di priorità, tenendo conto anche del numero di ore ridotto (circa 300) a disposizione dello stagista, identificati dalle seguenti sigle:
@@ -53,7 +62,14 @@ In fase di definizione contenutistica dello stage, i punti sopra descritti sono 
 	\item \textbf{Op} per i requisiti opzionali, rappresentanti valore aggiunto non strettamente competitivo.
 \end{itemize}
 
-\begin{tabularx}{\textwidth}{|X|X|}
+\begin{longtable}{
+		@{}
+		>{\raggedright}p{.5cm}
+		p{10.5cm}
+		>{\raggedleft}p{0.2cm}@{}
+		>{\raggedright}p{0.2cm}
+		p{8.5cm}
+		@{}} 
 	\hline
 	\multicolumn{2}{|c|}{\textbf{Obbligatori}}\\
 	\hline
@@ -64,7 +80,6 @@ In fase di definizione contenutistica dello stage, i punti sopra descritti sono 
 	Ob3 & Aggiunta prodotti e tariffe del nuovo fornitore ai risultati della ricerca lato Front-End del Booking Engine\\
 	\hline
 	Ob4 & Esecuzione test e redazione documentazione sul lavoro svolto\\
-	\hline
 	\hline
 	\multicolumn{2}{|c|}{\textbf{Desiderabili}}\\
 	\hline
@@ -78,4 +93,4 @@ In fase di definizione contenutistica dello stage, i punti sopra descritti sono 
 	\hline
 	Op1 & Analisi e realizzazione di nuove funzionalità\\
 	\hline
-\end{tabularx}
+\end{longtable}
