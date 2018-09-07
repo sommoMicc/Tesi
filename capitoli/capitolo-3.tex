@@ -15,9 +15,9 @@ Primo su tutti, l'inserimento in azienda, seppur solo per un paio di mesi, di un
 In secondo luogo, ha permesso all'azienda di esplorare nuovi canoni stilistici per alcuni suoi prodotti a costo zero, come nel caso del restyling della homepage del sito CrociereRegalo (descritta anch'essa nel prossimo capitolo), senza quindi il rischio di sacrificare inutilmente il lavoro (e la retribuzione) di un membro del personale.
 
 \section{Presentazione del progetto}
-L'obiettivo di questo stage è stato permettere a WebPD di completare la riscrittura (da capo) del sito CrociereRegalo.it. Tale sito, infatti, prima dell'ingresso di Primarete tra le quote di WebPD, era stato realizzato e mantenuto da WebCola, una web agency con la quale Primarete aveva stretto una partnership commerciale, che si è appunto interrotta nel 2015.\\
+L'obiettivo di questo stage è permettere a WebPD di completare la riscrittura (da capo) del sito CrociereRegalo.it. Tale sito, infatti, prima dell'ingresso di Primarete tra le quote di WebPD, era stato realizzato e mantenuto da WebCola, una web agency con la quale Primarete aveva stretto una partnership commerciale, che si è appunto interrotta nel 2015.\\
 Secondo gli accordi presi, il sorgente del sito era di proprietà di WebCola, pertanto non è stato possibile per WebPD procedere ad una semplice modifica/aggiornamento di qualcosa già esistente. Il vecchio sito, inoltre, non era responsive e, dai dati di Google Analytics é emerso che la maggior parte delle visite avveniva da dispositivi mobili. \\
-La problematica maggiore, comunque, erano (e lo sono tuttora) gli accordi presi con le varie compagnie di crociera (MSC, Costa, Royal Caribbean, Celebrity e Azamara): tali accordi, infatti, erano stati presi da WebCola in nome e per conto suo, quindi WebPD si è vista obbligata a ristabilirli.
+La problematica maggiore, comunque, si sono rivelati gli accordi presi con le varie compagnie di crociera (MSC, Costa, Royal Caribbean, Celebrity e Azamara): tali accordi, infatti, erano stati presi da WebCola in nome e per conto suo, quindi WebPD si è vista obbligata a ristabilirli.
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=.9\columnwidth]{stage/webcola_crociereregalo} 
@@ -25,13 +25,23 @@ La problematica maggiore, comunque, erano (e lo sono tuttora) gli accordi presi 
 \end{figure}\\
 Dal 2015 fino ad luglio 2018, WebPD è riuscita a creare un Booking Engine che interagisse con \Gls{api} e \glspl{webservice} forniti da Costa e MSC, permettendo di acquistare una crociera, pagando tramite un payment gateway fornito dal consorzio TVB (Triveneto Bassilichi). La soluzione realizzata, però, aveva grossi problemi di prestazioni (ad esempio la homepage del sito aveva un tempo di risposta medio di 7 secondi, a cui poi doveva essere sommato il tempo di download della risposta, rendering grafico ed esecuzione del codice Javascript presente) e mancava di alcune funzionalità, come la possibilità di vendere tariffe \textit{vuoto per pieno}. Esse non sono altro posti (cabine) acquistati da un'agenzia viaggi (nel caso in esame, Primarete) ad un prezzo scontato e rivenduti poi ai privati.
 \\
-Premesso ciò, lo stage ha avuto come obiettivo il completamento e l'ampliamento delle funzionalità offerte dal Booking Engine alla base di CrociereRegalo. Più nello specifico, lo stage si proponeva di svolgere le seguenti attività: 
+Premesso ciò, lo stage ha come obiettivo il completamento e l'ampliamento delle funzionalità offerte dal Booking Engine alla base di CrociereRegalo. Più nello specifico, lo stage si propone di svolgere le attività descritte in seguito.
+\subsection{Studio di funzionamento del Booking Engine}
+La parte introduttiva dello stage si pone come obiettivo quello di analizzare e capire il funzionamento del Booking Engine. Infatti, essendo quest'ultimo realizzato tramite il framework \textit{Codeigniter}, esso gode di una struttura delle classi particolare, come anche lo è il modo in cui vengono gestiti gli URL. Inoltre, avendo come DBMS il software \textit{Microsoft SQL Server}, il linguaggio utilizzato per le interazioni con il database è \textit{Transact SQL}, un dialetto di \textit{SQL}, con il quale é necessario prendere confidenza.
+
+\subsection{Ottimizzazione delle performance del Booking Engine}
+Come accennato precedentemente, il Booking Engine ha grossi problemi di prestazioni. Ciò è dovuto principalmente alla grande mole di dati contenuta nel database, che deve essere interrogato molteplici volte ad ogni richiesta HTTP ricevuta. Gli scopi di questa fase dello stage sono i seguenti:
 \begin{enumerate}
-	\item Studio del funzionamento del Booking Engine, comprendente la presa di confidenza con il framework PHP \textit{Codeigniter} e con il DBMS \textit{Microsoft SQL Server};
-	\item Ottimizzazione, tramite tool di SQL Server, dei database alla base del Booking Engine, attraverso la creazione guidata di indici per ottimizzare i tempi di esecuzione delle query più complesse;
-	\item Ottimizzazione, tramite l'utilizzo delle funzionalità di caching delle query presente in Codeigniter, del tempo di caricamento delle varie pagine del sito (con particolare attenzione alla homepage);
-	\item Integrazione delle tariffe \textit{vuoto per pieno} nel flusso di prenotazione;
-	\item Aggiunta della possibilità di prenotare crociere Royal Caribbean, Celebrity e Azamara, tramite l'integrazione dei \glspl{webservice} forniti da Fibos, partner informatico di Royal Caribbean (e delle sue controllate Celebrity e Azamara);
+	\item Ottimizzare il database in modo che le interrogazioni risultino più veloci. A tale scopo \textit{SQL Server} fornisce una funzionalità chiamata \textit{Database Engine Tuning Advisor}, che permette, sottoponendole delle query da analizzare, di suggerire la creazione di eventuali indici, in modo da aumentare le performance delle interrogazioni;
+	\item Valutare se implementare o meno (e in caso positivo, farlo) un meccanismo di caching dei risultati delle query, in modo da diminuire le interrogazioni al database il più possibile.
+\end{enumerate}
+
+\subsection{Integrazione delle tariffe vuoto per pieno}
+Il partner Primarete ha espresso l'esigenza di poter vendere le proprie tariffe \textit{vuoto per pieno} attraverso il Booking Engine. Come specificato precedentemente, esse sono dei gruppi di cabine acquistate "al buio" da un'agenzia viaggio ad un prezzo scontato (in quanto ne vengono acquistate più di una in blocco), che poi verranno rivendute dall'agenzia stessa ai clienti. Ovviamente, il guadagno dell'agenzia viaggi è rappresentato dalla differenza tra il prezzo di vendita della cabina e quello di acquisto.\\
+Il problema è che le cabine associate al vuoto per pieno, agli occhi dei Web Service delle varie compagnie di crociera, risultano prenotate, quindi non disponibili: è necessario modificare il flusso di prenotazione del Booking Engine permettendo di inserirvi anche i gruppi di cabine acquistate tramite tariffa vuoto per pieno, oltre a quelle ancora effettivamente disponibili.
+\begin{enumerate}
+	\item Integrazione delle tariffe \textit{vuoto per pieno} nel flusso di prenotazione, intervenendo sia a livello backend che frontend del Booking Engine;
+	\item Aggiunta della possibilità di prenotare crociere Royal Caribbean, Celebrity e Azamara, tramite l'integrazione dei \glspl{webservice} forniti da Fibos, partner informatico di Royal Caribbean (e delle sue controllate Celebrity e Azamara). Anche in questo caso, l'intervento deve avvenire sia a livello frontend che backend;
 	\item Restyling della homepage e di alcune pagine secondarie del sito, secondo i suggerimenti forniti dalla ditta che si occupa di ottimizzazione SEO.	
 \end{enumerate}
 
