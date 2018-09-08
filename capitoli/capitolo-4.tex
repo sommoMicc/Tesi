@@ -65,3 +65,21 @@ Sia \textit{OTA} che \textit{DataExchange} sono realizzati usando il framework \
 	\item \textbf{Controller}, che estendono la classe base \textit{CI\_Controller} e istanziano le \textit{view} popolandole con i dati provenienti dai \textit{model}. La particolarità di queste classi è che i loro metodi pubblici si possono chiamare direttamente tramite URL. Codeigniter, infatti, implementa un meccanismo (grazie al \textit{magic method \_\_call}) per il quale é possibile chiamare un metodo pubblico \textit{a} di una classe controller \textit{C} semplicemente recandosi all'url \textit{nomedelsito.dominio/C/a} (ad esempio \textit{crociereregalo.it/C/a}). Tale meccanismo risulta molto utile nella realizzazione di \gls{api} e nella creazione di \textit{URL} user-friendly (quindi più leggibili)
 \end{itemize} 
 Codeigniter, inoltre, presenta un modulo personalizzato per interagire con il database, che supporta funzionalità come il \textit{log delle query} (in pratica è possibile sapere l'ultima query eseguita, molto utile in caso di debug), meccanismi di \textit{query builder} (creazione assitita di query), \textit{query parametrizzate}, gestione delle transazioni ecc.
+
+\section{Ottimizzazione delle performance del database}
+Il primo intervento vero e proprio svolto da me su CrociereRegalo è stato cercare di ottimizzare il più possibile la reattività del sito riducendo i tempi di esecuzione delle query più complesse, come quella riportata qui di seguito:
+\begin{lstlisting}
+SELECT distinct TOP 100 l.Supplier, l.NameIT, l.Description, l.Logo, il.ShipCode,il.SailingLengthDays, il.ItineraryCode, po1.Code as PortoPartenzaCode ,po1.Name as PortoPartenza, po2.Name as PortoArrivo, po2.Code as PortoArrivoCode, min(il.SailingDate) as MinSailingDate, min(p.BestPrice) as BestPrice,it.GraphicsUrl,sp.Name as ShipName 
+FROM Cruises_ItineraryList il inner join Cruises_Lines l on il.Supplier= l.Supplier inner join Cruises_Ports po1 on (po1.Code = il.DepartingPort and po1.Supplier = il.Supplier ) inner join Cruises_Ports po2 on (po2.Code = il.EndPort and po2.Supplier = il.Supplier) inner join Cruises_Ship sp on (sp.Supplier=il.Supplier and sp.Code = il.ShipCode) inner join Cruises_Prices p on (p.Supplier=il.Supplier and p.CruiseId = il.CruiseID and p.CruiseCategoryAvailable=1) inner join Cruises_Itinerary it on (it.Supplier=il.Supplier and il.ItineraryCode = it.Code) 
+WHERE il.Supplier=1 AND il.AvailabilityStatusCode= 'AV' AND BestPrice > 0 
+GROUP By l.Supplier, l.NameIT, l.Description, l.Logo, il.ShipCode,il.SailingLengthDays, il.ItineraryCode, po1.Code, po2.Code, po1.Name, po2.Name , sp.ImgUrl,it.GraphicsUrl,sp.Name order by MinSailingDate,PortoArrivo,ItineraryCode
+\end{lstlisting}
+Questa query viene usata nel caso di ricerca di un itinerario filtrandolo per fornitore (in questo caso MSC Crociere). Il problema di questa interrogazione, oltre alla lunghezza, è l'elevato numero di JOIN tra tabelle aventi un ingente quantitativo di dati, nello specifico:
+\begin{itemize}
+	\item Cruises\_Prices: 424 780 righe
+	\item Cruises\_ItineraryList: 8 092 righe
+	\item Cruises\_Ports: 4 187 righe
+	\item Cruises\_Itinerary: 2 985 righe
+\end{itemize}
+Tali tabelle erano per lo più sprovviste di indici, pertanto le operazioni di JOIN risultavano molto costose. Come risultato si otteneva un tempo di esecuzione, nel server di produzione in assenza di sovraccarichi, variabile tra 23 e 25 secondi. Grazie al tool \textit{Database Tuning Engine Advisor} sono stati creati dei nuovi indici, precisamente su tutte le colonne coinvolte nelle clausole di JOIN. Questo ha portato un ingente riduzione nei tempi di esecuzione della query, che sono arrivati a sfiorare i 2 secondi. Vi è stato, quindi, un miglioramento di ben almeno 21 secondi (circa il 91\%) nel tempo di esecuzione della query e di conseguenza nel tempo di risposta della pagina web incaricata di elaborare e visualizzare i risultati della ricerca.
+
