@@ -67,9 +67,9 @@ Sia \textit{OTA} che \textit{DataExchange} sono realizzati usando il framework \
 Codeigniter, inoltre, presenta un modulo personalizzato per interagire con il database, che supporta funzionalità come il \textit{log delle query} (in pratica è possibile sapere l'ultima query eseguita, molto utile in caso di debug), meccanismi di \textit{query builder} (creazione assitita di query), \textit{query parametrizzate}, gestione delle transazioni ecc.
 
 \section{Ottimizzazione delle performance del database}
-\section{Il problema}
+\subsection{Il problema}
 Il sito CrociereRegalo soffriva di un grande problema: la velocità di caricamento delle pagine. Tale lentezza era dovuta principalmente all'elevato numero di query complesse presenti in ogni pagina, ciascuna delle quali aveva dei tempi di esecuzione nell'ordine dei secondi che, complessivamente, facevano sì che il tempo di caricamento di alcune pagine (in primis quella di visualizzazione dei risultati di una ricerca) lambisse pericolosamente il minuto.
-\section{La soluzione trovata}
+\subsection{La soluzione trovata}
 Dopo un'attenta analisi del database, é emerso che molte tabelle non avevano una corretta struttura. In particolare, su alcune non vi era definita alcuna chiave primaria, mentre in generale non erano presenti chiavi esterne ed indici. Sono quindi state definite chiavi esterne e primarie per tutte le tabelle, mentre per la creazione di indici ci si è affidati all'analisi delle principali query grazie allo strumento \textit{Database Tuning Engine Advisor} integrato nella suite di \textit{SQL Server}. Vengono ora riportati due esempi di analisi svolta e di risultati ottenuti.
 \subsubsection{Query di ricerca}
 
@@ -79,7 +79,7 @@ FROM Cruises_ItineraryList il inner join Cruises_Lines l on il.Supplier= l.Suppl
 WHERE il.Supplier=1 AND il.AvailabilityStatusCode= 'AV' AND BestPrice > 0 
 GROUP By l.Supplier, l.NameIT, l.Description, l.Logo, il.ShipCode,il.SailingLengthDays, il.ItineraryCode, po1.Code, po2.Code, po1.Name, po2.Name , sp.ImgUrl,it.GraphicsUrl,sp.Name order by MinSailingDate,PortoArrivo,ItineraryCode
 \end{lstlisting}
-Questa query viene usata nel caso di ricerca di un itinerario filtrandolo per fornitore (in questo caso MSC Crociere). Il problema di questa interrogazione, oltre alla lunghezza, è l'elevato numero di JOIN tra tabelle aventi un ingente quantitativo di dati, nello specifico:
+Questa é una delle query (la più esterna) che viene usata nel caso di ricerca di un itinerario filtrandolo per fornitore (in questo caso MSC Crociere). Il problema di questa interrogazione, oltre alla lunghezza, è l'elevato numero di JOIN tra tabelle aventi un ingente quantitativo di dati, nello specifico:
 \begin{itemize}
 	\item Cruises\_Prices: 424 780 righe
 	\item Cruises\_ItineraryList: 8 092 righe
@@ -87,12 +87,13 @@ Questa query viene usata nel caso di ricerca di un itinerario filtrandolo per fo
 	\item Cruises\_Itinerary: 2 985 righe
 \end{itemize}
 
-Tali tabelle erano per lo più sprovviste di indici, pertanto le operazioni di JOIN risultavano molto costose. Come risultato si otteneva un tempo di esecuzione, nel server di produzione in assenza di sovraccarichi, variabile tra 23 e 25 secondi. Grazie al tool \textit{Database Tuning Engine Advisor} sono stati creati dei nuovi indici, precisamente su tutte le colonne coinvolte nelle clausole di JOIN. Questo ha portato un ingente riduzione nei tempi di esecuzione della query, che sono arrivati a sfiorare i 2 secondi. Vi è stato, quindi, un miglioramento di ben almeno 21 secondi (circa il 91\%) nel tempo di esecuzione della query e di conseguenza nel tempo di risposta della pagina web incaricata di elaborare e visualizzare i risultati della ricerca.\\
+Tali tabelle erano per lo più sprovviste di indici, pertanto le operazioni di JOIN risultavano molto costose. Come risultato si otteneva un tempo di esecuzione, nel server di produzione in assenza di sovraccarichi, variabile tra 23 e 25 secondi. Grazie al tool \textit{Database Tuning Engine Advisor} sono stati creati dei nuovi indici, precisamente su tutte le colonne coinvolte nelle clausole di JOIN. Questo ha portato un ingente riduzione nei tempi di esecuzione della query, che sono arrivati a sfiorare i 2 secondi. Vi è stato, quindi, un miglioramento di ben almeno 21 secondi (circa il 91\%) nel tempo di esecuzione della query e di conseguenza nel \gls{tempodirisposta} della pagina web incaricata di elaborare e visualizzare i risultati della ricerca.\\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=1\columnwidth]{attivita/risultato_ricerca} 
 	\caption{Esempio di utilizzo del risultato della query sopra menzionata.}
 \end{figure}
+
 \subsubsection{Query dei last minute}
 In homepage vi è una sezione che visualizza tutte le offerte \textit{last minute} (ovvero crociere prossime alla partenza aventi ancora posti disponibili a prezzo scontato) presenti nel database. Queste ultime vengono inserite a mano dai dipendenti di \textit{Primarete}, ma sono collegate a crociere effettivamente presenti. La query sottostante restituisce tali offerte.
 \begin{lstlisting}
@@ -105,3 +106,50 @@ Anche qua, il numero di JOIN su tabelle aventi ingenti quantità di dati rende i
 	\includegraphics[width=1\columnwidth]{attivita/last_minute} 
 	\caption{Esempio di utilizzo del risultato della query sopra menzionata.}
 \end{figure}
+
+\subsection{Conclusioni}
+Al termine delle ottimizzazioni, sono stati ottenuti buoni risultati (il \gls{tempodirisposta} del sito è diminuito di almeno il 50\%), ma non abbastanza per rendere il sito reattivo ed equiparabile in termini di velocità ai competitor. Si è deciso quindi di esplorare nuove soluzioni.
+
+\section{Cache delle query}
+\subsection{Il problema}
+Se é vero che, al termine degli interventi sulla struttura del database descritti nella sezione precedente, le prestazioni delle interrogazioni erano migliorate molto, è anche vero che il sito non aveva raggiunto livelli di prestazioni ottimali. Infatti alcune pagine avevano ancora un \gls{tempodirisposta} molto elevato. Prendendo come esempio la pagina del sito più utilizzata, ovvero quella di visualizzazione dei risultati di una ricerca, essa è passata da un \gls{tempodirisposta} tra i 45 e i 60 secondi ad un \gls{tempodirisposta} tra i 15 e i 20 secondi, comunque troppo per le aspettative di un internauta medio: basti pensare che il principale competitor (\url{www.logitravel.it}) ha un \gls{tempodirisposta} che si attesta attorno al secondo e mezzo (10 volte meno) per la stessa funzionalità.
+
+\subsection{La soluzione}
+La soluzione trovata a tale problema nasce dalla seguente considerazione: é possibile prevedere quando cambia la maggior parte dei dati presenti nel database e utilizzati per le query più lente. Infatti dati inerenti a navi, itinerari, cabine, prezzi e disponibilità vengono rinnovati ad ogni integrazione, che è un'operazione schedulata 4 volte al giorno, ad orari noti. Osservando inoltre che la stessa query sugli stessi dati presenta gli stessi risultati, si è giunti alla conclusione che l'implementazione di un meccanismo di caching delle query permetta di ottimizzare velocità del sito e carico del server.\\
+Il meccanismo progettato ha il seguente funzionamento:
+\begin{itemize}
+	\item La query viene eseguita la prima volta ed il suo risultato viene salvato nella cache;
+	\item Quando la query viene eseguita ancora, invece di interrogare il database viene letto il contenuto della cache;
+	\item Ad ogni integrazione dati la cache viene svuotata, perchè i dati presenti in essa non riflettono più il nuovo contenuto delle tabelle del database;
+	\item Al termine di ogni integrazione, vengono effettuate delle richieste \textit{CURL} alle pagine più utilizzate del sito, in modo tale che la cache venga ricreata.
+\end{itemize}
+Si è deciso di affidare la gestione della cache a \textit{Codeigniter}, che offre già questa funzionalità. Il modulo di gestione del database di \textit{Codeigniter}, infatti, fornisce già i seguenti metodi:
+\begin{itemize}
+	\item \textit{cache\_on}, che permette di abilitare la cache;
+	\item \textit{cache\_off}, che permette di disabilitare la cache;
+	\item \textit{cache\_delete}, che permette di cancellare la cache di una singola pagina (passata come parametro);
+	\item \textit{cache\_delete\_all}, che permette di cancellare tutto il contenuto della cache.
+\end{itemize}
+Combinando l'uso di \textit{cache\_on} e \textit{cache\_off}, si può anche disabilitare la cache per determinate query, che magari operano su dati più "volatili" e aventi minor quantità. \\In generale, comunque, \textit{Codeigniter} salva i risultati delle varie query in dei file di cache (aventi come nome l'hash della query a cui tale file si riferisce) suddivisi per cartelle in base all'url che le ha generate.
+\begin{figure}[!h] 
+	\centering 
+	\includegraphics[width=1\columnwidth]{attivita/cache_codeigniter} 
+	\caption{Struttura di cartelle e file di cache in esse contenuti.}
+\end{figure}
+Grazie a \textit{cache\_delete} sarebbe possibile cancellare la cache solo di alcune pagine, ma è stato preferito non utilizzare tale funzione in quanto avrebbe aumentato inutilmente la complessità della soluzione.
+
+\subsection{Risultati}
+L'implementazione della cache ha giovato molto al Booking Engine. Basti pensare che ora la pagina di visualizzazione dei risultati ricerca è giunta ad avere un tempo di risposta medio attorno ai 3 secondi, ovvero ora è l'80\% più veloce di prima, ma soprattutto è paragonabile al tempo di risposta dei competitor. Il tempo di risposta della homepage, inoltre, è arrivata a toccare i 500 millisecondi, dai circa 3 secondi prima di implementare la cache.\\
+Tra ottimizzazione del database e cache, comunque, sono stati fatti ingenti miglioramenti alle prestazioni, che riassumo nella tabella sottostante, prendendo come esempio la pagina principale e quella di visualizzazione dei risultati della ricerca (che, per brevità, chiamerò soltanto "ricerca").\\
+
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{tabular}{ | l | l | l | l |}
+		\hline
+		\textbf{Pagina} & \textbf{Senza ottimizzazioni} & \textbf{Con DB ottimizzato} & \textbf{Con cache} \\ \hline
+		Homepage & 7 secondi & 3 secondi & 0.5 secondi.  \\
+		\hline
+		Ricerca & 45-60 secondi & 15-20 secondi & 3 secondi.  \\
+		\hline
+	\end{tabular}
+\end{center}
