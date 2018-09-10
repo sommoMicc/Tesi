@@ -153,3 +153,23 @@ Tra ottimizzazione del database e cache, comunque, sono stati fatti ingenti migl
 		\hline
 	\end{tabular}
 \end{center}
+
+\newpage
+\section{Integrazione delle tariffe vuoto per pieno}
+\subsection{Il problema}
+Dopo aver preso effettivamente confidenza con il database, mi è stato chiesto come secondo lavoro di creare un sistema che permettesse di inserire nel flusso di prenotazione anche tariffe vuoto per pieno. Precisamente, tale sistema avrebbe dovuto avere le seguenti caratteristiche:
+\begin{enumerate}
+	\item Permettere di inserire nel sistema gli acquisti di vuoti pieno effettuati da \textit{Primarete} tramite upload di appositi file;
+	\item Permettere di differenziare i prezzi in base al soggetto a cui si sta vendendo;
+	\item Permettere di prenotare e pagare una cabina con tariffa vuoto per pieno.
+\end{enumerate}
+
+\subsubsection{Inserimento degli acquisti nel sistema}
+Il sistema avrebbe dovuto prevedere una funzionalità di "carico" delle tariffe. In fase di acquisto dei vuoti pieno da parte di \textit{Primarete}, il fornitore (ovvero la compagnia di crociera) rilascia un file riepilogativo contenente il dettaglio di quanto acquistato. Tali informazioni avrebbero dovuto potersi caricare in modo assistito nel sistema, che avrebbe dovuto poi inserirle nel flusso di prenotazione.\\
+Il problema principale è stato che il file ritornato da ciascun fornitore aveva (e ha tuttora) il proprio formato dati, quindi si avrebbe dovuto creare un importatore per ogni fornitore. Inoltre, anche la tipologia di dati presente in ciascun file poteva differire: ad esempio, per riferirsi all'età di ogni passeggero, alcuni fornitori utilizzano l'età ed altri la data di nascita. Il sistema avrebbe dunque dovuto uniformare i dati caricati.
+
+\subsubsection{Differenziazione dei prezzi}
+CrociereRegalo è un Booking Engine utilizzato per vendite sia B2C (cioè verso clienti finali) sia B2B (cioè verso altre agenzie). Queste ultime, in base agli accordi commerciali che hanno con \textit{Primarete}, appartengono a determinati \textit{listini}, ovvero hanno diritto a commissioni/tariffe più o meno agevolate.\\Il sistema, quindi, avrebbe dovuto poter differenziare i prezzi di vendita delle cabine in base al listino di appartenenza dell'acquirente (se l'acquirente non fosse appartenuto a nessun listino, sarebbe stato identificato al pari di una vendita B2C).
+
+\subsubsection{Inserimento della tariffa nel flusso di prenotazione}
+Il Booking Engine avrebbe dovuto permettere di visualizzare i prezzi delle cabine soggette a tariffe vuoto per pieno nei risultati di ricerca. Inoltre, avrebbe dovuto essere possibile poter prenotare e conseguentemente pagare tali cabine.\\La disponibilità delle stesse, quindi, avrebbe dovuto aggiornarsi (decrementare) automaticamente.
