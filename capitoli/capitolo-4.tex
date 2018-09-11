@@ -48,6 +48,7 @@ Premesso ciò, vi sono due possibili interazioni tra \textit{OTA} e \textit{Data
 \end{itemize}
 
 \subsection{Flusso di prenotazione}
+\label{section:flusso-prenotazione}
 Quando il visitatore, in seguito alla ricerca, apre i dettagli di una partenza, viene data la possibilità di poter avviare la procedura (flusso) di prenotazione, che si avvale dell'interazione real-time tra \textit{OTA} e \textit{DataExchange} si compone nei seguenti punti:
 \begin{enumerate}
 	\item \textit{categoryAvailability}: vengono elencati i gruppi (categorie) di cabine effettivamente disponibili (o un messaggio di errore in caso non vi siano più posti prenotabili) tenendo conto del numero di passeggeri inseriti (banalmente, se si selezionano 4 passeggeri, vengono mostrati le categorie di cabine nelle quali vi è presente almeno una quadrupla) e dell'età di tali passeggeri (per il calcolo preciso della tariffa, in quanto un minore paga meno di un adulto);
@@ -55,6 +56,7 @@ Quando il visitatore, in seguito alla ricerca, apre i dettagli di una partenza, 
 	\item \textit{categoryItem}: vengono elencati tutti i servizi extra (e relativi prezzi) disponibili in aggiunta a quelli già inclusi nel prezzo della cabina, e viene data la possibilità di selezionarli per aggiungerli alla prenotazione;
 	\item \textit{requestPricing}: viene mostrato il prezzo finale (preso dal \gls{webservice} del fornitore) della prenotazione, tenendo conto di quanto selezionato negli step precedenti. Tale prezzo include anche le tasse portuali ed eventuali oneri aggiuntivi;
 	\item \textit{requestBooking}: viene effettuata una prenotazione od un'opzione di quanto selezionato negli step del flusso precedenti. Nel caso di prenotazione, viene anche gestito il pagamento (tramite \gls{api} fornite dal consorzio \textit{Triveneto Bassilichi}).
+	\item \textit{requestBookingInformation}: viene mostrato il riepilogo di ciò acquistato, con la possibilità di saldare quanto ancora dovuto (nel caso la prenotazione ammetta il versamento di un acconto).
 \end{enumerate}
 
 \subsection{Struttura del codice}
@@ -299,3 +301,29 @@ A livello frontend, si è fatto in modo che, al termine del caricamento del vuot
 	\caption{Schermata di inserimento dei prezzi di un vuoto pieno.}
 \end{figure}\\
 I prezzi poi vengono salvati tramite una chiamata AJAX che invoca il metodo \textit{salvaPrezzi} del controller \textit{Back} precedentemente descritto.
+
+\subsubsection{Inserimento della tariffa nel flusso di prenotazione}
+Come già accennato nella \hyperref[section:flusso-prenotazione]{sezione \ref*{section:flusso-prenotazione}}, il flusso di prenotazione si compone di 6 step, a ciascuno dei quali corrisponde un metodo nel controller \textbf{WS\_Cruises} del \textit{dataExchange}. Questi 6 metodi venivano (e vengono tuttora) chiamati tramite richieste AJAX dal frontend e al loro interno chiamavano l'omologo metodo in grado di interfacciarsi con i \gls{webservice} del fornitore considerato.\\
+Sono stati quindi creati i seguenti metodi:
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\ \hline
+		+ Inventory\_categoryAvailabilty (inout wsResult:array) : void & Concatena al risultato eventualmente restituito dai \gls{webservice} del fornitore le categorie di cabine, se presenti, aventi tariffa vuoto per pieno. Il codice della tariffa restituita (dato che servirà alle successive funzioni) è "INVENTORY".\\
+		\hline
+		+ Inventory\_cabinAvailabilty () : array & Legge dal database (facendo delle query su Cruises\_Inventory, Cruises\_InventoryDetail e Cruises\_InventoryPrices) e restituisce le singole cabine disponibili, compreso il prezzo, secondo i qualificatori che legge dal payload della richiesta, quali numero ed età dei passeggeri, cruiseID considerato, categoria delle cabine di cui si vuole controllare la disponibilità e listino di appartenenza dell'utente.\\
+		\hline
+		+ Inventory\_requestPricing () : array & Calcola un preventivo in base ai parametri passati nel payload della richiesta, ovvero fornitore, cruiseID, numero della cabina, dati anagrafici dei passeggeri.\\
+		\hline
+		+ Inventory\_requestBooking () : string & Prenota la cabina passata come parametro nel payload della richiesta e ritorna il bookingID (identificativo della prenotazione) corrispondente.\\
+		\hline
+		+ Inventory \_requestBookingInformation (bookId: string) : array & Dato il bookId passato come parametro, restituisce tutti i dettagli inerenti alla prenotazione. \\
+		\hline
+	\end{longtable}
+\end{center}
+Il primo metodo del flusso, \textit{categoryAvailability}, in base al valore del parametro \textit{supplier} (letto dal payload della richiesta), invocava i metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability}, che interrogano i rispettivi \glspl{webservice}. È stato sufficiente quindi che il nuovo metodo creato \textit{Inventory\_categoryAvailabilty} venisse invocato da \textit{categoryAvailabilty} a prescindere dal \textit{supplier}, concatenando all'output dei metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability} le categorie di cabine eventualmente disponibili con tariffa vuoto per pieno.\\
+Nei metodi \textit{cabinAvailability}, \textit{requestPricing}, \textit{requestBooking} e \textit{requestBookingInformation}, è stata introdotta un'istruzione condizionale che, in base al \textbf{fareCode} (codice della tariffa) passato come parametro, decida se invocare l'omologo metodo che legga dal database delle tariffe vuoto per pieno (in caso di fareCode = "INVENTORY") o dai \glspl{webservice} del fornitore.\\
+Al frontend, infine, non è stato necessario fare alcuna modifica.
+\newpage
+\section{Royal}
