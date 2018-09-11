@@ -325,5 +325,8 @@ Sono stati quindi creati i seguenti metodi:
 Il primo metodo del flusso, \textit{categoryAvailability}, in base al valore del parametro \textit{supplier} (letto dal payload della richiesta), invocava i metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability}, che interrogano i rispettivi \glspl{webservice}. È stato sufficiente quindi che il nuovo metodo creato \textit{Inventory\_categoryAvailabilty} venisse invocato da \textit{categoryAvailabilty} a prescindere dal \textit{supplier}, concatenando all'output dei metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability} le categorie di cabine eventualmente disponibili con tariffa vuoto per pieno.\\
 Nei metodi \textit{cabinAvailability}, \textit{requestPricing}, \textit{requestBooking} e \textit{requestBookingInformation}, è stata introdotta un'istruzione condizionale che, in base al \textbf{fareCode} (codice della tariffa) passato come parametro, decida se invocare l'omologo metodo che legga dal database delle tariffe vuoto per pieno (in caso di fareCode = "INVENTORY") o dai \glspl{webservice} del fornitore.\\
 Al frontend, infine, non è stato necessario fare alcuna modifica.
+\subsubsection{Test}
+Al termine della realizzazione, sono stati effettuati test manuali sulla congruenza dei dati tra le nuove tabelle e i vuoti pieno importati. 
+Infine si è verificato che i dati presenti nelle tabelle fossero interpretati in maniera adeguata dalle varie query presenti nel flusso di prenotazione, dal primo all'ultimo dei sei step.
 \newpage
 \section{Royal}
