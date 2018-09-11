@@ -256,3 +256,46 @@ Per gestire il caricamento dei vuoti pieno nel sistema sono state realizzate tre
 	\end{longtable}
 \end{center}
 La gestione del pannello di amministrazione è affidata ad un unico \textit{controller}, chiamato \textbf{Back}. In questa classe è stato aggiunto un metodo chiamato \textit{caricaVuotoPieno} che prende l'input dal frontend e lo passa al metodo \textit{loadFromFile} della classe \textit{Cruises\_Inventory} appena descritta, che si occuperà dell'elaborazione e della restituzione del risultato della stessa sotto forma di JSON.
+
+\subsubsection{Differenziazione dei prezzi}
+I prezzi di ogni cabina presente nel sistema risiedono nella tabella \textit{Cruises\_Prices}. Tale tabella permette di conoscere il prezzo di ogni categoria di cabina (per ogni combinazione di età dei passeggeri tollerata dal sistema) per ogni \gls{tariffa} disponibile. Il problema è che \textit{Cruises\_Prices} viene svuotata e ripopolata ad ogni integrazione: per questo motivo si è deciso di separare la gestione dei prezzi delle cabine soggette a tariffa vuoto per pieno in una nuova tabella, che è stata chiamata \textit{Cruises\_InventoryPrices}. Di preciso:
+\begin{itemize}
+	\item Nella tabella \textit{Cruises\_Prices} è stata inserita una nuova colonna di tipo intero, \textbf{Manuale}, che indica se la riga si sta riferendo ad una tariffa passata dal fornitore o presa da un vuoto pieno. Quando viene fatta un'integrazione, vengono eliminate solo le righe aventi valore di tale colonna pari a 0, in modo da non perdere le informazioni relative al vuoto pieno;
+	\item È stata creata la tabella \textbf{Cruises\_InventoryPrices}, avente i seguenti campi:
+		\begin{itemize}
+			\item \textit{Id}, identificatore univoco della riga;
+			\item \textit{Cruises\_Inventory}, chiave esterna che si riferisce al campo \textit{Id} di \textit{Cruises\_Inventory} e specifica il vuoto pieno di appartenenza di tale riga;
+			\item \textit{Listino}, chiave esterna di \textit{Cruises\_Listini}, tabella appena creata che verrà descrittà nel prossimo paragrafo. In caso di valori NULL, il listino si intende essere \textit{B2C}, ovvero vendita al dettaglio;
+			\item \textit{Categoria}, che rappresenta la categoria della cabina a cui ci si sta riferendo;
+			\item \textit{Cabina}, che rappresenta il numero di cabina a cui ci si sta riferendo;
+			\item \textit{BookId}, che indica il codice di prenotazione del fornitore collegato alla cabina a cui ci si sta riferendo;
+			\item Un campo per ogni combinazione di prezzi tollerata dal sistema, ovvero \textit{Price1Adult, Price2Adult, Price3Adult, Price4Adult, Price1Adult1Junior, Price1Adult1Junior1Child, Price2Adult1Child, Price2Adult2Child,Price2Adult1Child, Price2Adult2Junior, Price2Adult1Junior1Child};
+			\item \textit{Commissione}, che quantifica la commissione spettante all'agenzia viaggi collegata al listino specificato, in caso il campo \textit{Listino} non sia NULL.
+		\end{itemize}
+\end{itemize}
+La tabella \textbf{Cruises\_Listini} menzionata precedentemente è stata creata per poter gestire tutti i listini da collegare alle varie agenzie viaggi. Tale tabella presenta due campi, \textit{Id} e \textit{Nome}, usati appunto per definire il listino stesso. \\
+Nella tabella \textit{Cruises\_Utenti}, che raccoglie tutte le agenzie viaggio che possono accedere alla modalità di acquisto B2B, è stato aggiunto il campo \textit{Listino}, chiave esterna di \textit{Cruises\_Listini}, in modo da associare ogni agenzia registrata ad un listino, in base agli accordi presi con \textit{Primarete}. \\ \\
+Per l'interazione con la tabella \textit{Cruises\_InventoryPrices} è stato creato un nuovo model avente lo stesso nome della tabella, con i seguenti metodi: 
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\ \hline
+		+ getColonnePrezzi() : array & Ritorna un array contentente la lista di tutte le combinazioni di prezzi tollerata dal sistema. Questo metodo è stato scritto per rendere poi dinamico l'inserimento dei prezzi in questa tabella, ovvero in caso si voglia aggiungere un nuovo campo non presente (ad esempio \textit{Price6Adult}), sarà sufficiente aggiungerlo come colonna della tabella, e interfaccia grafica e query di inserimento si adatteranno automaticamente. \\
+		\hline
+		+ tentaAggiornamentoPrezzi (tabella: array, inventoryId: int) : void & Metodo che prova ad aggiornare i prezzi nel caso di caricamento di un vuoto pieno contenente cabine già presenti nel sistema.\\
+		\hline
+		+ salvaPrezzi (input: array) : boolean & Metodo che salva i prezzi di ogni cabina, per ogni listino, presenti nel parametro \textit{input}. Ritorna "true" in caso di successo, "false" altrimenti.\\
+		\hline
+		+ modificaPrezzi (input: array) : boolean & Metodo che modifica i prezzi di ogni cabina, per ogni listino, presenti nel parametro \textit{input}. Ritorna "true" in caso di successo, "false" altrimenti.\\
+		\hline
+	\end{longtable}
+\end{center}
+È stato inoltre creato un metodo \textit{salvaPrezzi} nel controller \textit{Back}, che si limita ad invocare il metodo \textit{salvaPrezzi} del model \textit{Cruises\_InventoryPrices} con i parametri passati tramite POST.\\
+A livello frontend, si è fatto in modo che, al termine del caricamento del vuoto pieno, si venga reindirizzati ad una pagina di inserimento prezzi, che permette appunto di specificare ogni combinazione di prezzo tollerata dal sistema per ogni categoria di cabina per ciascun listino. 
+	\begin{figure}[!h] 
+	\centering 
+	\includegraphics[width=1\columnwidth]{attivita/vuotopieno_prezzi} 
+	\caption{Schermata di inserimento dei prezzi di un vuoto pieno.}
+\end{figure}\\
+I prezzi poi vengono salvati tramite una chiamata AJAX che invoca il metodo \textit{salvaPrezzi} del controller \textit{Back} precedentemente descritto.
