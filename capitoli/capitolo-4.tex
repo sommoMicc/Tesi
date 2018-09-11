@@ -166,20 +166,30 @@ Dopo aver preso effettivamente confidenza con il database, mi è stato chiesto c
 
 \subsubsection{Inserimento degli acquisti nel sistema}
 Il sistema avrebbe dovuto prevedere una funzionalità di "carico" delle tariffe. In fase di acquisto dei vuoti pieno da parte di \textit{Primarete}, il fornitore (ovvero la compagnia di crociera) rilascia un file riepilogativo contenente il dettaglio di quanto acquistato. Tali informazioni avrebbero dovuto potersi caricare in modo assistito nel sistema, che avrebbe dovuto poi inserirle nel flusso di prenotazione.\\
-Il problema principale è stato che il file ritornato da ciascun fornitore aveva (e ha tuttora) il proprio formato dati, quindi si avrebbe dovuto creare un importatore per ogni fornitore. Inoltre, anche la tipologia di dati presente in ciascun file poteva differire: ad esempio, per riferirsi all'età di ogni passeggero, alcuni fornitori utilizzano l'età ed altri la data di nascita. Il sistema avrebbe dunque dovuto uniformare i dati caricati.
+Il problema principale è stato che il file ritornato da ciascun fornitore aveva (e ha tuttora) il proprio formato dati, quindi si sarebbe dovuto creare un importatore per ogni fornitore. Inoltre, anche la tipologia di dati presente in ciascun file poteva differire: ad esempio, per riferirsi all'età di ogni passeggero, alcuni fornitori utilizzano l'età ed altri la data di nascita. Il sistema avrebbe dunque dovuto uniformare i dati caricati.
 
 \subsubsection{Differenziazione dei prezzi}
-CrociereRegalo è un \bookingEngine utilizzato per vendite sia B2C (cioè verso clienti finali) sia B2B (cioè verso altre agenzie). Queste ultime, in base agli accordi commerciali che hanno con \textit{Primarete}, appartengono a determinati \textit{listini}, ovvero hanno diritto a commissioni/tariffe più o meno agevolate.\\Il sistema, quindi, avrebbe dovuto poter differenziare i prezzi di vendita delle cabine in base al listino di appartenenza dell'acquirente (se l'acquirente non fosse appartenuto a nessun listino, sarebbe stato identificato al pari di una vendita B2C).
+CrociereRegalo è un \bookingEngine utilizzato per vendite sia B2C (cioè verso clienti finali) sia B2B (cioè verso altre agenzie). Queste ultime, in base agli accordi commerciali che hanno con \textit{Primarete}, appartengono a determinati \textit{listini}, ovvero hanno diritto a commissioni/tariffe più o meno agevolate.\\Il sistema, quindi, avrebbe dovuto poter differenziare i prezzi di vendita delle cabine in base al listino di appartenenza dell'acquirente (un acquirente non appartenente a nessun listino sarebbe stato identificato al pari di una vendita B2C).
 
 \subsubsection{Inserimento della tariffa nel flusso di prenotazione}
-Il \bookingEngine avrebbe dovuto permettere di visualizzare i prezzi delle cabine soggette a tariffe vuoto per pieno nei risultati di ricerca. Inoltre, avrebbe dovuto essere possibile poter prenotare e conseguentemente pagare tali cabine.\\La disponibilità delle stesse, quindi, avrebbe dovuto aggiornarsi (decrementare) automaticamente.
+Il \bookingEngine avrebbe dovuto permettere di visualizzare i prezzi delle cabine soggette a tariffe vuoto per pieno nei risultati di ricerca. Inoltre, avrebbe dovuto essere possibile poter prenotare e conseguentemente pagare tali cabine.\\La disponibilità delle stesse, quindi, si sarebbe dovuta aggiornare (decrementare) automaticamente.
 
 \subsection{La soluzione}
 \subsubsection{Inserimento degli acquisti nel sistema}
 Affinché fosse possibile inserire gli acquisti nel sistema, è stata realizzata una nuova pagina nel pannello di amministrazione del \bookingEngine, accessibile solo tramite l'inserimento di username e password. In tale pagina viene visualizzato un riepilogo dei vuoti pieno caricati con la possibilità, per ognuno di essi, di avere il dettaglio delle cabine vendute e di quelle ancora disponibili. È stato inoltre inserito un tasto che apre una finestra di dialogo all'interno della quale viene data la possibilità di caricare nuovi vuoti pieno, andando quindi a "rifornire" il "magazzino". In base al fornitore selezionato nella finestra di dialogo è possibile: 
 \begin{itemize}
 	\item Caricare il file di riepilogo di quanto acquistato fornito dalla compagnia, in caso di fornitore \textbf{Costa} o \textbf{MSC}. Il primo fornisce un file con estensione \textit{.xls} mentre il secondo un file con estensione \textit{.csv}
+	\begin{figure}[!h] 
+		\centering 
+		\includegraphics[width=.8\columnwidth]{attivita/vuotopieno_msc} 
+		\caption{Schermata di caricamento del vuoto pieno MSC e Costa.}
+	\end{figure}
 	\item Inserire a mano i dettagli del vuoto pieno che si intende caricare nel caso di fornitore \textbf{Royal Caribbean}, \textbf{Celebrity} o \textbf{Azamara}. Essi infatti forniscono il file di riepilogo di quanto acquistato in formato \textit{.pdf}, che è molto difficile da interpretare.
+	\begin{figure}[!h] 
+		\centering 
+		\includegraphics[width=.8\columnwidth]{attivita/vuotopieno_royal} 
+		\caption{Schermata di caricamento del vuoto pieno Royal/Celebrity/Azamara.}
+	\end{figure}
 \end{itemize}
 In ogni caso, é stato deciso che per ciascun vuoto pieno si sarebbero memorizzate le seguenti informazioni:
 \begin{itemize}
@@ -189,9 +199,10 @@ In ogni caso, é stato deciso che per ciascun vuoto pieno si sarebbero memorizza
 	\item La \textbf{data di partenza} della crociera;
 	\item La \textbf{lunghezza} (in numero di notti) della crociera;
 	\item Il \textbf{numero di posti} (ovvero la capienza massima di persone) totali in quel vuoto pieno;
-	\item Il \textbf{numero di cabine} totali di quel vuoto pieno.
+	\item Il \textbf{numero di cabine} totali di quel vuoto pieno,
+	\item La \textbf{data di inizio} e la \textbf{data di fine} validità della tariffa, in modo che sia possibile venderla solo in determinati periodi/intervalli. Ciò significa che, ad esempio, se la data di inizio viene impostata al 20 agosto 2018 e la data di fine al 30 settembre 2018, in caso di una ricerca fatta prima del 20 agosto 2018 o dopo il 30 settembre 2018, la tariffa non comparirà tra i risultati.
 \end{itemize}
-Per memorizzare queste informazioni è stata creata una nuova tabella in database denominata \textbf{Cruises\_Inventory}, avente come campi \textit{Id} (chiave primaria auto incrementante), \textit{Supplier} (fornitore, chiave esterna che si riferisce a \textit{Cruises\_Lines}, tabella dove sono memorizzati tutti i fornitori), \textit{GroupID}, \textit{CruiseID}, \textit{DepartureDate} (data di partenza della crociera), \textit{Length} (lunghezza in notti della crociera), \textit{N\_Pax} (numero di posti totali) ed \textit{N\_Cab} (numero di cabine totali).\\
+Per memorizzare queste informazioni è stata creata una nuova tabella in database denominata \textbf{Cruises\_Inventory}, avente come campi \textit{Id} (chiave primaria auto incrementante), \textit{Supplier} (fornitore, chiave esterna che si riferisce a \textit{Cruises\_Lines}, tabella dove sono memorizzati tutti i fornitori), \textit{GroupID}, \textit{CruiseID}, \textit{DepartureDate} (data di partenza della crociera), \textit{Length} (lunghezza in notti della crociera), \textit{N\_Pax} (numero di posti totali), \textit{N\_Cab} (numero di cabine totali), \textit{Data\_Inizio} e \textit{Data\_Fine}.\\
 \\
 Oltre alle informazioni generali relative a ciascun vuoto pieno, è stato necessario memorizzarne anche il contenuto in dettaglio, in termini di cabine acquistate (e quindi da rivendere). Si è deciso di creare la tabella \textbf{Cruises\_InventoryDetail} avente i seguenti campi:
 \begin{itemize}
@@ -202,7 +213,7 @@ Oltre alle informazioni generali relative a ciascun vuoto pieno, è stato necess
 	\item \textbf{BookId}, numero di prenotazione del fornitore della cabina a cui la riga corrente si sta riferendo;
 	\item \textbf{Category}, categoria della cabina corrente.
 \end{itemize}
-Per gestire il caricamento dei vuoti pieno nel sistema sono state realizzate tre classi \textit{parser} (una per MSC, una per Costa e una per il trio Royal-Celebrity-Azamara)in grado di interpretare dei dati in input e renderli compatibili con la struttura delle tabelle \textit{Cruises\_Inventory} e \textit{Cruises\_InventoryDetail}. Queste tre classi, \textit{MSCParser}, \textit{CostaParser} e \textit{RoyalParser} implementano tutte l'interfaccia \textit{ParserInterface}, che ha i seguenti metodi astratti:
+Per gestire il caricamento dei vuoti pieno nel sistema sono state realizzate tre classi \textit{parser} (una per MSC, una per Costa e una per il trio Royal-Celebrity-Azamara)in grado di interpretare dei dati in input e renderli compatibili con la struttura delle tabelle \textit{Cruises\_Inventory} e \textit{Cruises\_InventoryDetail}. Queste tre classi, \textit{MSCParser}, \textit{CostaParser} e \textit{RoyalParser} implementano tutte l'interfaccia \textbf{ParserInterface}, che ha i seguenti metodi astratti:
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{tabularx}{\columnwidth}{XX}
@@ -224,3 +235,24 @@ Per gestire il caricamento dei vuoti pieno nel sistema sono state realizzate tre
 		\hline
 	\end{tabularx}
 \end{center}
+È stata poi creata una nuova classe, \textbf{Cruises\_Inventory}, "figlia" di \textit{CI\_Model} (classe base dei modelli di Codeigniter), che si occupa principalmente del caricamento del vuoto pieno nel database, avvalendosi dei parser prima elencati. Di preciso, ha i seguenti metodi:
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\ \hline
+		+ validId(id:int) : boolean & Ritorna \textit{true} se il parametro passato è un valore presente nella colonna "Id" della tabella \textit{Cruises\_Inventory}\\
+		\hline
+		+ loadFromFile (supplier: int, fileContent: string, dataInizio: Date, dataFine: Date) : void & In base al fornitore passato come parametro (\textit{supplier}), carica il contenuto del vuoto pieno (presente in \textit{fileContent}) nel database, avvalendosi del parser associato al fornitore.\\
+		\hline
+		- loadRoyalInput (supplier: int, content: array) : boolean & Carica il vuoto pieno Royal/Celebrity/Azamara (in base al valore della variabile \textit{supplier}) leggendo il contenuto dall'array associativo \textit{content} ed elaborandolo grazie al parser \textit{RoyalParser}.\\
+		\hline
+		- loadCostaFile (fileContent: string) : boolean & Carica il vuoto pieno Costa nel database; \textit{fileContent} rappresenta il contenuto del file del vuoto pieno caricato, che verrà elaborato dal parser \textit{CostaParser}.\\
+		\hline
+		- loadMSCFile (fileContent: string) : boolean & Carica il vuoto pieno MSC nel database; \textit{fileContent} rappresenta il contenuto del file del vuoto pieno caricato, che verrà elaborato dal parser \textit{MSCParser}.\\
+		\hline
+		- saveParsedFile(parser: ParserInterface, supplier: int) : boolean & Metodo che viene chiamato da \textit{loadRoyalInput}, \textit{loadCostaFile}, \textit{loadMSCFile}; serve a popolare la tabella \textit{Cruises\_InventoryDetail} e la tabella \textit{Cruises\_Prices}.\\
+		\hline
+	\end{longtable}
+\end{center}
+La gestione del pannello di amministrazione è affidata ad un unico \textit{controller}, chiamato \textbf{Back}. In questa classe è stato aggiunto un metodo chiamato \textit{caricaVuotoPieno} che prende l'input dal frontend e lo passa al metodo \textit{loadFromFile} della classe \textit{Cruises\_Inventory} appena descritta, che si occuperà dell'elaborazione e della restituzione del risultato della stessa sotto forma di JSON.
