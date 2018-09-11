@@ -23,15 +23,15 @@ La problematica maggiore, comunque, si sono rivelati gli accordi presi con le va
 	\includegraphics[width=.9\columnwidth]{stage/webcola_crociereregalo} 
 	\caption{Screenshot della versione di CrociereRegalo sviluppata da WebCola}
 \end{figure}\\
-Dal 2015 fino ad luglio 2018, WebPD è riuscita a creare un Booking Engine che interagisse con \Gls{api} e \glspl{webservice} forniti da Costa e MSC, permettendo di acquistare una crociera, pagando tramite un payment gateway fornito dal consorzio TVB (Triveneto Bassilichi). La soluzione realizzata, però, aveva grossi problemi di prestazioni (ad esempio la homepage del sito aveva un tempo di risposta medio di 7 secondi, a cui poi doveva essere sommato il tempo di download della risposta, rendering grafico ed esecuzione del codice Javascript presente) e mancava di alcune funzionalità, come la possibilità di vendere tariffe \textit{vuoto per pieno}. Esse non sono altro che posti (cabine) acquistati da un'agenzia viaggi (nel caso in esame, Primarete) ad un prezzo scontato e rivenduti poi ai privati.
+Dal 2015 fino ad luglio 2018, WebPD è riuscita a creare un \bookingEngine che interagisse con \Gls{api} e \glspl{webservice} forniti da Costa e MSC, permettendo di acquistare una crociera, pagando tramite un payment gateway fornito dal consorzio TVB (Triveneto Bassilichi). La soluzione realizzata, però, aveva grossi problemi di prestazioni (ad esempio la homepage del sito aveva un tempo di risposta medio di 7 secondi, a cui poi doveva essere sommato il tempo di download della risposta, rendering grafico ed esecuzione del codice Javascript presente) e mancava di alcune funzionalità, come la possibilità di vendere tariffe \textit{vuoto per pieno}. Esse non sono altro che posti (cabine) acquistati da un'agenzia viaggi (nel caso in esame, Primarete) ad un prezzo scontato e rivenduti poi ai privati.
 \\
-Premesso ciò, lo stage ha come obiettivo il completamento e l'ampliamento delle funzionalità offerte dal Booking Engine alla base di CrociereRegalo. Più nello specifico, lo stage si propone di svolgere le attività descritte in seguito.
+Premesso ciò, lo stage ha come obiettivo il completamento e l'ampliamento delle funzionalità offerte dal \bookingEngine alla base di CrociereRegalo. Più nello specifico, lo stage si propone di svolgere le attività descritte in seguito.
 
-\subsection{Studio di funzionamento del Booking Engine}
-La parte introduttiva dello stage si pone come obiettivo quello di analizzare e capire il funzionamento del Booking Engine. Infatti, essendo quest'ultimo realizzato tramite il framework \textit{Codeigniter}, esso gode di una struttura delle classi particolare, come anche lo è il modo in cui vengono gestiti gli URL. Inoltre, avendo come DBMS il software \textit{Microsoft SQL Server}, il linguaggio utilizzato per le interazioni con il database è \textit{Transact SQL}, un dialetto di \textit{SQL}, con il quale é necessario prendere confidenza.
+\subsection{Studio di funzionamento del \bookingEngine}
+La parte introduttiva dello stage si pone come obiettivo quello di analizzare e capire il funzionamento del \bookingEngine. Infatti, essendo quest'ultimo realizzato tramite il framework \textit{Codeigniter}, esso gode di una struttura delle classi particolare, come anche lo è il modo in cui vengono gestiti gli URL. Inoltre, avendo come DBMS il software \textit{Microsoft SQL Server}, il linguaggio utilizzato per le interazioni con il database è \textit{Transact SQL}, un dialetto di \textit{SQL}, con il quale é necessario prendere confidenza.
 
-\subsection{Ottimizzazione delle performance del Booking Engine}
-Come accennato precedentemente, il Booking Engine ha grossi problemi di prestazioni. Ciò è dovuto principalmente alla grande mole di dati contenuta nel database, che deve essere interrogato molteplici volte ad ogni richiesta HTTP ricevuta. Gli scopi di questa fase dello stage sono i seguenti:
+\subsection{Ottimizzazione delle performance del \bookingEngine}
+Come accennato precedentemente, il \bookingEngine ha grossi problemi di prestazioni. Ciò è dovuto principalmente alla grande mole di dati contenuta nel database, che deve essere interrogato molteplici volte ad ogni richiesta HTTP ricevuta. Gli scopi di questa fase dello stage sono i seguenti:
 \begin{enumerate}
 	\item Ottimizzare il database in modo che le interrogazioni risultino più veloci. A tale scopo \textit{SQL Server} fornisce una funzionalità chiamata \textit{Database Engine Tuning Advisor}, che permette, sottoponendole delle query da analizzare, di suggerire la creazione di eventuali indici, in modo da aumentare le performance delle interrogazioni;
 	\item Valutare se implementare o meno (e in caso positivo, farlo) un meccanismo di caching dei risultati delle query, in modo da diminuire le interrogazioni al database il più possibile.
@@ -44,11 +44,11 @@ Come accennato precedentemente, il Booking Engine ha grossi problemi di prestazi
 \end{figure}
 
 \subsection{Integrazione delle tariffe vuoto per pieno}
-Il partner Primarete ha espresso l'esigenza di poter vendere le proprie tariffe \textit{vuoto per pieno} attraverso il Booking Engine. Come specificato precedentemente, esse sono dei gruppi di cabine acquistate "al buio" da un'agenzia viaggio ad un prezzo scontato (in quanto ne vengono acquistate più di una in blocco), che poi verranno rivendute dall'agenzia stessa ai clienti. Ovviamente, il guadagno dell'agenzia viaggi è rappresentato dalla differenza tra il prezzo di vendita della cabina e quello di acquisto.\\
-Il problema è che le cabine associate al vuoto per pieno, agli occhi dei \glspl{webservice} delle varie compagnie di crociera, risultano prenotate, quindi non disponibili: è necessario modificare il flusso di prenotazione del Booking Engine permettendo di inserirvi anche i gruppi di cabine acquistate tramite tariffa vuoto per pieno, oltre a quelle ancora effettivamente disponibili; tale modifica dovrà essere fatta sia a livello backend che frontend.
+Il partner Primarete ha espresso l'esigenza di poter vendere le proprie tariffe \textit{vuoto per pieno} attraverso il \bookingEngine. Come specificato precedentemente, esse sono dei gruppi di cabine acquistate "al buio" da un'agenzia viaggio ad un prezzo scontato (in quanto ne vengono acquistate più di una in blocco), che poi verranno rivendute dall'agenzia stessa ai clienti. Ovviamente, il guadagno dell'agenzia viaggi è rappresentato dalla differenza tra il prezzo di vendita della cabina e quello di acquisto.\\
+Il problema è che le cabine associate al vuoto per pieno, agli occhi dei \glspl{webservice} delle varie compagnie di crociera, risultano prenotate, quindi non disponibili: è necessario modificare il flusso di prenotazione del \bookingEngine permettendo di inserirvi anche i gruppi di cabine acquistate tramite tariffa vuoto per pieno, oltre a quelle ancora effettivamente disponibili; tale modifica dovrà essere fatta sia a livello backend che frontend.
 
 \subsection{Aggiunta delle tariffe di un nuovo fornitore}
-La versione di CrociereRegalo sviluppata da WebCola integrava, oltre alle crociere di MSC e Costa, anche quelle di Royal Caribbean (e controllate, ovvero Celebrity e Azamara). Lo stage, quindi, si prefigge di ripristinare questa funzionalità anche sulla nuova versione del \textit{Booking Engine} CrociereRegalo reintroducendo nel flusso di prenotazione le crociere del gruppo Royal, tramite l'integrazione dei \glspl{webservice} forniti da IST (Fibos). Tale integrazione comporterà modifiche sia alla parte frontend che alla parte backend del \textit{Booking Engine}
+La versione di CrociereRegalo sviluppata da WebCola integrava, oltre alle crociere di MSC e Costa, anche quelle di Royal Caribbean (e controllate, ovvero Celebrity e Azamara). Lo stage, quindi, si prefigge di ripristinare questa funzionalità anche sulla nuova versione del \bookingEngine CrociereRegalo reintroducendo nel flusso di prenotazione le crociere del gruppo Royal, tramite l'integrazione dei \glspl{webservice} forniti da IST (Fibos). Tale integrazione comporterà modifiche sia alla parte frontend che alla parte backend del \bookingEngine
 
 
 \subsection{Altri interventi minori}
@@ -75,19 +75,19 @@ In fase di definizione contenutistica dello stage, i punti sopra descritti sono 
 	\hline
 	Ob1 & Interazione con il database SQL Server attraverso le librerie del framework Codeigniter\\
 	\hline
-	Ob2 & Realizzazione integrazione flat-file di un nuovo fornitore con il Data Exchange del Booking Engine\\
+	Ob2 & Realizzazione integrazione flat-file di un nuovo fornitore con il Data Exchange del \bookingEngine\\
 	\hline
-	Ob3 & Aggiunta prodotti e tariffe del nuovo fornitore ai risultati della ricerca lato Front-End del Booking Engine\\
+	Ob3 & Aggiunta prodotti e tariffe del nuovo fornitore ai risultati della ricerca lato Front-End del \bookingEngine\\
 	\hline
 	Ob4 & Esecuzione test e redazione documentazione sul lavoro svolto\\
 	\hline
 	\multicolumn{2}{|c|}{\textbf{Desiderabili}}\\
 	\hline
-	D1 & Realizzazione del registro carichi/scarichi tariffe “vuoto per pieno” come	funzionalità lato Back-End del Booking Engine\\
+	D1 & Realizzazione del registro carichi/scarichi tariffe “vuoto per pieno” come	funzionalità lato Back-End del \bookingEngine\\
 	\hline
 	D2 & Interrogazione web-service in tempo reale per sincronizzare prezzi e disponibilità del nuovo fornitore con il Data Exchange\\
 	\hline
-	D3 & Realizzazione conferma prenotazione al fornitore come funzionalità lato Front-End del Booking Engine\\
+	D3 & Realizzazione conferma prenotazione al fornitore come funzionalità lato Front-End del \bookingEngine\\
 	\hline
 	\multicolumn{2}{|c|}{\textbf{Opzionali}}\\
 	\hline
@@ -110,9 +110,9 @@ Infine, é stato posto come obbligo che tutto il lavoro prodotto dallo stagista 
 Lo stage ha una durata prevista di \textit{310} ore complessive, distribuite in 9 settimane da 34 ore lavorative ciascuna (ad esclusione della prima, da 38 ore). L'orario di lavoro accordato con il tutor aziendale è stato dal Lunedì al Giovedì dalle 09:00 alle 18:30, con 1 ora e 30 di pausa pranzo. \\
 Prima dell'inizio dello stage è stata definita, nel piano di lavoro, una scansione temporale delle attività con granularità settimanale così definita:
 \begin{itemize}
-	\item \textbf{Prima settimana}: formazione sulle tecnologie utilizzate dal Booking Engine CrociereRegalo, con particolare attenzione alla libreria \textit{Codeigniter} e al DBMS \textit{Microsoft SQL Server};
+	\item \textbf{Prima settimana}: formazione sulle tecnologie utilizzate dal \bookingEngine CrociereRegalo, con particolare attenzione alla libreria \textit{Codeigniter} e al DBMS \textit{Microsoft SQL Server};
 	\item \textbf{Seconda settimana}: Proseguimento delle attività di formazione iniziate la prima settimana. Ottimizzazione del database tramite gli strumenti forniti da SQL Server;
-	\item \textbf{Terza settimana}: Ottimizzazione del sito tramite implementazione della cache delle query. Studio e progettazione dell'aggiunta delle tariffe vuoto per pieno al flusso dati del Booking Engine;
+	\item \textbf{Terza settimana}: Ottimizzazione del sito tramite implementazione della cache delle query. Studio e progettazione dell'aggiunta delle tariffe vuoto per pieno al flusso dati del \bookingEngine;
 	\item \textbf{Quarta settimana}: Realizzazione, test e redazione di documentazione di quanto progettato la settimana precedente;
 	\item \textbf{Quinta settimana}: Studio e progettazione dell'integrazione dati forniti dal sistema FIBOS (Royal);
 	\item \textbf{Sesta settimana}: Realizzazione dell'integrazione di navi, porti, itinerari, categorie di cabina e prezzi attraverso interrogazioni schedulate ai \glspl{webservice} FIBOS;

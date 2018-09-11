@@ -14,7 +14,7 @@ La prima attività svolta, in realtà ancora prima dell'inizio dello stage stess
 Tale pianificazione, però, è stata "aggiustata" (ma mai stravolta) in base a quanto svolto settimana per settimana, decidendo di dedicare più o meno ore ad una determinata attività.\\
 Al termine di ogni settimana, periodo coincidente con il raggiungimento di un obiettivo, infine, è stato deciso che avrei dovuto redarre una breve relazione, con lo scopo di documentare il lavoro svolto. Tali relazioni, inoltre, sono servite come materiale ausiliario per la presentazione delle nuove funzionalità sviluppate al proponente. Infine, terminati tutti gli obiettivi e in caso di approvazione da parte del tutor e del proponente, avrei dovuto trasferire il lavoro svolto dall'ambiente di sviluppo a quello di produzione.
 
-\section{Funzionamento e struttura del Booking Engine}
+\section{Funzionamento e struttura del \bookingEngine}
 Appena iniziato lo stage, mi sono subito dedicato all'analisi della struttura di CrociereRegalo, grazie anche (soprattutto all'inizio) all'aiuto del mio tutor. 
 \subsection{Funzionalità}
 CrociereRegalo è un motore di ricerca di crociere. Permette di trovare una determinata crociera utilizzando dei filtri di ricerca per area geografica (ad esempio Caraibi, Mediterraneo, Nord Europa), per data di partenza con granularità mensile (ad esempio Settembre 2018), per intervalli di durata (da 1-6, 7-8, 9-12 o più di 12 giorni) e per compagnia di crociera (ad esempio MSC Crociere). Per capire bene il suo funzionamento è stato necessario apprendere alcuni termini tecnici affini all'ambiente croceristico, come :
@@ -27,13 +27,13 @@ CrociereRegalo è un motore di ricerca di crociere. Permette di trovare una dete
 Premesso ciò, CrociereRegalo permette di selezionare un itinerario, vederne le partenze, categorie di cabina disponibili e prezzi e poi prenotare od opzionare una cabina. 
 
 \subsection{OTA e DataExchange}
-Mi è stato spiegato che il Booking Engine, in realtà, era spezzato in due parti dipendenti l'una dall'altra: \textbf{OTA} (disponibile all'indirizzo \url{https://www.crociereregalo.it}) e \textbf{DataExchange} (disponibile all'indirizzo \url{https://data.crociereregalo.it}). L'idea alla base di questa divisione è che la parte \textit{OTA} rappresenti il sito web vero e proprio, con il quale l'internauta si affaccia, mentre la parte \textit{DataExchange} serva per l'interazione tra \textit{OTA} e \glspl{webservice} dei vari fornitori (dove per fornitori si intendono le varie compagnie di crociera). 
+Mi è stato spiegato che il \bookingEngine, in realtà, era spezzato in due parti dipendenti l'una dall'altra: \textbf{OTA} (disponibile all'indirizzo \url{https://www.crociereregalo.it}) e \textbf{DataExchange} (disponibile all'indirizzo \url{https://data.crociereregalo.it}). L'idea alla base di questa divisione è che la parte \textit{OTA} rappresenti il sito web vero e proprio, con il quale l'internauta si affaccia, mentre la parte \textit{DataExchange} serva per l'interazione tra \textit{OTA} e \glspl{webservice} dei vari fornitori (dove per fornitori si intendono le varie compagnie di crociera). 
 
 \subsection{Interazione tra OTA e DataExchange}
 \textit{OTA} e \textit{DataExchange} sono sì dipendenti l'uno dall'altro, ma hanno due database separati. Questo, fondamentalmente, avviene perchè i dati provenienti da i vari fornitori hanno formati diversi, che devono quindi essere uniformati per poter essere processati secondo una logica più indipendente possibile. Il compito del \textit{DataExchange} è proprio questo: interrogare i \glspl{webservice} dei vari fornitori, ricevere i dati, elaborarli, uniformarli e passarli ad \textit{OTA}.\\
 Premesso ciò, vi sono due possibili interazioni tra \textit{OTA} e \textit{DataExchange}
 \begin{itemize}
-	\item Interazione \textbf{schedulata}, che avviene circa 3 volte al giorno, il cui compito è sincronizzare i cataloghi (chiamati anche \textit{flatfile}) dei vari fornitori per rendere disponibili le (eventuali) modifiche alla parte \textit{OTA} del Booking Engine. \\Quando un visitatore del sito CrociereRegalo cerca una crociera, tale ricerca avviene interrogando i cataloghi presenti nel database della parte \textit{OTA}, senza quindi interrogare i \glspl{webservice} delle compagnie di crociera (per motivi di prestazione dovuti all'ingente mole di dati da elaborare). I cataloghi, quindi, vengono scaricati nel DataExchange, elaborati (uniformati) e poi sincronizzati con il database di OTA; la procedura di sincronizzazione viene chiamata \textbf{Integrazione}. L'integrazione avviene attraverso l'invocazione (grazie allo scheduler di \textit{Windows Server}) che, grazie ad una chiamata \textit{HTTP} ad una particolare pagina del DataExchange, invoca la procedura di integrazione dati.
+	\item Interazione \textbf{schedulata}, che avviene circa 3 volte al giorno, il cui compito è sincronizzare i cataloghi (chiamati anche \textit{flatfile}) dei vari fornitori per rendere disponibili le (eventuali) modifiche alla parte \textit{OTA} del \bookingEngine. \\Quando un visitatore del sito CrociereRegalo cerca una crociera, tale ricerca avviene interrogando i cataloghi presenti nel database della parte \textit{OTA}, senza quindi interrogare i \glspl{webservice} delle compagnie di crociera (per motivi di prestazione dovuti all'ingente mole di dati da elaborare). I cataloghi, quindi, vengono scaricati nel DataExchange, elaborati (uniformati) e poi sincronizzati con il database di OTA; la procedura di sincronizzazione viene chiamata \textbf{Integrazione}. L'integrazione avviene attraverso l'invocazione (grazie allo scheduler di \textit{Windows Server}) che, grazie ad una chiamata \textit{HTTP} ad una particolare pagina del DataExchange, invoca la procedura di integrazione dati.
 	\begin{figure}[!h] 
 		\centering 
 		\includegraphics[width=.75\columnwidth]{attivita/interazione_schedulata} 
@@ -139,7 +139,7 @@ Combinando l'uso di \textit{cache\_on} e \textit{cache\_off}, si può anche disa
 Grazie a \textit{cache\_delete} sarebbe possibile cancellare la cache solo di alcune pagine, ma è stato preferito non utilizzare tale funzione in quanto avrebbe aumentato inutilmente la complessità della soluzione.
 
 \subsection{Risultati}
-L'implementazione della cache ha giovato molto al Booking Engine. Basti pensare che ora la pagina di visualizzazione dei risultati ricerca è giunta ad avere un tempo di risposta medio attorno ai 3 secondi, ovvero ora è l'80\% più veloce di prima, ma soprattutto è paragonabile al tempo di risposta dei competitor. Il tempo di risposta della homepage, inoltre, è arrivata a toccare i 500 millisecondi, dai circa 3 secondi prima di implementare la cache.\\
+L'implementazione della cache ha giovato molto al \bookingEngine. Basti pensare che ora la pagina di visualizzazione dei risultati ricerca è giunta ad avere un tempo di risposta medio attorno ai 3 secondi, ovvero ora è l'80\% più veloce di prima, ma soprattutto è paragonabile al tempo di risposta dei competitor. Il tempo di risposta della homepage, inoltre, è arrivata a toccare i 500 millisecondi, dai circa 3 secondi prima di implementare la cache.\\
 Tra ottimizzazione del database e cache, comunque, sono stati fatti ingenti miglioramenti alle prestazioni, che riassumo nella tabella sottostante, prendendo come esempio la pagina principale e quella di visualizzazione dei risultati della ricerca (che, per brevità, chiamerò soltanto "ricerca").\\
 
 \begin{center}
@@ -169,7 +169,58 @@ Il sistema avrebbe dovuto prevedere una funzionalità di "carico" delle tariffe.
 Il problema principale è stato che il file ritornato da ciascun fornitore aveva (e ha tuttora) il proprio formato dati, quindi si avrebbe dovuto creare un importatore per ogni fornitore. Inoltre, anche la tipologia di dati presente in ciascun file poteva differire: ad esempio, per riferirsi all'età di ogni passeggero, alcuni fornitori utilizzano l'età ed altri la data di nascita. Il sistema avrebbe dunque dovuto uniformare i dati caricati.
 
 \subsubsection{Differenziazione dei prezzi}
-CrociereRegalo è un Booking Engine utilizzato per vendite sia B2C (cioè verso clienti finali) sia B2B (cioè verso altre agenzie). Queste ultime, in base agli accordi commerciali che hanno con \textit{Primarete}, appartengono a determinati \textit{listini}, ovvero hanno diritto a commissioni/tariffe più o meno agevolate.\\Il sistema, quindi, avrebbe dovuto poter differenziare i prezzi di vendita delle cabine in base al listino di appartenenza dell'acquirente (se l'acquirente non fosse appartenuto a nessun listino, sarebbe stato identificato al pari di una vendita B2C).
+CrociereRegalo è un \bookingEngine utilizzato per vendite sia B2C (cioè verso clienti finali) sia B2B (cioè verso altre agenzie). Queste ultime, in base agli accordi commerciali che hanno con \textit{Primarete}, appartengono a determinati \textit{listini}, ovvero hanno diritto a commissioni/tariffe più o meno agevolate.\\Il sistema, quindi, avrebbe dovuto poter differenziare i prezzi di vendita delle cabine in base al listino di appartenenza dell'acquirente (se l'acquirente non fosse appartenuto a nessun listino, sarebbe stato identificato al pari di una vendita B2C).
 
 \subsubsection{Inserimento della tariffa nel flusso di prenotazione}
-Il Booking Engine avrebbe dovuto permettere di visualizzare i prezzi delle cabine soggette a tariffe vuoto per pieno nei risultati di ricerca. Inoltre, avrebbe dovuto essere possibile poter prenotare e conseguentemente pagare tali cabine.\\La disponibilità delle stesse, quindi, avrebbe dovuto aggiornarsi (decrementare) automaticamente.
+Il \bookingEngine avrebbe dovuto permettere di visualizzare i prezzi delle cabine soggette a tariffe vuoto per pieno nei risultati di ricerca. Inoltre, avrebbe dovuto essere possibile poter prenotare e conseguentemente pagare tali cabine.\\La disponibilità delle stesse, quindi, avrebbe dovuto aggiornarsi (decrementare) automaticamente.
+
+\subsection{La soluzione}
+\subsubsection{Inserimento degli acquisti nel sistema}
+Affinché fosse possibile inserire gli acquisti nel sistema, è stata realizzata una nuova pagina nel pannello di amministrazione del \bookingEngine, accessibile solo tramite l'inserimento di username e password. In tale pagina viene visualizzato un riepilogo dei vuoti pieno caricati con la possibilità, per ognuno di essi, di avere il dettaglio delle cabine vendute e di quelle ancora disponibili. È stato inoltre inserito un tasto che apre una finestra di dialogo all'interno della quale viene data la possibilità di caricare nuovi vuoti pieno, andando quindi a "rifornire" il "magazzino". In base al fornitore selezionato nella finestra di dialogo è possibile: 
+\begin{itemize}
+	\item Caricare il file di riepilogo di quanto acquistato fornito dalla compagnia, in caso di fornitore \textbf{Costa} o \textbf{MSC}. Il primo fornisce un file con estensione \textit{.xls} mentre il secondo un file con estensione \textit{.csv}
+	\item Inserire a mano i dettagli del vuoto pieno che si intende caricare nel caso di fornitore \textbf{Royal Caribbean}, \textbf{Celebrity} o \textbf{Azamara}. Essi infatti forniscono il file di riepilogo di quanto acquistato in formato \textit{.pdf}, che è molto difficile da interpretare.
+\end{itemize}
+In ogni caso, é stato deciso che per ciascun vuoto pieno si sarebbero memorizzate le seguenti informazioni:
+\begin{itemize}
+	\item Il \textbf{fornitore}, ovvero MSC, Costa, Royal Caribbean, Celebrity o Azamara;
+	\item Il \textbf{groupID}, ovvero un identificatore univoco per ciascun fornitore del vuoto pieno acquistato;
+	\item Il \textbf{cruiseID}, ovvero un identificatore univoco per ciascun fornitore della crociera a cui tale vuoto pieno si riferisce;
+	\item La \textbf{data di partenza} della crociera;
+	\item La \textbf{lunghezza} (in numero di notti) della crociera;
+	\item Il \textbf{numero di posti} (ovvero la capienza massima di persone) totali in quel vuoto pieno;
+	\item Il \textbf{numero di cabine} totali di quel vuoto pieno.
+\end{itemize}
+Per memorizzare queste informazioni è stata creata una nuova tabella in database denominata \textbf{Cruises\_Inventory}, avente come campi \textit{Id} (chiave primaria auto incrementante), \textit{Supplier} (fornitore, chiave esterna che si riferisce a \textit{Cruises\_Lines}, tabella dove sono memorizzati tutti i fornitori), \textit{GroupID}, \textit{CruiseID}, \textit{DepartureDate} (data di partenza della crociera), \textit{Length} (lunghezza in notti della crociera), \textit{N\_Pax} (numero di posti totali) ed \textit{N\_Cab} (numero di cabine totali).\\
+\\
+Oltre alle informazioni generali relative a ciascun vuoto pieno, è stato necessario memorizzarne anche il contenuto in dettaglio, in termini di cabine acquistate (e quindi da rivendere). Si è deciso di creare la tabella \textbf{Cruises\_InventoryDetail} avente i seguenti campi:
+\begin{itemize}
+	\item \textbf{Id}, chiave primaria auto incrementante;
+	\item \textbf{Cruises\_Inventory}, chiave esterna collegata all'\textit{Id} dell'omonima tabella \textit{Cruises\_Inventory}, che serve per collegare ogni riga del dettaglio al vuoto pieno corrispondente;
+	\item \textbf{Cruises\_PricesID}, chiave esterna collegata all'\textit{Id} di \textit{Cruises\_Prices}, tabella il cui scopo verrà analizzato nel dettaglio nella sezione successiva;
+	\item \textbf{Cabin}, numero di cabina (univoco nel dominio del fornitore) a cui la riga corrente si sta riferendo;
+	\item \textbf{BookId}, numero di prenotazione del fornitore della cabina a cui la riga corrente si sta riferendo;
+	\item \textbf{Category}, categoria della cabina corrente.
+\end{itemize}
+Per gestire il caricamento dei vuoti pieno nel sistema sono state realizzate tre classi \textit{parser} (una per MSC, una per Costa e una per il trio Royal-Celebrity-Azamara)in grado di interpretare dei dati in input e renderli compatibili con la struttura delle tabelle \textit{Cruises\_Inventory} e \textit{Cruises\_InventoryDetail}. Queste tre classi, \textit{MSCParser}, \textit{CostaParser} e \textit{RoyalParser} implementano tutte l'interfaccia \textit{ParserInterface}, che ha i seguenti metodi astratti:
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{tabularx}{\columnwidth}{XX}
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\ \hline
+		+ getCruiseID() : string & Ritorna il CruiseID corrispondente al vuoto pieno considerato\\
+		\hline
+		+ getGroupID() : string & Ritorna il GroupID corrispondente al vuoto pieno considerato\\
+		\hline
+		+ getDepartureDate() : string & Ritorna la data di partenza corrispondente al vuoto pieno considerato, in formato "Y-m-d" (esempio 2018-09-27).\\
+		\hline
+		+ getLength() : int & Ritorna la lunghezza (in numero di notti) corrispondente al vuoto pieno considerato.\\
+		\hline
+		+ getNPax() : int & Ritorna la capienza totale (in numero di persone) corrispondente al vuoto pieno considerato.\\
+		\hline
+		+ getNCab() : int & Ritorna la capienza totale (in numero di cabine) corrispondente al vuoto pieno considerato.\\
+		\hline
+		+ popolaDettaglioTabella() : array & Ritorna un array che, per ciascuna riga del vuoto pieno, associa a ciascun campo della tabella \textit{Cruises\_InventoryDetail} il relativo valore.\\
+		\hline
+	\end{tabularx}
+\end{center}
