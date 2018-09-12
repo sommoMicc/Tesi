@@ -462,9 +462,15 @@ Per quanto riguarda l'integrazione nel flusso di prenotazione delle tariffe \tex
 		\hline
 		RequestCabins &  Dati in input nave (Ship), data di partenza (Date), numero ed età dei passeggeri (Guests) e codice della tariffa (FareCode), restituisce una lista di cabine disponibili che soddisfano i criteri definiti dai parametri passati.\\
 		\hline
+		RequestPricing &  Dati in input nave (Ship), data di partenza (Date), numero ed età dei passeggeri (Guests), codice della tariffa (FareCode) e della cabina (Cabin), restituisce una quotazione veritiera che soddisfa i criteri definiti dai parametri passati.\\
+		\hline
+		RequestBooking &  Dati in input nave (Ship), data di partenza (Date), numero, età e dati anagrafici dei passeggeri (Guests), codice della tariffa (FareCode) e della cabina (Cabin) e la tipologia di prenotazione che si vuole effettuare (AgreementSt, da porre a OF in caso si voglia fare un'opzione, mentre a BK in caso di prenotazione vera e propria), restituisce il codice di prenotazione (BookingId), assieme all'ammontare di denaro e relative scadenze dei pagamenti.\\
+		\hline
+		RequestRetrieve &  Dato in input il numero di prenotazione (BookingId), restituisce le informazioni dettagliate (sia inerenti all'itinerario, sia allo stato dei pagamenti) della prenotazione corrispondente.\\
+		\hline
 	\end{longtable}
 \end{center}
-
+Per effettuare le \gls{RPC} sopra descritte, sono stati realizzati i seguenti nuovi metodi all'interno della classe \textit{Royal\_Model}:
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
@@ -475,9 +481,15 @@ Per quanto riguarda l'integrazione nel flusso di prenotazione delle tariffe \tex
 		\hline
 		+ cabinAvailability(ship: string, date: string, guests: array, fareCode: string) : SimpleXMLObject & Effettua una \gls{RPC} a \textit{RequestCabins} del \gls{webservice}, con i parametri \textit{Ship}, \textit{Date}, \textit{Guests}, \textit{FareCode} valorizzati in base a quanto passato. Ritorna la risposta in forma di oggetto SimpleXMLObject, o NULL in caso di risposta mal formattata.\\
 		\hline
+		+ pricingInformation(ship: string, date: string, cabin: string, fareCode: string, guest: array) : SimpleXMLObject & Effettua una \gls{RPC} a \textit{RequestPricing} del \gls{webservice}, con i parametri \textit{Ship}, \textit{Date}, \textit{Guests}, \textit{FareCode}, \textit{Cabin} valorizzati in base a quanto passato. Ritorna la risposta in forma di oggetto SimpleXMLObject, o NULL in caso di risposta mal formattata.\\
+		\hline
+		+ book(ship: string, date: string, cabin: string, fareCode: string, guest: array, agreementSt: string) : SimpleXMLObject & Effettua una \gls{RPC} a \textit{RequestBooking} del \gls{webservice}, con i parametri \textit{Ship}, \textit{Date}, \textit{Guests}, \textit{FareCode}, \textit{Cabin}, \textit{AgreementSt} valorizzati in base a quanto passato. Ritorna la risposta in forma di oggetto SimpleXMLObject, o NULL in caso di risposta mal formattata.\\
+		\hline
+		+ retrieveBooking(bookingNumber: string) : SimpleXMLObject & Effettua una \gls{RPC} a \textit{RequestRetrieve} del \gls{webservice}, con il parametro \textit{BookingId} valorizzato in base a quanto passato. Ritorna la risposta in forma di oggetto SimpleXMLObject, o NULL in caso di risposta mal formattata.\\
+		\hline
 	\end{longtable}
 \end{center}
-
+Infine, per invocare ed elaborare i risultati dei nuovi metodi scritti in \textit{Royal\_Model}, sono state aggiunte le seguenti funzioni a \textit{WS\_Cruises}:
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
@@ -487,6 +499,12 @@ Per quanto riguarda l'integrazione nel flusso di prenotazione delle tariffe \tex
 		+ Fibos\_categoryAvailability (supplier: int, cruiseID: string, guest: array) : array & Restituisce un array contenente la lista delle categorie di cabina effettivamente disponibili, interrogando il \gls{webservice} tramite l'invocazione del metodo \textit{categoryAvailability} di \textit{Royal\_Model}.\\
 		\hline
 		+ Fibos\_cabinAvailability (supplier: int, cruiseID: string, guest: array, fareCode: string) : array & Restituisce un array contenente la lista delle singole cabina effettivamente disponibili, interrogando il \gls{webservice} tramite l'invocazione del metodo \textit{categoryAvailability} di \textit{Royal\_Model}, tenendo conto dei parametri passati (quindi anche del fareCode, ovvero della tariffa scelta allo step precedente).\\
+		\hline
+		+ Fibos\_requestPricing (supplier: int, cruiseID: string, guest: array, fareCode: string, cabin: string) : array & Restituisce un array contenente una quotazione veritiera per la cabina selezionata (tenendo conto di tariffa, crociera, cabina, selezionate e del numero ed età dei passeggeri), interrogando il \gls{webservice} tramite l'invocazione del metodo \textit{pricingInformation} di \textit{Royal\_Model}.\\
+		\hline
+		+ Fibos\_requestBooking (supplier: int, cruiseID: string, guest: array, fareCode: string, cabin: string, agreementSt: string) : array & Effettua una prenotazione in base ai parametri passati (tariffa, crociera, cabina, numero ed età dei passeggeri, tipo di prenotazione), interrogando il \gls{webservice} tramite l'invocazione del metodo \textit{book} di \textit{Royal\_Model}.\\
+		\hline
+		+ Fibos\_requestBookingInformation (bookingNumber: string) : array & Restituisce le informazioni inerenti alla prenotazione passata come parametro, interrogando il \gls{webservice} tramite l'invocazione del metodo \textit{retrieveBooking} di \textit{Royal\_Model}.\\
 		\hline
 	\end{longtable}
 \end{center}
