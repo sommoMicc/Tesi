@@ -287,9 +287,9 @@ Per l'interazione con la tabella \textit{Cruises\_InventoryPrices} è stato crea
 		\hline
 		+ tentaAggiornamentoPrezzi (tabella: array, inventoryId: int) : void & Metodo che prova ad aggiornare i prezzi nel caso di caricamento di un vuoto pieno contenente cabine già presenti nel sistema.\\
 		\hline
-		+ salvaPrezzi (input: array) : boolean & Metodo che salva i prezzi di ogni cabina, per ogni listino, presenti nel parametro \textit{input}. Ritorna "true" in caso di successo, "false" altrimenti.\\
+		+ salvaPrezzi (input: array) : boolean & Metodo che salva i prezzi di ogni cabina, per ogni listino, presenti nel parametro \textit{input}. Ritorna \textit{true} in caso di successo, \textit{false} altrimenti.\\
 		\hline
-		+ modificaPrezzi (input: array) : boolean & Metodo che modifica i prezzi di ogni cabina, per ogni listino, presenti nel parametro \textit{input}. Ritorna "true" in caso di successo, "false" altrimenti.\\
+		+ modificaPrezzi (input: array) : boolean & Metodo che modifica i prezzi di ogni cabina, per ogni listino, presenti nel parametro \textit{input}. Ritorna \textit{true} in caso di successo, \textit{false} altrimenti.\\
 		\hline
 	\end{longtable}
 \end{center}
@@ -329,4 +329,48 @@ Al frontend, infine, non è stato necessario fare alcuna modifica.
 Al termine della realizzazione, sono stati effettuati test manuali sulla congruenza dei dati tra le nuove tabelle e i vuoti pieno importati. 
 Infine si è verificato che i dati presenti nelle tabelle fossero interpretati in maniera adeguata dalle varie query presenti nel flusso di prenotazione, dal primo all'ultimo dei sei step.
 \newpage
-\section{Royal}
+\section{Aggiunta delle tariffe di un nuovo fornitore}
+\subsection{Il problema}
+L'ultimo argomento affrontato durante lo stage è stato aggiungere la possibilità di prenotare una crociera con \textit{Royal Caribbean},\textit{Celebrity} e \textit{Azamara}. Queste tre compagnie, per fortuna, forniscono, grazie alla società \textit{ISTINFOR}, dei \glspl{webservice} chiamati \textbf{FIBOS}, che sono unici per le tre compagnie di crociera sopra citate. \\
+\textit{FIBOS} prevede l'utilizzo di due tipologie di \glspl{webservice}: \textbf{FDF} (Fibos Data Feed) e \textbf{RCCL} (Royal Caribbean Cruise Line).
+\subsubsection{Importazione di aree geografiche, navi, porti e categorie di cabine}
+Per poter interfacciarsi con i \glspl{webservice}, è stato necessario aggiungere al \bookingEngine le informazioni (codici, descrizioni) di aree geografiche, navi, porti e categorie di cabine utilizzate da FIBOS.
+
+\subsubsection{Implementazione di FDF}
+Questi \glspl{webservice} sono progettati per il trasferimento di grandi quantità di dati e forniscono un sistema di ricerca di crociere (e relativi prezzi). Si sono quindi dimostrati adatti al meccanismo di integrazione schedulata presente nel \bookingEngine. È stato dunque necessario creare un sistema che interrogasse i \glspl{webservice} \textit{FDF}, consolidandone i risultati nel \textit{DataExchange} ed integrandoli poi nell'\textit{OTA}. 
+
+\subsubsection{Implementazione di RCCL}
+Per far fronte ai dati richiesti in tempo reale dal flusso di prenotazione, invece, sono stati offerti da \textit{FIBOS} i \glspl{webservice} \textbf{RCCL}, che è stato necessario integrare ed interrogare.
+
+\section{La soluzione}
+\subsubsection{Importazione di aree geografiche, navi, porti e categorie di cabine}
+Informazioni circa codici di aree geografiche, navi, porti, categorie di cabine, ponti ci sono state fornite da \textit{ISTINFOR} in un file formato \textit{.xlsx}. In caso di variazioni di tali informazioni, per contratto, ci sarebbe stato mandato un nuovo file aggiornato. Proprio per questo é stato deciso, invece di importare a mano i dati, di realizzare un importatore.\\
+A livello grafico, è stata realizzata una semplice finestra di dialogo che permettesse di caricare il file in oggetto e mandarlo al backend per l'elaborazione.
+\begin{figure}[!h] 
+	\centering 
+	\includegraphics[width=.6\columnwidth]{attivita/upload_royal} 
+	\caption{Schermata di caricamento del file passato da ISTINFOR}
+\end{figure} \\
+A livello backend, è stato realizzato un nuovo model nella parte \textit{OTA}, chiamato semplicemente \textit{Royal}, avente i seguenti metodi:
+
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\ \hline
+		+ parse(fileName: string) : boolean & Elabora il file avente nome (e percorso) 'fileName'. Restituisce true se l'elaborazione è andata a buon fine, false altrimenti .\\
+		\hline
+		- loadPorts () : boolean & Viene invocato da \textit{parse}, si occupa di leggere i porti dal file e caricarli nella tabella \textit{Cruises\_Ports} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
+		\hline
+		- loadShips () : boolean & Viene invocato da \textit{parse}, si occupa di leggere le navi dal file e caricarle nella tabella \textit{Cruises\_Ships} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
+		\hline
+		- loadDecks () : boolean & Viene invocato da \textit{parse}, si occupa di leggere i ponti delle varie navi dal file e caricarli nella tabella \textit{Cruises\_Decks} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
+		\hline
+		- loadCategories () : boolean & Viene invocato da \textit{parse}, si occupa di leggere le categorie di cabine delle varie navi dal file e caricarle nella tabella \textit{Cruises\_CabinCategories} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
+		\hline
+	\end{longtable}
+\end{center}
+È stato poi creato un nuovo metodo \textit{caricaRoyal} sul controller \textit{Back} dell'\textit{OTA}, che prende il file caricato dal frontend e lo passa al metodo \textit{parse} del model \textit{Royal} sopra descritto.
+
+\subsubsection{Implementazione di FDF}
+Dopo aver inserito ad database tutti i 
