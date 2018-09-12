@@ -373,4 +373,50 @@ A livello backend, è stato realizzato un nuovo model nella parte \textit{OTA}, 
 È stato poi creato un nuovo metodo \textit{caricaRoyal} sul controller \textit{Back} dell'\textit{OTA}, che prende il file caricato dal frontend e lo passa al metodo \textit{parse} del model \textit{Royal} sopra descritto.
 
 \subsubsection{Implementazione di FDF}
-Dopo aver inserito ad database tutti i 
+Nel file \textit{.xlsx} fornito da \textit{ISTINFOR} mancano tutte le informazioni inerenti a itinerari, prezzi e partenze delle crociere. Queste sono invece fornite dal \gls{webservice} \textbf{FDF}, che quindi si è dovuto implementare. L'interazione con tale \gls{webservice} avviene tramite chiamate \gls{SOAP} ad appositi URL forniti da \textit{ISTINFOR}.\\ Essendoci stati forniti solo degli URL di sviluppo, le chiamate restituiscono dati verosimili ma non veri. Inoltre, \textit{ISTINFOR} utilizza un firewall: vengono accettate richieste provenienti solo da IP noti. Siccome il server di sviluppo utilizzato era all'interno della rete dell'ufficio, con IP dinamico e non esposto, è stato necessario creare un ambiente online di test, da affiancare a quello di produzione (all'indirizzo \url{http://primaretetest.webpd.it/crociereregalo} e \url{http://primaretetest.webpd.it/dataExchange}).\\
+Premesso ciò, la struttura di una chiamata \gls{SOAP} accettata da \textit{FDF} è la seguente:
+\begin{lstlisting}
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://tempuri.org/WebService/Service1">
+  <SOAP-ENV:Body>
+    <ns1:PROCEDURA>
+      <ns1:MessageXML>
+        <PROCEDURA>
+          <Header>
+            <CruiseLineCode>RCCL</CruiseLineCode>
+            <SubsystemId>2</SubsystemId>
+            <AgencyId1>041178383</AgencyId1>
+            <AgencyId2>041178383</AgencyId2>
+            <Currency>EUR</Currency>
+            <AgencyConsumer>A</AgencyConsumer>
+          </Header>
+          <PROCEDURA>
+            <PARAMETRO/>
+          </PROCEDURA>
+        </PROCEDURA>
+      </ns1:MessageXML>
+    </ns1:PROCEDURA>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+\end{lstlisting}Il tag \textit{Header} ed il suo contenuto sono comuni a tutte le richieste. Bisogna poi sostituire il nome \textit{PROCEDURA} con quello della funzione che si vuole invocare (ad esempio \textit{SearchBySea}) e, in base a quanto definito nella documentazione, includere una lista di parametri (allo stesso livello del tag \textit{Parametro}). Prima di invocare una procedura generica, però, è necessario fare una chiamata alla funzione di login, che permette di autenticarsi.
+Tutte le chiamate ai \gls{webservice} vengono gestite dal \textit{DataExchange}, all'interno del quale sono state create due nuove classi per semplificarne l'interazione: \textit{Royal\_Model} e \textit{Royal\_WS}.\\
+La prima è un model che serve ad effettuare le chiamate ai \gls{webservice} forniti, e si compone dei seguenti metodi:
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\
+		\hline
+		- callWS (xml: string, function: string) : string & Fa una richiesta al \gls{webservice}, chiamando la procedura remota \textit{function}, utilizzando come payload il valore del parametro \textit{xml}. Restituisce la risposta del \gls{webservice} come stringa.\\
+		\hline
+		- buildHeader(lineCode: string) : void & Costruisce e salva in una variabile interna alla classe l'intestazione della richiesta, popolando contenuto il tag \textit{<CruiseLineCode>} con il valore del parametro \textit{lineCode} passato.\\
+		\hline
+		+ login (lineCode: string) : boolean & Effettua la chiamata alla procedura remota di login, avvalendosi della funzione \textit{buildHeader}, alla quale viene passato il parametro \textit{lineCode}.\\
+		\hline
+		- loadShips () : boolean & Viene invocato da \textit{parse}, si occupa di leggere le navi dal file e caricarle nella tabella \textit{Cruises\_Ships} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
+		\hline
+		- loadDecks () : boolean & Viene invocato da \textit{parse}, si occupa di leggere i ponti delle varie navi dal file e caricarli nella tabella \textit{Cruises\_Decks} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
+		\hline
+		- loadCategories () : boolean & Viene invocato da \textit{parse}, si occupa di leggere le categorie di cabine delle varie navi dal file e caricarle nella tabella \textit{Cruises\_CabinCategories} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
+		\hline
+	\end{longtable}
+\end{center}
