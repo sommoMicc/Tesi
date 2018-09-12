@@ -60,6 +60,7 @@ Quando il visitatore, in seguito alla ricerca, apre i dettagli di una partenza, 
 \end{enumerate}
 
 \subsection{Struttura del codice}
+\label{section:struttura-codice}
 Sia \textit{OTA} che \textit{DataExchange} sono realizzati usando il framework \textit{Codeigniter}. Questo implica che applicano a PHP il paradigma \textit{Object-oriented} (orientato agli oggetti) associato al design pattern \gls{mvc}. Entrambi i progetti, dunque, presentano tre tipologie di classi:
 \begin{itemize}
 	\item \textbf{Model}, che estendono la classe base \textit{CI\_Model}, i quali sono la chiave di accesso ai dati dell'applicazione. Si è deciso di realizzare un \textit{model} per ogni tabella presente nel database;
@@ -406,17 +407,30 @@ La prima è un model che serve ad effettuare le chiamate ai \gls{webservice} for
 		\hline
 		\textbf{Metodo} & \textbf{Descrizione} \\
 		\hline
-		- callWS (xml: string, function: string) : string & Fa una richiesta al \gls{webservice}, chiamando la procedura remota \textit{function}, utilizzando come payload il valore del parametro \textit{xml}. Restituisce la risposta del \gls{webservice} come stringa.\\
-		\hline
 		- buildHeader(lineCode: string) : void & Costruisce e salva in una variabile interna alla classe l'intestazione della richiesta, popolando contenuto il tag \textit{<CruiseLineCode>} con il valore del parametro \textit{lineCode} passato.\\
+		\hline
+		- callWS (xml: string, function: string) : SimpleXMLObject & Fa una richiesta al \gls{webservice}, chiamando la procedura remota \textit{function}, utilizzando come payload il valore del parametro \textit{xml}. Restituisce la risposta del \gls{webservice} come istanza di SimpleXMLObject (che permette di muoversi agevolmente tra i vari tag e attributi), oppure NULL in caso si verifichi un errore di parsing (ad esempio la risposta non sia in XML ben formattato).\\
 		\hline
 		+ login (lineCode: string) : boolean & Effettua la chiamata alla procedura remota di login, avvalendosi della funzione \textit{buildHeader}, alla quale viene passato il parametro \textit{lineCode}.\\
 		\hline
-		- loadShips () : boolean & Viene invocato da \textit{parse}, si occupa di leggere le navi dal file e caricarle nella tabella \textit{Cruises\_Ships} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
-		\hline
-		- loadDecks () : boolean & Viene invocato da \textit{parse}, si occupa di leggere i ponti delle varie navi dal file e caricarli nella tabella \textit{Cruises\_Decks} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
-		\hline
-		- loadCategories () : boolean & Viene invocato da \textit{parse}, si occupa di leggere le categorie di cabine delle varie navi dal file e caricarle nella tabella \textit{Cruises\_CabinCategories} del \textit{DataExchange} (che poi viene sincronizzata, ad ogni integrazione, con l'omonima tabella dell'\textit{OTA}). Restitusce \textit{true} in caso di successo, \textit{false} altrimenti.\\
+		+ requestPricesSea (sea: string, date: string, guests: int) : SimpleXMLObject & Effettua una \gls{RPC} al metodo \textit{RequestSearchBySeaPricing} del \gls{webservice}, con i parametri \textit{Sea}, \textit{Date} e \textit{Guests} valorizzati in base a quanto passato.\\
 		\hline
 	\end{longtable}
 \end{center}
+Il metodo \textit{RequestSearchBySeaPricing} di \textit{FDF} permette di effettuare una ricerca del miglior prezzo per ogni categoria di cabina di tutte le partenze di tutte le navi gestite dal sistema (quindi Royal, Celebrity e Azamara). Nella ricerca possono essere inserite delle restrizioni sul numero di passeggeri, sull'area geografica (mare) di navigazione e su un intervallo di date (ad esempio crociere che partono dal 3 settembre 2018 al 10 ottobre 2019). \\
+La chiamata a \textit{RequestSearchBySeaPricing} (quindi al metodo \textit{requestPricesSea} di \textit{Royal\_Model}) viene utilizzata dal meccanismo schedulato di integrazione per popolare le informazioni inerenti agli itinerari disponibili, alle date di partenza di ogni itinerario e ai prezzi di ogni categoria di cabina di ogni data di partenza di ogni itinerario. Tale elaborazione richiede molto tempo (fino a 40 minuti), per tanto viene eseguita durante la notte (è stato deciso di schedularla alle 2 del mattino, dato che non c'é un orario preciso di rilascio dei nuovi aggiornamenti). \\
+Per permettere l'invocazione di tale metodo è stato realizzato un controller apposito, chiamato \textit{Royal\_WS}, il cui contenuto é il seguente:
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\
+		\hline
+		+ load\_PricesSea() : void & Tramite la chiamata al metodo \textit{requestPricesSea} del model \textit{Royal\_Model}, sincronizza, per ogni itinerario, la lista delle partenze (incluse disponibilità di cabine, prezzi e in generale tutto quanto restituito dalla funzione) con il database del \textit{DataExchange}. Grazie al meccanismo dei \textit{magic method} descritto in sezione \ref{section:struttura-codice}, esso può essere invocato direttamente via URL.\\
+		\hline
+	\end{longtable}
+\end{center}
+
+\subsubsection{Implementazione di RCCL}
+Il metodo \textit{RequestSearchBySeaPricing} di \textit{FDF}, ai fini dell'integrazione dati, presentava un grande difetto: non restituiva il dettaglio dell'itinerario, ma vi si riferiva utilizzandone solo il codice. Ciò rappresentava un problema sia ai fini della ricerca offerta dal \bookingEngine che della visualizzazione dei dettagli di una crociera. In tale pagina, infatti, è presente la lista di destinazioni toccate dalla crociera. Per reperire queste informazioni si sarebbe potuto mappare a mano ciascun itinerario in base alle informazioni contenute nei cataloghi cartacei delle tre compagnie, ma sarebbe stato un lavoro enorme (gli itinerari sono circa 1400 in totale) che si sarebbe dovuto ripetere costantemente nel tempo, in quanto essi cambiano ogni manciata di mesi.\\
+Per, dunque, evitare tanto lavoro si è deciso di implementare, all'interno del metodo \textit{load\_PricesSea} della classe \textit{Royal\_WS}, delle \gls{RPC} a \textit{RequestItinerary}, fornito dal \gls{webservice} \textit{RCCL}, che restituisce le informazioni dettagliate dell'itinerario corrispondente ai parametri passati (codice della nave, data di partenza e codice itinerario).  Dato che il protocollo di comunicazione è analogo a quello utilizzato per \textit{FDF}, si è deciso (per questo e per tutti le altre \gls{RPC} utilizzate di \textit{RCCL}) di riutilizzare la classe \textit{Royal\_Model}, andando a definire nuovi metodi in base alle necessità.
