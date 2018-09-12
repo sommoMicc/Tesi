@@ -28,7 +28,7 @@ Dal 2015 fino ad luglio 2018, WebPD è riuscita a creare un \bookingEngine che i
 Premesso ciò, lo stage ha come obiettivo il completamento e l'ampliamento delle funzionalità offerte dal \bookingEngine alla base di CrociereRegalo. Più nello specifico, lo stage si propone di svolgere le attività descritte in seguito.
 
 \subsection{Studio di funzionamento del \bookingEngine}
-La parte introduttiva dello stage si pone come obiettivo quello di analizzare e capire il funzionamento del \bookingEngine. Infatti, essendo quest'ultimo realizzato tramite il framework \textit{Codeigniter}, esso gode di una struttura delle classi particolare, come anche lo è il modo in cui vengono gestiti gli URL. Inoltre, avendo come DBMS il software \textit{Microsoft SQL Server}, il linguaggio utilizzato per le interazioni con il database è \textit{Transact SQL}, un dialetto di \textit{SQL}, con il quale é necessario prendere confidenza.
+La parte introduttiva dello stage si pone come obiettivo quello di analizzare e capire il funzionamento del \bookingEngine. Infatti, essendo quest'ultimo realizzato tramite il framework \textit{Codeigniter}, esso gode di una struttura delle classi particolare, come anche lo è il modo in cui vengono gestiti gli URL. Inoltre, avendo come \gls{DBMS} il software \textit{Microsoft SQL Server}, il linguaggio utilizzato per le interazioni con il database è \textit{Transact SQL}, un dialetto di \textit{SQL}, con il quale é necessario prendere confidenza.
 
 \subsection{Ottimizzazione delle performance del \bookingEngine}
 Come accennato precedentemente, il \bookingEngine ha grossi problemi di prestazioni. Ciò è dovuto principalmente alla grande mole di dati contenuta nel database, che deve essere interrogato molteplici volte ad ogni richiesta HTTP ricevuta. Gli scopi di questa fase dello stage sono i seguenti:
@@ -111,7 +111,7 @@ Infine, é stato posto come obbligo che tutto il lavoro prodotto dallo stagista 
 Lo stage ha una durata prevista di \textit{310} ore complessive, distribuite in 9 settimane da 34 ore lavorative ciascuna (ad esclusione della prima, da 38 ore). L'orario di lavoro accordato con il tutor aziendale è stato dal Lunedì al Giovedì dalle 09:00 alle 18:30, con 1 ora e 30 di pausa pranzo. \\
 Prima dell'inizio dello stage è stata definita, nel piano di lavoro, una scansione temporale delle attività con granularità settimanale così definita:
 \begin{itemize}
-	\item \textbf{Prima settimana}: formazione sulle tecnologie utilizzate dal \bookingEngine CrociereRegalo, con particolare attenzione alla libreria \textit{Codeigniter} e al DBMS \textit{Microsoft SQL Server};
+	\item \textbf{Prima settimana}: formazione sulle tecnologie utilizzate dal \bookingEngine CrociereRegalo, con particolare attenzione alla libreria \textit{Codeigniter} e al \gls{DBMS} \textit{Microsoft SQL Server};
 	\item \textbf{Seconda settimana}: Proseguimento delle attività di formazione iniziate la prima settimana. Ottimizzazione del database tramite gli strumenti forniti da SQL Server;
 	\item \textbf{Terza settimana}: Ottimizzazione del sito tramite implementazione della cache delle query. Studio e progettazione dell'aggiunta delle tariffe vuoto per pieno al flusso dati del \bookingEngine;
 	\item \textbf{Quarta settimana}: Realizzazione, test e redazione di documentazione di quanto progettato la settimana precedente;
@@ -124,7 +124,7 @@ Prima dell'inizio dello stage è stata definita, nel piano di lavoro, una scansi
 
 \subsection{Vincoli tecnologici}
 A livello implementativo, l'azienda non ha imposto precisi vincoli, se non quello di aderire il quanto più possibile ai paradigmi di programmazione già preesistenti ed applicare del buon senso a quanto si intende realizzare. Ciò principalmente significa dovrà essere adottato un design pattern \gls{mvc}, intrinseco di \textit{Codeigniter}, e cercare di creare del codice che 
-sia quanto più manutenibile possibile. Ovviamente, tutto ciò realizzato avrebbe dovuto girare correttamente sull'ambiente di esecuzione già utilizzato, ovvero \textit{PHP 7.1} su \textit{Windows Server 2008 R2}, \textit{IIS} come web server e \textit{SQL Server 2012} come \textit{DBMS}.
+sia quanto più manutenibile possibile. Ovviamente, tutto ciò realizzato avrebbe dovuto girare correttamente sull'ambiente di esecuzione già utilizzato, ovvero \textit{PHP 7.1} su \textit{Windows Server 2008 R2}, \textit{IIS} come web server e \textit{SQL Server 2012} come \textit{\gls{DBMS}}.
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.6\columnwidth]{stage/mvc} 
