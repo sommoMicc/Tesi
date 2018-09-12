@@ -449,4 +449,44 @@ Per, dunque, evitare tanto lavoro si è deciso di implementare, all'interno del 
 	\includegraphics[width=.9\columnwidth]{attivita/dettaglio_itinerario} 
 	\caption{Dettaglio dell'itinerario visualizzato dal frontend.}
 \end{figure}
-Le informazioni ritornate da questo metodo includono anche la lista di destinazioni dell'itinerario, ma la lingua in cui i nomi di tali destinazioni (porti, città, stati) vengono restituiti è mista. Ad esempio, per riferirsi alle isole delle Azzorre, viene usato tanto il nome italiano "Azzorre" quanto il nome spagnolo "Azores". La stessa cosa vale per Danimarca, Scozia, Australia, Emirati Arabi, Canarie, Belgio ecc. È stato dunque necessario realizzare un mapping manuale dei nomi, che permettesse di tradurre i nomi in lingua italiana.
+Le informazioni ritornate da questo metodo includono anche la lista di destinazioni dell'itinerario, ma la lingua in cui i nomi di tali destinazioni (porti, città, stati) vengono restituiti è mista. Ad esempio, per riferirsi alle isole delle Azzorre, viene usato tanto il nome italiano "Azzorre" quanto il nome spagnolo "Azores". La stessa cosa vale per Danimarca, Scozia, Australia, Emirati Arabi, Canarie, Belgio ecc. È stato dunque necessario realizzare un mapping manuale dei nomi, che permettesse di tradurre i nomi in lingua italiana.\\ \\
+Per quanto riguarda l'integrazione nel flusso di prenotazione delle tariffe \textit{FIBOS}, analogamente al lavoro svolto per i vuoti pieno, sono stati creati ed implementati nuovi metodi nel controller \textit{WS\_Cruises} che utilizzano nuovi metodi creati nel model \textit{Royal\_Model}. Sono state utilizzate le seguenti procedure di \textit{RCCL}:
+
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Procedura} & \textbf{Descrizione} \\
+		\hline
+		RequestCategories & Dati in input nave (Ship), data di partenza (Date), numero ed età dei passeggeri (Guests), restituisce una lista di tariffe disponibili per quella partenza, complete di prezzi per ogni categoria di cabina, tasse portuali ed eventualmente oneri aggiuntivi.\\
+		\hline
+		RequestCabins &  Dati in input nave (Ship), data di partenza (Date), numero ed età dei passeggeri (Guests) e codice della tariffa (FareCode), restituisce una lista di cabine disponibili che soddisfano i criteri definiti dai parametri passati.\\
+		\hline
+	\end{longtable}
+\end{center}
+
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\
+		\hline
+		+ categoryAvailability(ship: string, date: string, guests: array) : SimpleXMLObject & Effettua una \gls{RPC} a \textit{RequestCategories} del \gls{webservice}, con i parametri \textit{Ship}, \textit{Date} e \textit{Guests} valorizzati in base a quanto passato. Ritorna la risposta in forma di oggetto SimpleXMLObject, o NULL in caso di risposta mal formattata.\\
+		\hline
+		+ cabinAvailability(ship: string, date: string, guests: array, fareCode: string) : SimpleXMLObject & Effettua una \gls{RPC} a \textit{RequestCabins} del \gls{webservice}, con i parametri \textit{Ship}, \textit{Date}, \textit{Guests}, \textit{FareCode} valorizzati in base a quanto passato. Ritorna la risposta in forma di oggetto SimpleXMLObject, o NULL in caso di risposta mal formattata.\\
+		\hline
+	\end{longtable}
+\end{center}
+
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\
+		\hline
+		+ Fibos\_categoryAvailability (supplier: int, cruiseID: string, guest: array) : array & Restituisce un array contenente la lista delle categorie di cabina effettivamente disponibili, interrogando il \gls{webservice} tramite l'invocazione del metodo \textit{categoryAvailability} di \textit{Royal\_Model}.\\
+		\hline
+		+ Fibos\_cabinAvailability (supplier: int, cruiseID: string, guest: array, fareCode: string) : array & Restituisce un array contenente la lista delle singole cabina effettivamente disponibili, interrogando il \gls{webservice} tramite l'invocazione del metodo \textit{categoryAvailability} di \textit{Royal\_Model}, tenendo conto dei parametri passati (quindi anche del fareCode, ovvero della tariffa scelta allo step precedente).\\
+		\hline
+	\end{longtable}
+\end{center}
