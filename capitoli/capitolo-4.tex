@@ -433,4 +433,20 @@ Per permettere l'invocazione di tale metodo è stato realizzato un controller ap
 
 \subsubsection{Implementazione di RCCL}
 Il metodo \textit{RequestSearchBySeaPricing} di \textit{FDF}, ai fini dell'integrazione dati, presentava un grande difetto: non restituiva il dettaglio dell'itinerario, ma vi si riferiva utilizzandone solo il codice. Ciò rappresentava un problema sia ai fini della ricerca offerta dal \bookingEngine che della visualizzazione dei dettagli di una crociera. In tale pagina, infatti, è presente la lista di destinazioni toccate dalla crociera. Per reperire queste informazioni si sarebbe potuto mappare a mano ciascun itinerario in base alle informazioni contenute nei cataloghi cartacei delle tre compagnie, ma sarebbe stato un lavoro enorme (gli itinerari sono circa 1400 in totale) che si sarebbe dovuto ripetere costantemente nel tempo, in quanto essi cambiano ogni manciata di mesi.\\
-Per, dunque, evitare tanto lavoro si è deciso di implementare, all'interno del metodo \textit{load\_PricesSea} della classe \textit{Royal\_WS}, delle \gls{RPC} a \textit{RequestItinerary}, fornito dal \gls{webservice} \textit{RCCL}, che restituisce le informazioni dettagliate dell'itinerario corrispondente ai parametri passati (codice della nave, data di partenza e codice itinerario).  Dato che il protocollo di comunicazione è analogo a quello utilizzato per \textit{FDF}, si è deciso (per questo e per tutti le altre \gls{RPC} utilizzate di \textit{RCCL}) di riutilizzare la classe \textit{Royal\_Model}, andando a definire nuovi metodi in base alle necessità.
+Per, dunque, evitare tanto lavoro si è deciso di implementare, all'interno del metodo \textit{load\_PricesSea} della classe \textit{Royal\_WS}, delle \gls{RPC} a \textit{RequestItinerary}, fornito dal \gls{webservice} \textit{RCCL}, che restituisce le informazioni dettagliate dell'itinerario corrispondente ai parametri passati (codice della nave, data di partenza e codice itinerario).  Dato che il protocollo di comunicazione è analogo a quello utilizzato per \textit{FDF}, si è deciso (per questo e per tutti le altre \gls{RPC} utilizzate di \textit{RCCL}) di riutilizzare la classe \textit{Royal\_Model}, andando a definire nuovi metodi in base alle necessità. In questo caso è stato aggiunto il seguente metodo: 
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
+		\hline
+		\textbf{Metodo} & \textbf{Descrizione} \\
+		\hline
+		+ requestItinerary(ship: string, date: string, itinerary: string) : SimpleXMLObject & Effettua una \gls{RPC} a \textit{RequestItinerary} del \gls{webservice}, con i parametri \textit{Ship}, \textit{Date} e \textit{Itinerary} valorizzati in base a quanto passato. Ritorna la risposta in forma di oggetto SimpleXMLObject, o NULL in caso di risposta mal formattata.\\
+		\hline
+	\end{longtable}
+\end{center}
+\begin{figure}[!h] 
+	\centering 
+	\includegraphics[width=.8\columnwidth]{attivita/dettaglio_itinerario} 
+	\caption{Dettaglio dell'itinerario visualizzato dal frontend.}
+\end{figure}
+Le informazioni ritornate da questo metodo includono anche la lista di destinazioni dell'itinerario, ma la lingua in cui i nomi di tali destinazioni (porti, città, stati) vengono restituiti è mista. Ad esempio, per riferirsi alle isole delle Azzorre, viene usato tanto il nome italiano "Azzorre" quanto il nome spagnolo "Azores". La stessa cosa vale per Danimarca, Scozia, Australia, Emirati Arabi, Canarie, Belgio ecc. È stato dunque necessario realizzare un mapping manuale dei nomi, che permettesse di tradurre i nomi in lingua italiana.
