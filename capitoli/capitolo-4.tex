@@ -37,13 +37,13 @@ Premesso ciò, vi sono due possibili interazioni tra \textit{OTA} e \textit{Data
 	\begin{figure}[!h] 
 		\centering 
 		\includegraphics[width=.75\columnwidth]{attivita/interazione_schedulata} 
-		\caption{Schema dell'integrazione schedulata appena descritta.}
+		\caption{Schema dell'integrazione schedulata DataExchange-OTA.}
 	\end{figure}
 	\item Interazione \textbf{real-time}, che avviene durante tutto il flusso di prenotazione di una cabina (che analizzerò in seguito). Tale flusso deve per forza disporre di dati aggiornati in tempo reale, altrimenti potrebbero verificarsi problemi in fase di prenotazione (come la prenotazione di una cabina non più disponibile). L'interazione in tempo reale avviene attraverso delle chiamate \textit{HTTP} (ajax) effettuate nel momento del bisogno dall'\textit{OTA} al \textit{DataExchange}, attraverso lo scambio di dati in formato \textit{JSON}.
 	\begin{figure}[!h] 
 		\centering 
 		\includegraphics[width=.75\columnwidth]{attivita/interazione_realtime} 
-		\caption{Schema dell'integrazione in tempo reale appena descritta.}
+		\caption{Schema dell'integrazione in tempo reale DataExchange-OTA.}
 	\end{figure}
 \end{itemize}
 
@@ -172,7 +172,7 @@ Il sistema avrebbe dovuto prevedere una funzionalità di "carico" delle tariffe.
 Il problema principale è stato che il file ritornato da ciascun fornitore aveva (e ha tuttora) il proprio formato dati, quindi si sarebbe dovuto creare un importatore per ogni fornitore. Inoltre, anche la tipologia di dati presente in ciascun file poteva differire: ad esempio, per riferirsi all'età di ogni passeggero, alcuni fornitori utilizzano l'età ed altri la data di nascita. Il sistema avrebbe dunque dovuto uniformare i dati caricati.
 
 \subsubsection{Differenziazione dei prezzi}
-CrociereRegalo è un \bookingEngine utilizzato per vendite sia B2C (cioè verso clienti finali) sia B2B (cioè verso altre agenzie). Queste ultime, in base agli accordi commerciali che hanno con \textit{Primarete}, appartengono a determinati \textit{listini}, ovvero hanno diritto a commissioni/tariffe più o meno agevolate.\\Il sistema, quindi, avrebbe dovuto poter differenziare i prezzi di vendita delle cabine in base al listino di appartenenza dell'acquirente (un acquirente non appartenente a nessun listino sarebbe stato identificato al pari di una vendita B2C).
+CrociereRegalo è un \bookingEngine \hphantom{i}utilizzato per vendite sia B2C (cioè verso clienti finali) sia B2B (cioè verso altre agenzie). Queste ultime, in base agli accordi commerciali che hanno con \textit{Primarete}, appartengono a determinati \textit{listini}, ovvero hanno diritto a commissioni/tariffe più o meno agevolate.\\Il sistema, quindi, avrebbe dovuto poter differenziare i prezzi di vendita delle cabine in base al listino di appartenenza dell'acquirente (un acquirente non appartenente a nessun listino sarebbe stato identificato al pari di una vendita B2C).
 
 \subsubsection{Inserimento della tariffa nel flusso di prenotazione}
 Il \bookingEngine avrebbe dovuto permettere di visualizzare i prezzi delle cabine soggette a tariffe vuoto per pieno nei risultati di ricerca. Inoltre, avrebbe dovuto essere possibile poter prenotare e conseguentemente pagare tali cabine.\\La disponibilità delle stesse, quindi, si sarebbe dovuta aggiornare (decrementare) automaticamente.
