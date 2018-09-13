@@ -41,8 +41,9 @@ Per la realizzazione di siti web semplici, dove per semplici si intende senza es
 \\
 \subsubsection{DBMS}
 Per lo sviluppo di prodotti software, WebPD si appoggia a due \gls{DBMS}: \textit{Microsoft SQL Server 2012} e \textit{MySQL Server}. Entrambi questi software sono \gls{RDBMS}, ma la scelta di utilizzare l'uno o l'altro dipende dalle caratteristiche del progetto, nello specifico: \begin{itemize}
-	\item \textbf{Microsoft SQL Server} viene utilizzato nei progetti che prevedono un'ampia mole di dati da gestire e interrogazioni (query) complesse (come, ad esempio, CrociereRegalo.it), in quanto in tali contesti si è dimostrato mediamente più performante di \textit{MySQL};
-	\item \textbf{MySQL Server} viene utilizzato il più possibile in caso il progetto non contenga una grossa mole di dati e/o interrogazioni complesse, in quanto non prevede costi di licenza (mentre \textit{SQL Server} si, e anche abbastanza elevati \footcite{site:sql-server-pricing}) ed é multipiattaforma (attualmente disponibile per Linux, Windows e MacOS).
+	\item \textbf{Microsoft SQL Server} viene utilizzato nei progetti che prevedono un'ampia mole di dati da gestire e interrogazioni (query) complesse (come, ad esempio, CrociereRegalo.it), in quanto in tali contesti si è dimostrato mediamente più performante di \textit{MySQL}
+	\footnote{Studio comparativo sulle performance di SQL Server PostgreSQL Oracle XE e MySQL\\\url{https://bit.ly/2MtTE8e} - consultato 13/09/2018};
+	\item \textbf{MySQL Server} viene utilizzato il più possibile in caso il progetto non contenga una grossa mole di dati e/o interrogazioni complesse, in quanto non prevede costi di licenza (mentre \textit{SQL Server} si, e anche abbastanza elevati \footnote{Prezzi di SQL Server - URL: \url{https://bit.ly/2rECrAS} - consultato 13/09/2018} ed é multipiattaforma (attualmente disponibile per Linux, Windows e MacOS).
 \end{itemize}
 
 \subsection{Mobile}
@@ -129,7 +130,7 @@ WebPD, come strumento di versionamento, utilizza il software \textit{Git}, proba
 	\includegraphics[width=0.3\columnwidth]{azienda/git} 
 	\caption{Logo di Git }
 \end{figure}\\
- Le motivazioni che hanno portato all'adozione di Git al posto del suo "antagonista" \textit{Subversion} (SVN) sono le seguenti:
+ Le motivazioni che hanno portato all'adozione di Git al posto del suo "antagonista" \textit{Subversion} (SVN) sono le seguenti \footnote{Differences Between Git and SVN - \url{https://bit.ly/2p4NzWI} - consultato il 13/09/2018}:
 \begin{itemize}
 	\item Decentralizzazione del repository: a differenza di Subversion, l'architettura di Git prevede che vi sia una copia dell'intero repository in ciascun client, in modo da poter effettuare \textit{commit} anche in assenza di una connessione verso il server (cosa non possibile con SVN);
 	\item Velocità: le operazioni di commit sono molto spesso più veloci su Git in quanto vengono effettuate sulla copia locale del repository, ed é possibile poi inviarle al repository remoto (tramite \textit{push}) in un secondo momento, anche in blocco.
