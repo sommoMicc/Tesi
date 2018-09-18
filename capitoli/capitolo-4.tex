@@ -9,41 +9,46 @@
 
 \intro{In questo capitolo verranno descritte le attività svolte durante lo stage. Per ogni attività si cercherà di descrivere il problema affrontato, le scelte effettuate ed i test svolti.}\\
 
-\section{Pianificazione}
-La prima attività svolta, in realtà ancora prima dell'inizio dello stage stesso, è stata quella di pianificare il lavoro da svolgere. Tale pianificazione è stata concordata tra il tutor aziendale e il sottoscritto, ed è esposta nella sezione \ref{sec:vincoli-temporali} a pagina \pageref{sec:vincoli-temporali} di questo documento.\\
-Tale pianificazione, però, è stata "aggiustata" (ma mai stravolta) in base a quanto svolto settimana per settimana, decidendo di dedicare più o meno ore ad una determinata attività.\\
-Al termine di ogni settimana, periodo coincidente con il raggiungimento di un obiettivo, infine, è stato deciso che avrei dovuto redarre una breve relazione, con lo scopo di documentare il lavoro svolto. Tali relazioni, inoltre, sono servite come materiale ausiliario per la presentazione delle nuove funzionalità sviluppate al proponente. Infine, terminati tutti gli obiettivi e in caso di approvazione da parte del tutor e del proponente, avrei dovuto trasferire il lavoro svolto dall'ambiente di sviluppo a quello di produzione.
+%\section{Pianificazione}
+%La prima attività svolta, in realtà ancora prima dell'inizio dello stage stesso, è stata quella di pianificare il lavoro da svolgere. Tale %pianificazione è stata concordata tra il tutor aziendale e il sottoscritto, ed è esposta nella sezione \ref{sec:vincoli-temporali} a pagina %\pageref{sec:vincoli-temporali} di questo documento.\\
+%Tale pianificazione, però, è stata "aggiustata" (ma mai stravolta) in base a quanto svolto settimana per settimana, decidendo di dedicare più o meno ore ad una determinata attività.\\
+%Al termine di ogni settimana, periodo coincidente con il raggiungimento di un obiettivo, infine, è stato deciso che avrei dovuto redarre una %breve relazione, con lo scopo di documentare il lavoro svolto. Tali relazioni, inoltre, sono servite come materiale ausiliario per la %presentazione delle nuove funzionalità sviluppate al proponente. Infine, terminati tutti gli obiettivi e in caso di approvazione da parte del %tutor e del proponente, avrei dovuto trasferire il lavoro svolto dall'ambiente di sviluppo a quello di produzione.
+
+\section{Scelte tecnologiche}
+A livello tecnologico, datosi che il \bookingEngine\hphantom{i}è basato sullo stack che in azienda viene chiamato \gls{wisp}, sono stato obbligato ad utilizzare \textit{PHP} su \gls{framework} \textit{Codeigniter} per la parte \textit{backend}, \textit{HTML5}, \textit{CSS3}, \textit{Javascript} (principalmente utilizzando \gls{jquery}) per quanto riguarda il \textit{frontend}. Infine, per la comunicazione tra \textit{backend} e \textit{frontend} ho adoperato richieste \gls{ajax} con \gls{json} come formato per lo scambio di dati. Come ambiente di sviluppo ho deciso di usare \textit{Visual Studio Code} per via della sua semplicità e possibilità di personalizzazione. Infine, tutto il lavoro che ho svolto è stato sottoposto a versionamento utilizzando il server \textit{Git} dell'azienda. 
 
 \section{Funzionamento e struttura del \bookingEngine}
 Appena iniziato lo stage, mi sono subito dedicato all'analisi della struttura di CrociereRegalo, grazie anche (soprattutto all'inizio) all'aiuto del mio tutor. 
 \subsection{Funzionalità}
-CrociereRegalo è un motore di ricerca di crociere. Permette di trovare una determinata crociera utilizzando dei filtri di ricerca per area geografica (ad esempio Caraibi, Mediterraneo, Nord Europa), per data di partenza con granularità mensile (ad esempio Settembre 2018), per intervalli di durata (da 1-6, 7-8, 9-12 o più di 12 giorni) e per compagnia di crociera (ad esempio MSC Crociere). Per capire bene il suo funzionamento è stato necessario apprendere alcuni termini tecnici affini all'ambiente croceristico, come :
+CrociereRegalo è un motore di ricerca di crociere. Permette di trovare una determinata crociera utilizzando dei filtri di ricerca per area geografica (ad esempio Caraibi, Mediterraneo, Nord Europa), per data di partenza con granularità mensile (ad esempio Settembre 2018), per intervalli di durata (da 1-6, 7-8, 9-12 o più di 12 giorni) e per compagnia di crociera (ad esempio MSC Crociere). Per capire bene il suo funzionamento è stato necessario apprendere alcuni termini tecnici affini all'ambiente croceristico, come:
 \begin{itemize}
 	\item \textbf{Itinerario}: definisce il percorso che fa una crociera (ad esempio "Barcellona, Ajaccio, Civitavecchia, Barcellona"). Nell'arco di un periodo di tempo vi possono essere molteplici crociere percorrenti un singolo itinerario. Ogni itinerario è identificato da un codice che lo contraddistingue univocamente, e la durata dell'itinerario è una proprietà intrinseca (ovvero, all'interno di una compagnia di crociera, non esistono due itinerari che svolgono lo stesso percorso mettendoci tempi diversi). Ciascun itinerario ha 0 o più partenze nell'arco di un anno;
-	\item \textbf{Cabina}: é una stanza di una nave da crociera. Esistono varie categorie di cabina, differenziate in base alla grandezza, al posizionamento (ad esempio le cabine interne alla nave, senza quindi finestre, che sono quelle più economiche). Quando si effettua una prenotazione, non viene prenotato un posto letto ma viene prenotata un'intera cabina;
+	\item \textbf{Cabina}: una stanza di una nave da crociera. Esistono varie categorie di cabina, differenziate in base alla grandezza, al posizionamento (ad esempio le cabine interne alla nave, senza quindi finestre, che sono quelle più economiche). Quando si effettua una prenotazione, non viene prenotato un posto letto ma viene prenotata un'intera cabina;
 	\item \textbf{Opzione}: consiste nel blocco del prezzo di una cabina per un periodo di tempo che varia in base al fornitore, ma che di solito si attesta tra le 24 e le 72 ore. Tale prezzo infatti, analogamente per quanto avviene con i biglietti aerei, aumenta all'aumentare delle prenotazioni (quindi al passare del tempo).
 
 \end{itemize}
-Premesso ciò, CrociereRegalo permette di selezionare un itinerario, vederne le partenze, categorie di cabina disponibili e prezzi e poi prenotare od opzionare una cabina. 
+CrociereRegalo permette di selezionare un itinerario, vederne le partenze, categorie di cabina disponibili e prezzi e poi prenotare od opzionare una cabina. 
 
 \subsection{OTA e DataExchange}
 Mi è stato spiegato che il \bookingEngine, in realtà, era spezzato in due parti dipendenti l'una dall'altra: \textbf{OTA} (disponibile all'indirizzo \url{https://www.crociereregalo.it}) e \textbf{DataExchange} (disponibile all'indirizzo \url{https://data.crociereregalo.it}). L'idea alla base di questa divisione è che la parte \textit{OTA} rappresenti il sito web vero e proprio, con il quale l'internauta si affaccia, mentre la parte \textit{DataExchange} serva per l'interazione tra \textit{OTA} e \glspl{webservice} dei vari fornitori (dove per fornitori si intendono le varie compagnie di crociera). 
 
 \subsection{Interazione tra OTA e DataExchange}
-\textit{OTA} e \textit{DataExchange} sono sì dipendenti l'uno dall'altro, ma hanno due database separati. Questo, fondamentalmente, avviene perchè i dati provenienti da i vari fornitori hanno formati diversi, che devono quindi essere uniformati per poter essere processati secondo una logica più indipendente possibile. Il compito del \textit{DataExchange} è proprio questo: interrogare i \glspl{webservice} dei vari fornitori, ricevere i dati, elaborarli, uniformarli e passarli ad \textit{OTA}.\\
-Premesso ciò, vi sono due possibili interazioni tra \textit{OTA} e \textit{DataExchange}
+\textit{OTA} e \textit{DataExchange} sono dipendenti l'uno dall'altro, ma hanno due database separati. Questo, fondamentalmente, avviene perchè i dati provenienti da i vari fornitori hanno formati diversi, che devono quindi essere uniformati per poter essere processati secondo una logica più indipendente possibile. Il compito del \textit{DataExchange} è proprio questo: interrogare i \glspl{webservice} dei vari fornitori, ricevere i dati, elaborarli, uniformarli e passarli ad \textit{OTA}.\\
+Vi sono due possibili interazioni tra \textit{OTA} e \textit{DataExchange}
 \begin{itemize}
-	\item Interazione \textbf{schedulata}, che avviene circa 3 volte al giorno, il cui compito è sincronizzare i cataloghi (chiamati anche \textit{flatfile}) dei vari fornitori per rendere disponibili le (eventuali) modifiche alla parte \textit{OTA} del \bookingEngine. \\Quando un visitatore del sito CrociereRegalo cerca una crociera, tale ricerca avviene interrogando i cataloghi presenti nel database della parte \textit{OTA}, senza quindi interrogare i \glspl{webservice} delle compagnie di crociera (per motivi di prestazione dovuti all'ingente mole di dati da elaborare). I cataloghi, quindi, vengono scaricati nel DataExchange, elaborati (uniformati) e poi sincronizzati con il database di OTA; la procedura di sincronizzazione viene chiamata \textbf{Integrazione}. L'integrazione avviene attraverso l'invocazione (grazie allo scheduler di \textit{Windows Server}) che, grazie ad una chiamata \textit{HTTP} ad una particolare pagina del DataExchange, invoca la procedura di integrazione dati.
+	\item Interazione \textbf{schedulata} (illustrata in Figura \ref{figura:integrazione-schedulata}), che avviene circa 3 volte al giorno, il cui compito è sincronizzare i cataloghi (chiamati anche \textit{flatfile}) dei vari fornitori per rendere disponibili le (eventuali) modifiche alla parte \textit{OTA} del \bookingEngine. \\Quando un visitatore del sito CrociereRegalo cerca una crociera, tale ricerca avviene interrogando i cataloghi presenti nel database della parte \textit{OTA}, senza quindi interrogare i \glspl{webservice} delle compagnie di crociera (per motivi di prestazione dovuti all'ingente mole di dati da elaborare). I cataloghi, quindi, vengono scaricati nel DataExchange, elaborati (uniformati) e poi sincronizzati con il database di OTA; la procedura di sincronizzazione viene chiamata \textbf{Integrazione}. L'integrazione avviene attraverso l'invocazione (grazie allo scheduler di \textit{Windows Server}) che, grazie ad una chiamata \textit{HTTP} ad una particolare pagina del DataExchange, invoca la procedura di integrazione dati.
 	\begin{figure}[!h] 
 		\centering 
 		\includegraphics[width=.75\columnwidth]{attivita/interazione_schedulata} 
 		\caption{Schema dell'integrazione schedulata DataExchange-OTA.}
+		\label{figura:integrazione-schedulata}
 	\end{figure}
-	\item Interazione \textbf{real-time}, che avviene durante tutto il flusso di prenotazione di una cabina (che analizzerò in seguito). Tale flusso deve per forza disporre di dati aggiornati in tempo reale, altrimenti potrebbero verificarsi problemi in fase di prenotazione (come la prenotazione di una cabina non più disponibile). L'interazione in tempo reale avviene attraverso delle chiamate \textit{HTTP} (ajax) effettuate nel momento del bisogno dall'\textit{OTA} al \textit{DataExchange}, attraverso lo scambio di dati in formato \textit{JSON}.
+	\item Interazione \textbf{real-time} (rappresentata in Figura \ref{figura:integrazione-realtime}), che avviene durante tutto il flusso di prenotazione di una cabina (che analizzerò in seguito). Tale flusso deve per forza disporre di dati aggiornati in tempo reale, altrimenti potrebbero verificarsi problemi in fase di prenotazione (come la prenotazione di una cabina non più disponibile). L'interazione in tempo reale avviene attraverso delle chiamate \textit{HTTP} (\gls{ajax}) effettuate nel momento del bisogno dall'\textit{OTA} al \textit{DataExchange}, attraverso lo scambio di dati in formato \gls{json}.
 	\begin{figure}[!h] 
 		\centering 
 		\includegraphics[width=.75\columnwidth]{attivita/interazione_realtime} 
 		\caption{Schema dell'integrazione in tempo reale DataExchange-OTA.}
+		\label{figura:integrazione-realtime}
 	\end{figure}
 \end{itemize}
 
@@ -258,7 +263,7 @@ Per gestire il caricamento dei vuoti pieno nel sistema sono state realizzate tre
 		\hline
 	\end{longtable}
 \end{center}
-La gestione del pannello di amministrazione è affidata ad un unico \textit{controller}, chiamato \textbf{Back}. In questa classe è stato aggiunto un metodo chiamato \textit{caricaVuotoPieno} che prende l'input dal frontend e lo passa al metodo \textit{loadFromFile} della classe \textit{Cruises\_Inventory} appena descritta, che si occuperà dell'elaborazione e della restituzione del risultato della stessa sotto forma di JSON.
+La gestione del pannello di amministrazione è affidata ad un unico \textit{controller}, chiamato \textbf{Back}. In questa classe è stato aggiunto un metodo chiamato \textit{caricaVuotoPieno} che prende l'input dal frontend e lo passa al metodo \textit{loadFromFile} della classe \textit{Cruises\_Inventory} appena descritta, che si occuperà dell'elaborazione e della restituzione del risultato della stessa sotto forma di \gls{json}.
 
 \subsubsection{Differenziazione dei prezzi}
 I prezzi di ogni cabina presente nel sistema risiedono nella tabella \textit{Cruises\_Prices}. Tale tabella permette di conoscere il prezzo di ogni categoria di cabina (per ogni combinazione di età dei passeggeri tollerata dal sistema) per ogni \gls{tariffa} disponibile. Il problema è che \textit{Cruises\_Prices} viene svuotata e ripopolata ad ogni integrazione: per questo motivo si è deciso di separare la gestione dei prezzi delle cabine soggette a tariffa vuoto per pieno in una nuova tabella, che è stata chiamata \textit{Cruises\_InventoryPrices}. Di preciso:
@@ -301,10 +306,10 @@ A livello frontend, si è fatto in modo che, al termine del caricamento del vuot
 	\includegraphics[width=1\columnwidth]{attivita/vuotopieno_prezzi} 
 	\caption{Schermata di inserimento dei prezzi di un vuoto pieno.}
 \end{figure}\\
-I prezzi poi vengono salvati tramite una chiamata AJAX che invoca il metodo \textit{salvaPrezzi} del controller \textit{Back} precedentemente descritto.
+I prezzi poi vengono salvati tramite una chiamata \gls{ajax} che invoca il metodo \textit{salvaPrezzi} del controller \textit{Back} precedentemente descritto.
 
 \subsubsection{Inserimento della tariffa nel flusso di prenotazione}
-Come già accennato nella \hyperref[section:flusso-prenotazione]{sezione \ref*{section:flusso-prenotazione}}, il flusso di prenotazione si compone di 6 step, a ciascuno dei quali corrisponde un metodo nel controller \textbf{WS\_Cruises} del \textit{dataExchange}. Questi 6 metodi venivano (e vengono tuttora) chiamati tramite richieste AJAX dal frontend e al loro interno chiamavano l'omologo metodo in grado di interfacciarsi con i \gls{webservice} del fornitore considerato.\\
+Come già accennato nella \hyperref[section:flusso-prenotazione]{sezione \ref*{section:flusso-prenotazione}}, il flusso di prenotazione si compone di 6 step, a ciascuno dei quali corrisponde un metodo nel controller \textbf{WS\_Cruises} del \textit{dataExchange}. Questi 6 metodi venivano (e vengono tuttora) chiamati tramite richieste \gls{ajax} dal frontend e al loro interno chiamavano l'omologo metodo in grado di interfacciarsi con i \gls{webservice} del fornitore considerato.\\
 Sono stati quindi creati i seguenti metodi:
 \begin{center}
 	\def\arraystretch{1.5}
