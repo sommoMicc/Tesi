@@ -76,8 +76,8 @@ Nel dettaglio:
 Sia \textit{OTA} che \textit{DataExchange} sono realizzati usando il \gls{framework} \textit{Codeigniter}. Questo implica che applicano a PHP il paradigma \textit{Object-oriented} (orientato agli oggetti) associato al design pattern \gls{mvc}. Entrambi i progetti, dunque, presentano tre tipologie di classi:
 \begin{itemize}
 	\item \textbf{Model}, che estendono la classe base \textit{CI\_Model}, i quali sono la chiave di accesso ai dati dell'applicazione. Si è deciso di realizzare un \textit{model} per ogni tabella presente nel database;
-	\item \textbf{View}, che generano il codice HTML di ogni pagina (o porzione di essa). Alle \textit{view} é possibile passare delle variabili in modo da rendere dinamico il loro contenuto.
-	\item \textbf{Controller}, che estendono la classe base \textit{CI\_Controller} e istanziano le \textit{view} popolandole con i dati provenienti dai \textit{model}. La particolarità di queste classi è che i loro metodi pubblici si possono chiamare direttamente tramite URL. Codeigniter, infatti, implementa un meccanismo (grazie al \textit{magic method \_\_call}) per il quale é possibile chiamare un metodo pubblico \textit{a} di una classe controller \textit{C} semplicemente recandosi all'url \textit{nomedelsito.dominio/C/a} (ad esempio \textit{crociereregalo.it/C/a}). Tale meccanismo risulta molto utile nella realizzazione di \gls{api} e nella creazione di \textit{URL} user-friendly (quindi più leggibili)
+	\item \textbf{View}, che generano il codice HTML di ogni pagina (o porzione di essa). Alle \textit{view} è possibile passare delle variabili in modo da rendere dinamico il loro contenuto.
+	\item \textbf{Controller}, che estendono la classe base \textit{CI\_Controller} e istanziano le \textit{view} popolandole con i dati provenienti dai \textit{model}. La particolarità di queste classi è che i loro metodi pubblici si possono chiamare direttamente tramite URL. Codeigniter, infatti, implementa un meccanismo (grazie al \textit{magic method \_\_call}) per il quale è possibile chiamare un metodo pubblico \textit{a} di una classe controller \textit{C} semplicemente recandosi all'url \textit{nomedelsito.dominio/C/a} (ad esempio \textit{crociereregalo.it/C/a}). Tale meccanismo risulta molto utile nella realizzazione di \gls{api} e nella creazione di \textit{URL} user-friendly (quindi più leggibili)
 \end{itemize} 
 Codeigniter, inoltre, presenta un modulo personalizzato per interagire con il database, che supporta funzionalità come il \textit{log delle query} (in pratica è possibile sapere l'ultima query eseguita, molto utile in caso di debug), meccanismi di \textit{query builder} (creazione assitita di query), \textit{query parametrizzate}, gestione delle transazioni ecc.
 
@@ -85,7 +85,7 @@ Codeigniter, inoltre, presenta un modulo personalizzato per interagire con il da
 \subsection{Il problema}
 Il sito CrociereRegalo soffriva di un grande problema: la velocità di caricamento delle pagine. Tale lentezza era dovuta principalmente all'elevato numero di query complesse presenti in ogni pagina, ciascuna delle quali aveva dei tempi di esecuzione nell'ordine dei secondi che, complessivamente, facevano sì che il tempo di caricamento di alcune pagine (in primis quella di visualizzazione dei risultati di una ricerca) lambisse pericolosamente il minuto.
 \subsection{La soluzione trovata}
-Dopo un'attenta analisi del database, é emerso che molte tabelle non avevano una corretta struttura. In particolare, su alcune non vi era definita alcuna chiave primaria, mentre in generale non erano presenti chiavi esterne ed indici. Sono quindi state definite chiavi esterne e primarie per tutte le tabelle, mentre per la creazione di indici ci si è affidati all'analisi delle principali query grazie allo strumento \textit{Database Tuning Engine Advisor} integrato nella suite di \textit{SQL Server}. Vengono ora riportati due esempi di analisi svolta e di risultati ottenuti.
+Dopo un'attenta analisi del database, è emerso che molte tabelle non avevano una corretta struttura. In particolare, su alcune non vi era definita alcuna chiave primaria, mentre in generale non erano presenti chiavi esterne ed indici. Sono quindi state definite chiavi esterne e primarie per tutte le tabelle, mentre per la creazione di indici ci si è affidati all'analisi delle principali query grazie allo strumento \textit{Database Tuning Engine Advisor} integrato nella suite di \textit{SQL Server}. Vengono ora riportati due esempi di analisi svolta e di risultati ottenuti.
 \subsubsection{Query di ricerca}
 
 \begin{lstlisting}
@@ -94,7 +94,7 @@ FROM Cruises_ItineraryList il inner join Cruises_Lines l on il.Supplier= l.Suppl
 WHERE il.Supplier=1 AND il.AvailabilityStatusCode= 'AV' AND BestPrice > 0 
 GROUP By l.Supplier, l.NameIT, l.Description, l.Logo, il.ShipCode,il.SailingLengthDays, il.ItineraryCode, po1.Code, po2.Code, po1.Name, po2.Name , sp.ImgUrl,it.GraphicsUrl,sp.Name order by MinSailingDate,PortoArrivo,ItineraryCode
 \end{lstlisting}
-Questa é una delle query (la più esterna) che viene usata nel caso di ricerca di un itinerario filtrandolo per fornitore (in questo caso MSC Crociere) i cui esiti vengono utilizzati per creare la schermata presente in Figura \ref{figura:query-1}. Il problema di questa interrogazione, oltre alla lunghezza, è l'elevato numero di JOIN tra tabelle aventi un ingente quantitativo di dati, nello specifico:
+Questa è una delle query (la più esterna) che viene usata nel caso di ricerca di un itinerario filtrandolo per fornitore (in questo caso MSC Crociere) i cui esiti vengono utilizzati per creare la schermata presente in Figura \ref{figura:query-1}. Il problema di questa interrogazione, oltre alla lunghezza, è l'elevato numero di JOIN tra tabelle aventi un ingente quantitativo di dati, nello specifico:
 \begin{itemize}
 	\item Cruises\_Prices: 424 780 righe
 	\item Cruises\_ItineraryList: 8 092 righe
@@ -125,15 +125,15 @@ SELECT distinct top 4 l.Logo,l.NameIT as SupplierName,il.Supplier,il.CruiseID,il
 Anche qua, il numero di JOIN su tabelle aventi ingenti quantità di dati rende il tempo di esecuzione della query molto elevato in caso il database non sia sufficientemente ottimizzato. Grazie alle ottimizzazioni suggerite dal tool \textit{Database Tuning Engine Advisor}, si è avuto un miglioramento del tempo di esecuzione indicativamente dell'83\%, che è passato da 3 secondi a 0.5. Tale miglioramento si è riflettuto anche nelle performance della homepage, che ha visto una netta diminuzione del tempo medio di risposta.
 
 
-\subsection{Conclusioni}
+\subsection{Risultati delle ottimizzazioni}
 Al termine delle ottimizzazioni, sono stati ottenuti buoni risultati (il \gls{tempodirisposta} del sito è diminuito di almeno il 50\%), ma non abbastanza per rendere il sito reattivo ed equiparabile in termini di velocità ai competitor. Si è deciso quindi di esplorare nuove soluzioni.
 
 \section{Cache delle query}
 \subsection{Il problema}
-Se é vero che, al termine degli interventi sulla struttura del database descritti nella sezione precedente, le prestazioni delle interrogazioni erano migliorate molto, è anche vero che il sito non aveva raggiunto livelli di prestazioni ottimali. Infatti alcune pagine avevano ancora un \gls{tempodirisposta} molto elevato. Prendendo come esempio la pagina del sito più utilizzata, ovvero quella di visualizzazione dei risultati di una ricerca, essa è passata da un \gls{tempodirisposta} tra i 45 e i 60 secondi ad un \gls{tempodirisposta} tra i 15 e i 20 secondi, comunque troppo per le aspettative di un internauta medio: basti pensare che il principale competitor (\url{www.logitravel.it}) ha un \gls{tempodirisposta} che si attesta attorno al secondo e mezzo (10 volte meno) per la stessa funzionalità.
+Se è vero che, al termine degli interventi sulla struttura del database descritti nella sezione precedente, le prestazioni delle interrogazioni erano migliorate molto, è anche vero che il sito non aveva raggiunto livelli di prestazioni ottimali. Infatti alcune pagine avevano ancora un \gls{tempodirisposta} molto elevato. Prendendo come esempio la pagina del sito più utilizzata, ovvero quella di visualizzazione dei risultati di una ricerca, essa è passata da un \gls{tempodirisposta} tra i 45 e i 60 secondi ad un \gls{tempodirisposta} tra i 15 e i 20 secondi, comunque troppo per le aspettative di un internauta medio: basti pensare che il principale competitor (\url{www.logitravel.it}) ha un \gls{tempodirisposta} che si attesta attorno al secondo e mezzo (10 volte meno) per la stessa funzionalità.
 
 \subsection{La soluzione}
-La soluzione trovata a tale problema nasce dalla seguente considerazione: é possibile prevedere quando cambia la maggior parte dei dati presenti nel database e utilizzati per le query più lente. Infatti dati inerenti a navi, itinerari, cabine, prezzi e disponibilità vengono rinnovati ad ogni integrazione, che è un'operazione schedulata 4 volte al giorno, ad orari noti. Osservando inoltre che la stessa query sugli stessi dati presenta gli stessi risultati, si è giunti alla conclusione che l'implementazione di un meccanismo di caching delle query permetta di ottimizzare velocità del sito e carico del server.\\
+La soluzione trovata a tale problema nasce dalla seguente considerazione: è possibile prevedere quando cambia la maggior parte dei dati presenti nel database e utilizzati per le query più lente. Infatti dati inerenti a navi, itinerari, cabine, prezzi e disponibilità vengono rinnovati ad ogni integrazione, che è un'operazione schedulata 4 volte al giorno, ad orari noti. Osservando inoltre che la stessa query sugli stessi dati presenta gli stessi risultati, si è giunti alla conclusione che l'implementazione di un meccanismo di caching delle query permetta di ottimizzare velocità del sito e carico del server.\\
 Il meccanismo progettato ha il seguente funzionamento:
 \begin{itemize}
 	\item La query viene eseguita la prima volta ed il suo risultato viene salvato nella cache;
@@ -211,7 +211,7 @@ Affinché fosse possibile inserire gli acquisti nel sistema, è stata realizzata
 		\caption{Schermata di caricamento del vuoto pieno Royal/Celebrity/Azamara.}
 	\end{figure}
 \end{itemize}
-In ogni caso, é stato deciso che per ciascun vuoto pieno si sarebbero memorizzate le seguenti informazioni:
+In ogni caso, è stato deciso che per ciascun vuoto pieno si sarebbero memorizzate le seguenti informazioni:
 \begin{itemize}
 	\item Il \textbf{fornitore}, ovvero MSC, Costa, Royal Caribbean, Celebrity o Azamara;
 	\item Il \textbf{groupID}, ovvero un identificatore univoco per ciascun fornitore del vuoto pieno acquistato;
@@ -362,7 +362,7 @@ Per far fronte ai dati richiesti in tempo reale dal flusso di prenotazione, inve
 
 \section{La soluzione}
 \subsubsection{Importazione di aree geografiche, navi, porti e categorie di cabine}
-Informazioni circa codici di aree geografiche, navi, porti, categorie di cabine, ponti ci sono state fornite da \textit{ISTINFOR} in un file formato \textit{.xlsx}. In caso di variazioni di tali informazioni, per contratto, ci sarebbe stato mandato un nuovo file aggiornato. Proprio per questo é stato deciso, invece di importare a mano i dati, di realizzare un importatore.\\
+Informazioni circa codici di aree geografiche, navi, porti, categorie di cabine, ponti ci sono state fornite da \textit{ISTINFOR} in un file formato \textit{.xlsx}. In caso di variazioni di tali informazioni, per contratto, ci sarebbe stato mandato un nuovo file aggiornato. Proprio per questo è stato deciso, invece di importare a mano i dati, di realizzare un importatore.\\
 A livello grafico, è stata realizzata una semplice finestra di dialogo che permettesse di caricare il file in oggetto e mandarlo al backend per l'elaborazione.
 \begin{figure}[!h] 
 	\centering 
@@ -436,7 +436,7 @@ La prima è un model che serve ad effettuare le chiamate ai \gls{webservice} for
 \end{center}
 Il metodo \textit{RequestSearchBySeaPricing} di \textit{FDF} permette di effettuare una ricerca del miglior prezzo per ogni categoria di cabina di tutte le partenze di tutte le navi gestite dal sistema (quindi Royal, Celebrity e Azamara). Nella ricerca possono essere inserite delle restrizioni sul numero di passeggeri, sull'area geografica (mare) di navigazione e su un intervallo di date (ad esempio crociere che partono dal 3 settembre 2018 al 10 ottobre 2019). \\
 La chiamata a \textit{RequestSearchBySeaPricing} (quindi al metodo \textit{requestPricesSea} di \textit{Royal\_Model}) viene utilizzata dal meccanismo schedulato di integrazione per popolare le informazioni inerenti agli itinerari disponibili, alle date di partenza di ogni itinerario e ai prezzi di ogni categoria di cabina di ogni data di partenza di ogni itinerario. Tale elaborazione richiede molto tempo (fino a 40 minuti), per tanto viene eseguita durante la notte (è stato deciso di schedularla alle 2 del mattino, dato che non c'é un orario preciso di rilascio dei nuovi aggiornamenti). \\
-Per permettere l'invocazione di tale metodo è stato realizzato un controller apposito, chiamato \textit{Royal\_WS}, il cui contenuto é il seguente:
+Per permettere l'invocazione di tale metodo è stato realizzato un controller apposito, chiamato \textit{Royal\_WS}, il cui contenuto è il seguente:
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
@@ -528,7 +528,7 @@ Infine, per invocare ed elaborare i risultati dei nuovi metodi scritti in \texti
 
 \subsubsection{Problemi riscontrati}
 Nell'implementazione dei due \glspl{webservice} sopra menzionati, sono stati riscontrati dei problemi, principalmente con la documentazione fornitaci da \textit{ISTINFOR}. All'inizio, infatti, ci sono stati forniti i manuali aggiornati a febbraio 2014, e molti parametri delle procedure da noi usate non corrispondevano a quanto scritto nel manuale. Dopo numerose sollecitazioni, siamo riusciti ad ottenere la guida aggiornata all'ultima release (febbraio 2018).\\
-Un altro problema riscontrato, forse quello che ci ha fatto perdere più tempo, é stato l'eterogeneità dei formati delle date richiesti dai parametri/tag/attributi delle varie procedure. Infatti, alcune di esse richiedevano che la data fosse espressa in formato YYYY-mm-dd (ovvero 2018-09-27), altre in formato YYYYmmdd (20180927), altre ancora in formato dd/mm/YYYYY (27/09/2018) o addirittura mm/dd/YYYY (09/27/2018). Al di là delle numerose conversioni necessarie per adattarle al formato presente nel database (che é YYYY-mm-dd), il problema è stato che il manuale si è rivelato ambiguo riguardo al formato corretto da usare (o non veniva specificato o, addirittura, veniva specificato sbagliato). Visto anche l'elevato tempo di risposta (settimane) del supporto tecnico, soprattutto probabilmente perché lo stage si è svolto durante il periodo estivo tipico delle ferie, abbiamo dovuto procedere molto spesso per tentativi, perdendo molto tempo.
+Un altro problema riscontrato, forse quello che ci ha fatto perdere più tempo, è stato l'eterogeneità dei formati delle date richiesti dai parametri/tag/attributi delle varie procedure. Infatti, alcune di esse richiedevano che la data fosse espressa in formato YYYY-mm-dd (ovvero 2018-09-27), altre in formato YYYYmmdd (20180927), altre ancora in formato dd/mm/YYYYY (27/09/2018) o addirittura mm/dd/YYYY (09/27/2018). Al di là delle numerose conversioni necessarie per adattarle al formato presente nel database (che è YYYY-mm-dd), il problema è stato che il manuale si è rivelato ambiguo riguardo al formato corretto da usare (o non veniva specificato o, addirittura, veniva specificato sbagliato). Visto anche l'elevato tempo di risposta (settimane) del supporto tecnico, soprattutto probabilmente perché lo stage si è svolto durante il periodo estivo tipico delle ferie, abbiamo dovuto procedere molto spesso per tentativi, perdendo molto tempo.
 
 \subsubsection{Test}
 Anche in questo caso, vista l'assenza di una suite di testing, si sono svolte delle verifiche a mano di congruenza tra i dati restituiti da i \gls{webservice} e quelli presenti nel database. Inoltre, grazie alle credenziali di accesso forniteci da \textit{Primarete}, è stato possibile verificare la congruenza tra quanto presente nel database e quanto visualizzato dal portale di prenotazione ufficiale del gruppo Royal/Celebrity/Azamara. I dati in nostro possesso, sebbene derivanti da canali di test e non di produzione, erano in pratica dati reali, solo semplicemente non aggiornatissimi.
