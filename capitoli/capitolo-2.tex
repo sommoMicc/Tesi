@@ -46,16 +46,17 @@ Per lo sviluppo di prodotti software, WebPD si appoggia a due \gls{DBMS}: \texti
 \begin{itemize}
 	\item \textbf{Microsoft SQL Server} viene utilizzato nei progetti che prevedono un'ampia mole di dati da gestire e interrogazioni (query) complesse (come, ad esempio, CrociereRegalo.it), in quanto in tali contesti si è dimostrato mediamente più performante di \textit{MySQL}
 	\footnote{Studio comparativo sulle performance di SQL Server PostgreSQL Oracle XE e MySQL\\\url{https://bit.ly/2MtTE8e} - consultato 13/09/2018};
-	\item \textbf{MySQL Server} viene utilizzato il più possibile in caso il progetto non contenga una grossa mole di dati e/o interrogazioni complesse, in quanto non prevede costi di licenza (mentre \textit{SQL Server} si, e anche abbastanza elevati \cite{sqlserverpricing} ed è multipiattaforma (attualmente disponibile per Linux, Windows e MacOS).
+	\item \textbf{MySQL Server} viene utilizzato il più possibile in caso il progetto non contenga una grossa mole di dati e/o interrogazioni complesse, in quanto non prevede costi di licenza (a differenza di \textit{SQL Server} che ha costi abbastanza elevati \cite{sqlserverpricing}) ed è multipiattaforma (attualmente disponibile per Linux, Windows e MacOS).
 \end{itemize}
 
 \subsection{Mobile}
-Il know-how accumulato da WebPD nella realizzazione di applicazioni web ha portato all'adozione del framework \textit{Cordova} per la creazione di applicazioni mobile, il quale offre la possibilità di creare app ibride cross platform utilizzando HTML/CSS e Javascript. Tali applicazioni, grazie ad alcune interfacce messe a disposizione da Cordova, possono accedere alle funzionalità native del dispositivo, come fotocamera, storage o sensoristica varia (accellerometro, giroscopio e GPS, se presenti).
+Il know-how accumulato da WebPD nella realizzazione di applicazioni web ha portato all'adozione del framework \textit{Cordova} (il cui schema di funzionamento è illustrato in Figura \ref{figura:funzionamento-cordova}) per la creazione di applicazioni mobile, il quale offre la possibilità di creare app ibride cross platform utilizzando HTML/CSS e Javascript. Tali applicazioni, grazie ad alcune interfacce messe a disposizione da Cordova, possono accedere alle funzionalità native del dispositivo, come fotocamera, storage o sensoristica varia (accellerometro, giroscopio e GPS, se presenti).
 
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.6\columnwidth]{azienda/cordova_architettura} 
 	\caption{Schema dell'architettura di un'app basata su Cordova}
+	\label{figura:funzionamento-cordova}
 \end{figure}
 
 \subsection{Desktop}
@@ -66,12 +67,13 @@ Java, di contro, viene usato quando si ha l'esigenza di creare applicazioni cros
 \section{Processi aziendali}
 \subsection{Ciclo di vita}
 \label{sec:modello-evolutivo}
-In WebPD, la \textit{way-of-working} inerente al ciclo di vita del software aderisce al \textit{modello Evolutivo}.\\
-L'adozione di tale modello deriva (principalmente) dall'esigenza di dover adattarsi alla mutevolezza dei requisiti. È un dato di fatto, purtroppo, che molto spesso neanche il cliente stesso sa di preciso che cosa vuole, quindi solo "toccando con mano" l'istanza del suo pensiero esso sa dire se effettivamente è quello che fa per lui o no.\\
+In WebPD, la \textit{way-of-working} inerente al ciclo di vita del software aderisce al \textit{modello Evolutivo}, le cui caratteristiche sono illustrate in Figura \ref{figura:modello-evolutivo}.\\
+L'adozione di tale modello deriva principalmente dall'esigenza di dover adattarsi alla mutevolezza dei requisiti. È un dato di fatto, purtroppo, che molto spesso neanche il cliente stesso ha chiare le sue esigenze, quindi solo "toccando con mano" l'istanza del suo pensiero esso sa dire se effettivamente è ciò che fa per lui o no.\\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.6\columnwidth]{azienda/modello_evolutivo} 
 	\caption{Schema del modello evolutivo. URL: \url{https://bit.ly/2N49cUI} }
+	\label{figura:modello-evolutivo}
 \end{figure}\\
 Questo problema viene affrontato dal modello evolutivo, prevedendo che non venga effettuato solo un unico rilascio, ma che vengano creati prototipi, istanze di un sottoinsieme di requisiti del progetto, sottomessi poi al cliente. L'esito della valutazione dei prototipi può portare ad una rivisitazione dei requisiti inerenti alle funzionalità contenute in essi.\\
 Nello specifico, il modello prevede le seguenti fasi :
@@ -86,7 +88,7 @@ Nello specifico, il modello prevede le seguenti fasi :
 	\item \textbf{Rilascio} della versione finale, corrispondente all'ultimo prototipo accettato dal proponente.
 \end{enumerate}
 Il modello evolutivo, inoltre, prevede la possibilità di avere più canali di sviluppo (ad esempio stabile, alpha, beta ecc.), utili per poter "sperimentare" nuove funzionalità senza andare ad intaccare la versione stabile del software.\\
-Il problema principale di questo modello è che i tempi di sviluppo possono allungarsi notevolmente. La validazione da parte del cliente, infatti, è un'operazione che può richiedere molto tempo, durante il quale lo sviluppo non può proseguire. Inoltre, in caso di un cliente molto "indeciso", il numero di prototipi può aumentare in modo esponenziale, rischiando quindi che gli \glspl{incremento} si trasformino in \glspl{iterazione}.
+Il problema principale di questo modello è che i tempi di sviluppo possono allungarsi notevolmente. La validazione da parte del cliente, infatti, è un'operazione che può richiedere molto tempo, durante il quale lo sviluppo non può proseguire. Inoltre, in caso di un cliente molto "indeciso", il numero di prototipi può aumentare, rischiando quindi che gli \glspl{incremento} si trasformino in \glspl{iterazione}.
 
 \subsection{Miglioramento della qualità dei processi}
 Nella way-of-working aziendale è presente una forte attenzione alla qualità dei processi. L'organizzazione interna di questi ultimi è incentrata sul principio del miglioramento continuo, grazie all'applicazione del Ciclo di Deming, conosciuto anche con l'acronimo PDCA. Tale acronimo contiene le iniziali delle quattro fasi in cui è possibile suddividere il processo di miglioramento: \begin{enumerate}
@@ -99,41 +101,45 @@ Nella way-of-working aziendale è presente una forte attenzione alla qualità de
 	\centering 
 	\includegraphics[width=0.6\columnwidth]{azienda/pdca} 
 	\caption{Rappresentazione grafica del PDCA. URL: \url{https://bit.ly/2LP32TF} }
+	\label{figura:pdca}
 \end{figure}
 A livello grafico, il PDCA è rappresentato attraverso un cerchio in movimento, che dichiara la ciclicità della sua applicazione.\\
-In figura lo standard è rappresentato come un cuneo in quanto agisce da limite inferiore per la qualità. L'obiettivo del PDCA è quindi portare sempre più in alto la qualità dello standard.
+In Figura \ref{figura:pdca} lo standard è rappresentato come un cuneo in quanto agisce da limite inferiore per la qualità. L'obiettivo del PDCA è quindi portare sempre più in alto la qualità dello standard.
 
 \subsection{Strumenti a supporto dei processi}
 \subsubsection{Gestione di progetto}
 Per quanto riguarda gli strumenti di gestione di progetto, WebPD si affida a \textit{Trello}. 
-Trello è uno software di amministrazione di progetto web-based, con tanto di relative applicazioni per Android e iOS. Trello permette la creazione di una bacheca condivisa, organizzata in \textit{cards}, all'interno delle quali è possibile inserire dei compiti da svolgere (\textit{task}) e assegnare ciascuno di questi compiti una data di scadenza. \\
+Trello è uno software di amministrazione di progetto web-based, con numerose applicazioni per Android e iOS. Trello permette la creazione di una bacheca condivisa (come mostrato in Figura \ref{figura:trello}), organizzata in \textit{cards}, all'interno delle quali è possibile inserire dei compiti da svolgere (\textit{task}) e assegnare ciascuno di questi compiti una data di scadenza. \\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.8\columnwidth]{azienda/trello} 
 	\caption{Screenshot dell'interfaccia web di Trello.}
+	\label{figura:trello}
 \end{figure}\\
 Su ogni compito è possibile pubblicare dei commenti per, ad esempio, porre domande o fare determinate osservazioni e aggiungere checklist, etichiette (tag) e allegati.\\ 
 I \textit{task} possono inoltre essere agilmente spostati tra una \textit{card} e un'altra, funzionalità utile, ad esempio, per tenere quanto più pulita possibile la bacheca, nascondendo i \textit{task} già svolti o raggruppandoli in apposite \textit{cards} aventi funzione di storico.\\
 Una feature molto interessante è la sincronizzazione live delle modifiche, che permette a più persone di agire e collaborare sulla bacheca contemporaneamente, senza incorrere nel rischio di visualizzare o modificare dati non aggiornati.\\
 Trello, infine, prevede anche numerosi \textit{Power-up}, ovvero estensioni (a pagamento) che permettono di interagire con numerosi servizi, quali, ad esempio, Google Drive, Onedrive, Google Calendar, GitHub, BitBucket, Slack ecc.\\
 \\
-Per avere una più immediata visualizzazione dell'andamento dei \textit{task}, assieme a Trello viene usato \textit{Trellogantt}. Quest'ultimo, come forse già suggerisce il nome, permette di visualizzare i dati contenuti in una bacheca di Trello sotto forma di diagrammi di Gantt. Inoltre permette, con un semplice drag-and-drop, di modificare le date di scadenza dei vari task.\\
+Per avere una più immediata visualizzazione dell'andamento dei \textit{task}, assieme a Trello viene usato \textit{Trellogantt}. Quest'ultimo, come forse già suggerisce il nome, permette di visualizzare i dati contenuti in una bacheca di Trello sotto forma di diagrammi di Gantt, come mostrato in Figura \ref{figura:trellogantt}. Inoltre permette, con un semplice drag-and-drop, di modificare le date di scadenza dei vari task.\\
 
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.8\columnwidth]{azienda/trellogantt} 
 	\caption{Interfaccia di Trellogantt. URL: \url{https://bit.ly/2wysjgc} }
+	\label{figura:trellogantt}
 \end{figure}
 
 
 \subsubsection{Gestione di versione}
-WebPD, come strumento di versionamento, utilizza il software \textit{Git}, probabilmente il più utilizzato nel suo campo.\\
+WebPD, come strumento di versionamento, utilizza il software \textit{Git} (logo in Figura \ref{figura:logo-git}), probabilmente il più utilizzato nel suo campo.\\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.3\columnwidth]{azienda/git} 
 	\caption{Logo di Git }
+	\label{figura:logo-git}
 \end{figure}\\
- Le motivazioni che hanno portato all'adozione di Git al posto del suo "antagonista" \textit{Subversion} (SVN) sono le seguenti \footnote{Differences Between Git and SVN - \url{https://bit.ly/2p4NzWI} - consultato il 13/09/2018}:
+ Le motivazioni che hanno spinto WebPD all'adozione di Git al posto del suo "antagonista" \textit{Subversion} (SVN) sono  \footnote{Differences Between Git and SVN - \url{https://bit.ly/2p4NzWI} - consultato il 13/09/2018}x illustrate in Figura \ref{figura:differenze-git-svn}. In particolare:
 \begin{itemize}
 	\item Decentralizzazione del repository: a differenza di Subversion, l'architettura di Git prevede che vi sia una copia dell'intero repository in ciascun client, in modo da poter effettuare \textit{commit} anche in assenza di una connessione verso il server (cosa non possibile con SVN);
 	\item Velocità: le operazioni di commit sono molto spesso più veloci su Git in quanto vengono effettuate sulla copia locale del repository, ed è possibile poi inviarle al repository remoto (tramite \textit{push}) in un secondo momento, anche in blocco.
@@ -143,6 +149,7 @@ WebPD, come strumento di versionamento, utilizza il software \textit{Git}, proba
 	\centering 
 	\includegraphics[width=0.8\columnwidth]{azienda/gitsvn} 
 	\caption{Differenze tra Git e SVN. URL: \url{https://bit.ly/2ovUUOL} }
+	\label{figura:differenze-git-svn}
 \end{figure}
 I repository contenenti tutti i progetti dell'azienda sono ospitati da un server Git privato, installato in uno dei server di WebPD. Tale scelta è stata fatta per essere quanto più tolleranti possibile ad un'eventuale assenza di connessione internet.
 
@@ -150,19 +157,20 @@ I repository contenenti tutti i progetti dell'azienda sono ospitati da un server
 In azienda viene permesso a ciascun programmatore, in base alle sue preferenze, di scegliere l'ambiente di sviluppo che preferisce. In ogni caso ci sono degli strumenti generalmente preferiti, in base alla tecnologia utilizzata per sviluppare
 
 \subsubsection{Sviluppo Web}
-Per quanto riguarda lo sviluppo web, lo strumento più frequentemente utilizzato è \textit{Visual Studio Code}, un tool multi piattaforma sviluppato da Microsoft, che si pone in mezzo tra un \gls{ide} e un semplice editor di testo. Di base, infatti, non fornisce altro che la funzionalità di \textit{syntax highlight}, ma grazie a innumerevoli plugin, può acquisire, ad esempio, funzionalità avanzate di analisi statica. Inoltre si integra molto bene con Git, integrando degli strumenti per effettuare commit, push e merge.
+Per quanto riguarda lo sviluppo web, lo strumento più frequentemente utilizzato è \textit{Visual Studio Code} (la cui \textit{UI} è mostrata in Figura \ref{figura:vs-code}), un tool multi piattaforma sviluppato da Microsoft, che si pone in mezzo tra un \gls{ide} e un semplice editor di testo. Di base, infatti, non fornisce altro che la funzionalità di \textit{syntax highlight}, ma grazie a innumerevoli plugin, può acquisire, ad esempio, funzionalità avanzate di analisi statica. Inoltre si integra molto bene con Git, integrando degli strumenti per effettuare commit, push e merge.
 
 \subsubsection{Sviluppo Mobile}
-Dato che viene utilizzato \textit{Cordova}, le tecnologie utilizzate sono (quasi) analoghe a quelle utilizzate nello sviluppo web. Pertanto, anche in questo campo, \textit{Visual Studio Code}, coaudivato dagli adeguati plugin, rimane una scelta molto gettonata. In alternativa, viene usato anche \textit{Jetbrains WebStorm}, un vero e proprio \gls{ide} che fornisce funzionalità avanzate di refactoring del codice e di linting.
+Dato che viene utilizzato \textit{Cordova}, le tecnologie utilizzate sono (quasi) analoghe a quelle utilizzate nello sviluppo web. Pertanto, anche in questo campo, \textit{Visual Studio Code}, coaudivato dagli adeguati plugin, rimane una scelta consueta. In alternativa, viene usato anche \textit{Jetbrains WebStorm}, un vero e proprio \gls{ide} che fornisce funzionalità avanzate di refactoring del codice e di linting.
 
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.8\columnwidth]{azienda/vscode} 
 	\caption{Schermata di Visual Studio Code}
+	\label{figura:vs-code}
 \end{figure}
 
 \subsubsection{Sviluppo Desktop}
 Nello sviluppo di applicazioni desktop, bisogna fare una distinzione in base al linguaggio utilizzato. In caso si tratti di Java, l'\gls{ide} più comune è IntelliJ Idea, che offre strumenti di analisi "on-the-fly" e completamento e generazione automatica del codice. Discorso a parte per Delphi, in quanto, essendo una tecnologia proprietaria, si è vincolati all'\gls{ide} \textit{Embarcadero RAD Studio} che, tra le altre cose, ha un costo di licenza molto elevato (arriva a sforare i 6000 euro).
 
-\subsection{Clientela}
+\section{Clientela}
 La tipologia di cliente più comune per WebPD è la piccola-media impresa che vuole realizzare o ammodernare il suo sito web, vetrina o e-commerce che sia. Tale clientela proviene da numerosi settori, quali (per citarne alcuni) edile, farmaceutico, navale e turistico. WebPD possiede numerose soluzioni a portfolio, utili al cliente per capire meglio le sue esigenze, che, molto spesso, non sono ben chiare neanche a lui. Tutti i prodotti offerti, inoltre, sono altamente personalizzabili, in modo da concretizzare fedelmente quanto richiesto dal cliente.
