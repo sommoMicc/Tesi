@@ -7,32 +7,34 @@
 \label{cap:processi-metodologie}
 
 \section{Profilo}
-Web PD s.a.s. é una software house nata nel 2009, con sede a Padova ma con clienti in tutta Italia. La società nasce con lo scopo di gestire portali ecommerce, ma negli anni ha modificato la sua key activity in sviluppo di soluzioni software personalizzate. Ad oggi si occupa di consulenza informatica su software gestionali, applicazioni web e mobile (sia Android che iOS).\\
+Web PD s.a.s. è una software house nata nel 2009, con sede a Padova ma con clienti in tutta Italia (logo in Figura \ref{figura:logo-webpd}). La società nasce con lo scopo di gestire portali e-commerce, ma negli anni ha modificato la sua key activity in sviluppo di soluzioni software personalizzate. Ad oggi si occupa di consulenza informatica su software gestionali, applicazioni web e mobile (sia Android che iOS).\\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.4\columnwidth]{azienda/logo_webpd} 
 	\caption{Logo WebPD}
+	\label{figura:logo-webpd}
 \end{figure}
 \\
-Il primo prodotto realizzato da Web PD é il gestionale Martina, un software per piattaforma Windows, sviluppato secondo un’architettura client-server modulare, che consente la gestione del ciclo attivo (vendite) e passivo (acquisti) di un’impresa commerciale. Grazie alla sua struttura modulare, é possibile aggiungere a Martina diverse funzionalità, come ad esempio gestione di magazzino, gestione della contabilità e
+Il primo prodotto realizzato da Web PD è il gestionale Martina, un software per piattaforma Windows, sviluppato secondo un’architettura client-server modulare, che consente la gestione del ciclo attivo (vendite) e passivo (acquisti) di un’impresa commerciale. Grazie alla sua struttura modulare, è possibile aggiungere a Martina diverse funzionalità, come ad esempio gestione di magazzino, gestione della contabilità e
 gestione dello scadenziario.\\
 \\
 Successivamente l’azienda aggiunge al portfolio di servizi offerti anche la realizzazione, grazie alle piattaforme OpenCart e Prestashop, di siti e-commerce integrati al gestionale Martina. \\
-È in questo contesto che prima nascono gli ecommerce TuttoNauticaWeb.com e MiglioNautico.com, successivamente FarmaZero.com e SubitoStore.com.\\
+È in questo contesto che prima nascono gli e-commerce TuttoNauticaWeb.com e MiglioNautico.com, successivamente FarmaZero.com e SubitoStore.com.\\
 \\
-Nel 2015 Web PD da s.a.s. si trasforma in s.r.l. perché ha l’intenzione di addentrarsi nel settore turistico; questa strategia si perfeziona con l’acquisizione di un agenzia di viaggi ad Albignasego (PD).\\
+Nel 2015 Web PD da s.a.s. si trasforma in s.r.l. perché ha l’intenzione di addentrarsi nel settore turistico; questa strategia si perfeziona con l’acquisizione di un' agenzia di viaggi ad Albignasego (PD).\\
 \\
-Nel 2016 il network e franchising di agenzie di viaggio Primarete Viaggi e Vacanze s.r.l. acquisisce il 49\% delle quote sociali di Web PD s.r.l.. Il frutto di questa collaborazione é l’ammodernamento, continuo ed ancora in corso, dei portali Viaggiregalo.it, CrociereRegalo.it, SimaWorldTravel.it e PercorsiReligiosi.it, di proprietà di Promoter Travel s.r.l., una controllata di Primarete.\\
+Nel 2016 il network e franchising di agenzie di viaggio Primarete Viaggi e Vacanze s.r.l. acquisisce il 49\% delle quote sociali di Web PD s.r.l.. Il frutto di questa collaborazione è l’ammodernamento, continuo ed ancora in corso, dei portali Viaggiregalo.it, CrociereRegalo.it, SimaWorldTravel.it e PercorsiReligiosi.it, di proprietà di Promoter Travel s.r.l., una controllata di Primarete.\\
 
 \section{Dominio tecnologico}
 L'azienda offre un ampio ventaglio di prodotti, che coinvolgono diverse piattaforme. È opportuno esaminare le tecnologie adoperate raggruppandole nelle seguenti categorie: \textit{Web}, \textit{Mobile} e \textit{Desktop}.
 
 \subsection{Web}
-In WebPD, la realizzazione di prodotti basati su piattaforma Web avviene, a livello di backend, utilizzando come linguaggio di programmazione PHP (versione 5 o 7). Molto spesso, per i progetti più complessi, viene usato il framework \textit{Codeigniter} (versione 3), che agevola l'implementazione del design pattern MVC e fornisce numerosi strumenti per facilitare (dunque accellerare) lo sviluppo. Codeigniter, tra le altre cose, infatti, implementa una serie di classi che facilitano l'esecuzione ed il debug delle query, oltre ad un meccanismo che permette di salvarle in cache (aumentando notevolmente le prestazioni del prodotto).\\
+In WebPD, la realizzazione di prodotti basati su piattaforma Web avviene, a livello di backend, utilizzando come linguaggio di programmazione PHP (versione 5 o 7). Molto spesso, per i progetti più complessi, viene usato il framework \textit{Codeigniter} (versione 3, il cui funzionamento è illustrato in Figura \ref{figura:flow-chart-codeigniter}), che agevola l'implementazione del design pattern MVC e fornisce numerosi strumenti per facilitare (dunque accellerare) lo sviluppo. Codeigniter, tra le altre cose, infatti, implementa una serie di classi che facilitano l'esecuzione ed il debug delle query, oltre ad un meccanismo che permette di salvarle in cache (aumentando notevolmente le prestazioni del prodotto).\\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=1.0\columnwidth]{azienda/codeigniter_flow} 
 	\caption{Flow chart di un'applicazione creata con Codeigniter}
+	\label{figura:flow-chart-codeigniter}
 \end{figure}\\
 Per quanto riguarda il frontend, invece, viene utilizzato HTML5, CSS3 e Javascript (jQuery), senza usare framework che implementino Single Page Application (come React.js o Angular).\\\\\
 Come server web, infine, vengono usati \textit{Apache2}, in caso di hosting su piattaforma Linux, o  \textit{IIS}, in caso di hosting su piattaforma Windows.\\\\
@@ -40,10 +42,11 @@ Per la realizzazione di siti web semplici, dove per semplici si intende senza es
 \\
 \\
 \subsubsection{DBMS}
-Per lo sviluppo di prodotti software, WebPD si appoggia a due \gls{DBMS}: \textit{Microsoft SQL Server 2012} e \textit{MySQL Server}. Entrambi questi software sono \gls{RDBMS}, ma la scelta di utilizzare l'uno o l'altro dipende dalle caratteristiche del progetto, nello specifico: \begin{itemize}
+Per lo sviluppo di prodotti software, WebPD si appoggia a due \gls{DBMS}: \textit{Microsoft SQL Server 2012} e \textit{MySQL Server}. Entrambi questi software sono \gls{RDBMS}, ma la scelta di utilizzare l'uno o l'altro dipende dalle caratteristiche del progetto, nello specifico: 
+\begin{itemize}
 	\item \textbf{Microsoft SQL Server} viene utilizzato nei progetti che prevedono un'ampia mole di dati da gestire e interrogazioni (query) complesse (come, ad esempio, CrociereRegalo.it), in quanto in tali contesti si è dimostrato mediamente più performante di \textit{MySQL}
 	\footnote{Studio comparativo sulle performance di SQL Server PostgreSQL Oracle XE e MySQL\\\url{https://bit.ly/2MtTE8e} - consultato 13/09/2018};
-	\item \textbf{MySQL Server} viene utilizzato il più possibile in caso il progetto non contenga una grossa mole di dati e/o interrogazioni complesse, in quanto non prevede costi di licenza (mentre \textit{SQL Server} si, e anche abbastanza elevati \footnote{Prezzi di SQL Server - URL: \url{https://bit.ly/2rECrAS} - consultato 13/09/2018} ed é multipiattaforma (attualmente disponibile per Linux, Windows e MacOS).
+	\item \textbf{MySQL Server} viene utilizzato il più possibile in caso il progetto non contenga una grossa mole di dati e/o interrogazioni complesse, in quanto non prevede costi di licenza (mentre \textit{SQL Server} si, e anche abbastanza elevati \cite{sqlserverpricing} ed è multipiattaforma (attualmente disponibile per Linux, Windows e MacOS).
 \end{itemize}
 
 \subsection{Mobile}
@@ -103,13 +106,13 @@ In figura lo standard è rappresentato come un cuneo in quanto agisce da limite 
 \subsection{Strumenti a supporto dei processi}
 \subsubsection{Gestione di progetto}
 Per quanto riguarda gli strumenti di gestione di progetto, WebPD si affida a \textit{Trello}. 
-Trello é uno software di amministrazione di progetto web-based, con tanto di relative applicazioni per Android e iOS. Trello permette la creazione di una bacheca condivisa, organizzata in \textit{cards}, all'interno delle quali é possibile inserire dei compiti da svolgere (\textit{task}) e assegnare ciascuno di questi compiti una data di scadenza. \\
+Trello è uno software di amministrazione di progetto web-based, con tanto di relative applicazioni per Android e iOS. Trello permette la creazione di una bacheca condivisa, organizzata in \textit{cards}, all'interno delle quali è possibile inserire dei compiti da svolgere (\textit{task}) e assegnare ciascuno di questi compiti una data di scadenza. \\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.8\columnwidth]{azienda/trello} 
 	\caption{Screenshot dell'interfaccia web di Trello.}
 \end{figure}\\
-Su ogni compito é possibile pubblicare dei commenti per, ad esempio, porre domande o fare determinate osservazioni e aggiungere checklist, etichiette (tag) e allegati.\\ 
+Su ogni compito è possibile pubblicare dei commenti per, ad esempio, porre domande o fare determinate osservazioni e aggiungere checklist, etichiette (tag) e allegati.\\ 
 I \textit{task} possono inoltre essere agilmente spostati tra una \textit{card} e un'altra, funzionalità utile, ad esempio, per tenere quanto più pulita possibile la bacheca, nascondendo i \textit{task} già svolti o raggruppandoli in apposite \textit{cards} aventi funzione di storico.\\
 Una feature molto interessante è la sincronizzazione live delle modifiche, che permette a più persone di agire e collaborare sulla bacheca contemporaneamente, senza incorrere nel rischio di visualizzare o modificare dati non aggiornati.\\
 Trello, infine, prevede anche numerosi \textit{Power-up}, ovvero estensioni (a pagamento) che permettono di interagire con numerosi servizi, quali, ad esempio, Google Drive, Onedrive, Google Calendar, GitHub, BitBucket, Slack ecc.\\
@@ -133,7 +136,7 @@ WebPD, come strumento di versionamento, utilizza il software \textit{Git}, proba
  Le motivazioni che hanno portato all'adozione di Git al posto del suo "antagonista" \textit{Subversion} (SVN) sono le seguenti \footnote{Differences Between Git and SVN - \url{https://bit.ly/2p4NzWI} - consultato il 13/09/2018}:
 \begin{itemize}
 	\item Decentralizzazione del repository: a differenza di Subversion, l'architettura di Git prevede che vi sia una copia dell'intero repository in ciascun client, in modo da poter effettuare \textit{commit} anche in assenza di una connessione verso il server (cosa non possibile con SVN);
-	\item Velocità: le operazioni di commit sono molto spesso più veloci su Git in quanto vengono effettuate sulla copia locale del repository, ed é possibile poi inviarle al repository remoto (tramite \textit{push}) in un secondo momento, anche in blocco.
+	\item Velocità: le operazioni di commit sono molto spesso più veloci su Git in quanto vengono effettuate sulla copia locale del repository, ed è possibile poi inviarle al repository remoto (tramite \textit{push}) in un secondo momento, anche in blocco.
 	\item Miglior gestione di branch e tag: in SVN, branch e tag sono copie dell'intero progetto (che quindi possono aumentare molto lo spazio richiesto dal repository sul server), mentre in Git sono semplicemente dei riferimenti ad una determinata commit.
 \end{itemize}
 \begin{figure}[!h] 
