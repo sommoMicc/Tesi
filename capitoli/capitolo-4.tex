@@ -321,7 +321,7 @@ Per l'interazione con la tabella \textit{Cruises\_InventoryPrices} è stato crea
 \end{center}
 È stato inoltre creato un metodo \textit{salvaPrezzi} nel controller \textit{Back}, che si limita ad invocare il metodo \textit{salvaPrezzi} del model \textit{Cruises\_InventoryPrices} con i parametri passati tramite POST.\\
 A livello frontend, si è fatto in modo che, al termine del caricamento del \textit{vuoto per pieno}, si venga reindirizzati ad una pagina di inserimento prezzi (come quella mostrata in Figura \ref{figura:inserimento-prezzi-vuotopieno}), che permette appunto di specificare ogni combinazione di prezzo tollerata dal sistema per ogni categoria di cabina per ciascun listino. 
-	\begin{figure}[!h] 
+\begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=1\columnwidth]{attivita/vuotopieno_prezzi} 
 	\caption{Schermata di inserimento dei prezzi di un \textit{vuoto per pieno}.}
@@ -367,13 +367,13 @@ Infine si è verificato che i dati presenti nelle tabelle fossero interpretati i
 	\item Si è verificato che il metodo \textbf{Inventory\_requestBooking} effettuasse e salvasse correttamente una nuova prenotazione a database, restituendone il codice corretto;
 	\item Si è verificato che il metodo \textbf{Inventory\_requestBookingInformation} restituisse i dettagli corretti di un \textit{vuoto per pieno} preventivamente prenotato, in base a quanto presente nel database.
 \end{itemize}
-
+\newpage
 \section{Aggiunta delle tariffe di un nuovo fornitore}
 \subsection{Analisi del problema}
-L'ultimo argomento affrontato durante lo stage è stato aggiungere la possibilità di prenotare una crociera con \textit{Royal Caribbean}, \textit{Celebrity} e \textit{Azamara}. Queste tre compagnie, per fortuna, forniscono, grazie alla società \textit{ISTINFOR}, dei \glspl{webservice} chiamati \textbf{FIBOS}, che sono unici per le tre compagnie di crociera sopra citate. \\
+L'ultimo argomento affrontato durante lo stage è stato aggiungere la possibilità di prenotare una crociera con \textit{Royal Caribbean}, \textit{Celebrity} e \textit{Azamara}. Queste tre compagnie forniscono, grazie alla società \textit{ISTINFOR}, dei \glspl{webservice} chiamati \textbf{FIBOS}, che sono unici per le tre compagnie di crociera sopra citate. \\
 \textit{FIBOS} prevede l'utilizzo di due tipologie di \glspl{webservice}: \textbf{FDF} (Fibos Data Feed) e \textbf{RCCL} (Royal Caribbean Cruise Line).
 \subsubsection{Importazione delle informazioni statiche}
-Per poter interfacciarsi con i \glspl{webservice}, è stato necessario aggiungere al \bookingEngine\hphantom{i}le informazioni (codici, descrizioni) di aree geografiche, navi, porti e categorie di cabine utilizzate da FIBOS. Queste informazioni sono considerate statiche in quanto non cambiano spesso: si possono verificare delle variazioni solo in caso di varo di una nuova nave e/o costruzione di un nuovo porto.
+Per potersi interfacciare con i \glspl{webservice}, è stato necessario aggiungere al \bookingEngine\hphantom{i}le informazioni (codici, descrizioni) di aree geografiche, navi, porti e categorie di cabine utilizzate da FIBOS. Queste informazioni sono considerate statiche in quanto non cambiano spesso: si possono verificare delle variazioni solo in caso di varo di una nuova nave e/o costruzione di un nuovo porto.
 
 \subsubsection{Utilizzo di FDF}
 Questi \glspl{webservice} sono progettati per il trasferimento di grandi quantità di dati e forniscono un sistema di ricerca di crociere (e relativi prezzi). Si sono quindi dimostrati adatti al meccanismo di integrazione schedulata presente nel \bookingEngine. È stato dunque necessario creare un sistema che interrogasse i \glspl{webservice} \textit{FDF}, consolidandone i risultati nel \textit{DataExchange} ed integrandoli poi nell'\textit{OTA}. 
@@ -415,7 +415,7 @@ A livello backend, per gestire l'importazione del file, è stato realizzato un n
 È stato poi creato un nuovo metodo \textit{caricaRoyal} sul controller \textit{Back} dell'\textit{OTA}, che prende il file caricato dal frontend e lo passa al metodo \textit{parse} del model \textit{Royal} sopra descritto.
 
 \subsubsection{Utilizzo di FDF - Progettazione}
-Nel file \textit{.xlsx} fornito da \textit{ISTINFOR} mancano tutte le informazioni inerenti a itinerari, prezzi e partenze delle crociere. Queste sono invece fornite dal \gls{webservice} \textbf{FDF}, che quindi si è dovuto implementare. L'interazione con tale \gls{webservice} avviene tramite chiamate \gls{SOAP} ad appositi URL forniti da \textit{ISTINFOR}.\\ Essendoci stati forniti solo degli URL di sviluppo, le chiamate restituiscono dati verosimili ma non veri. Inoltre, \textit{ISTINFOR} utilizza un firewall: vengono accettate richieste provenienti solo da IP noti. Siccome il server di sviluppo utilizzato era all'interno della rete dell'ufficio, con IP dinamico e non esposto, è stato necessario creare un ambiente online di test, da affiancare a quello di produzione (all'indirizzo \url{http://primaretetest.webpd.it/crociereregalo} e \url{http://primaretetest.webpd.it/dataExchange}).\\
+Nel file \textit{.xlsx} fornito da \textit{ISTINFOR} mancano tutte le informazioni inerenti a itinerari, prezzi e partenze delle crociere. Queste sono invece fornite dal \gls{webservice} \textbf{FDF}, che quindi si è dovuto implementare. L'interazione con tale \gls{webservice} avviene tramite chiamate \gls{SOAP} ad appositi URL forniti da \textit{ISTINFOR}.\\ Essendoci stati forniti solo degli URL di sviluppo, le chiamate restituiscono dati verosimili ma non veri. Inoltre, \textit{ISTINFOR} utilizza un firewall: vengono accettate richieste provenienti solo da IP noti. Siccome il server di sviluppo utilizzato era all'interno della rete dell'ufficio, con IP dinamico e non esposto, è stato necessario creare un ambiente online di test, da affiancare a quello di produzione (all'indirizzo \cite{site:sviluppo-crociereregalo} e \cite{site:sviluppo-dataexchange}).\\
 Premesso ciò, la struttura di una chiamata \gls{SOAP} accettata da \textit{FDF} è la seguente:
 \begin{lstlisting}
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://tempuri.org/WebService/Service1">
@@ -439,8 +439,14 @@ Premesso ciò, la struttura di una chiamata \gls{SOAP} accettata da \textit{FDF}
     </ns1:PROCEDURA>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
-\end{lstlisting}Il tag \textit{Header} ed il suo contenuto sono comuni a tutte le richieste. Bisogna poi sostituire il nome \textit{PROCEDURA} con quello della funzione che si vuole invocare (ad esempio \textit{SearchBySea}) e, in base a quanto definito nella documentazione, includere una lista di parametri (allo stesso livello del tag \textit{Parametro}). Prima di invocare una procedura generica, però, è necessario fare una chiamata alla funzione di login, che permette di autenticarsi.
-
+\end{lstlisting}
+Il tag \textit{Header} ed il suo contenuto sono comuni a tutte le richieste. Bisogna poi sostituire il nome \textit{PROCEDURA} con quello della funzione che si vuole invocare (ad esempio \textit{SearchBySea}) e, in base a quanto definito nella documentazione, includere una lista di parametri (allo stesso livello del tag \textit{Parametro}). Prima di invocare una procedura generica, però, è necessario fare una chiamata alla funzione di login, che permette di autenticarsi, come mostrato in Figura \ref{figura:flowchart-login-webservice}.
+\begin{figure}[!h] 
+	\centering 
+	\includegraphics[width=.6\columnwidth]{attivita/flowchart-login-webservice} 
+	\caption{Flow chart dell'invocazione di una qualsiasi procedura FDF.}
+	\label{figura:flowchart-login-webservice}
+\end{figure}\\
 \subsubsection{Utilizzo di FDF - Codifica}
 Tutte le chiamate ai \gls{webservice} vengono gestite dal \textit{DataExchange}, all'interno del quale sono state create due nuove classi per semplificarne l'interazione: \textit{Royal\_Model} e \textit{Royal\_WS}.\\
 La prima è un model che serve ad effettuare le chiamate ai \gls{webservice} forniti, e si compone dei seguenti metodi:
