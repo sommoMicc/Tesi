@@ -199,7 +199,7 @@ Il \bookingEngine\hphantom{i}avrebbe dovuto permettere di visualizzare i prezzi 
 
 \subsection{Progettazione e codifica della soluzione}
 \subsubsection{Inserimento degli acquisti nel sistema - Progettazione}
-Affinché fosse possibile inserire gli acquisti nel sistema, è stata realizzata una nuova pagina nel pannello di amministrazione del \bookingEngine, accessibile solo tramite l'inserimento di username e password. In tale pagina viene visualizzato un riepilogo dei \textit{vuoto per pieno} caricati con la possibilità, per ognuno di essi, di avere il dettaglio delle cabine vendute e di quelle ancora disponibili. È stato inoltre inserito un tasto che apre una finestra di dialogo all'interno della quale viene data la possibilità di caricare nuovi \textit{vuoto per pieno}, andando quindi a "rifornire" il "magazzino". In base al fornitore selezionato nella finestra di dialogo è possibile: 
+Affinché fosse possibile inserire gli acquisti nel sistema, si è progettato di realizzare nuova pagina riepilogativa nel pannello di amministrazione del \bookingEngine, accessibile solo tramite l'inserimento di username e password. In tale pagina viene visualizzato un riepilogo dei \textit{vuoto per pieno} caricati con la possibilità, per ognuno di essi, di avere il dettaglio delle cabine vendute e di quelle ancora disponibili. È stato inoltre inserito un tasto che apre una finestra di dialogo all'interno della quale viene data la possibilità di caricare nuovi \textit{vuoto per pieno}, andando quindi a "rifornire" il "magazzino". In base al fornitore selezionato nella finestra di dialogo è possibile: 
 \begin{itemize}
 	\item Caricare il file di riepilogo di quanto acquistato fornito dalla compagnia, in caso di fornitore \textbf{Costa} o \textbf{MSC}, come mostrato in Figura \ref{figura:upload-msc-costa}. Il primo fornisce un file con estensione \textit{.xls} mentre il secondo un file con estensione \textit{.csv}
 	\begin{figure}[!h] 
@@ -228,7 +228,7 @@ In ogni caso, è stato deciso che per ciascun \textit{vuoto per pieno} si sarebb
 	\item La \textbf{data di inizio} e la \textbf{data di fine} validità della tariffa, in modo che sia possibile venderla solo in determinati periodi/intervalli. Ciò significa che, ad esempio, se la data di inizio viene impostata al 20 agosto 2018 e la data di fine al 30 settembre 2018, in caso di una ricerca fatta prima del 20 agosto 2018 o dopo il 30 settembre 2018, la tariffa non comparirà tra i risultati.
 \end{itemize}
 \subsubsection{Inserimento degli acquisti nel sistema - Codifica}
-Per memorizzare queste informazioni è stata creata una nuova tabella in database denominata \textbf{Cruises\_Inventory}, avente come campi \textit{Id} (chiave primaria auto incrementante), \textit{Supplier} (fornitore, chiave esterna che si riferisce a \textit{Cruises\_Lines}, tabella dove sono memorizzati tutti i fornitori), \textit{GroupID}, \textit{CruiseID}, \textit{DepartureDate} (data di partenza della crociera), \textit{Length} (lunghezza in notti della crociera), \textit{N\_Pax} (numero di posti totali), \textit{N\_Cab} (numero di cabine totali), \textit{Data\_Inizio} e \textit{Data\_Fine}.\\
+Oltre alla realizzazione della pagina riepilogativa precedentemente progettata, per memorizzare queste informazioni è stata creata una nuova tabella in database denominata \textbf{Cruises\_Inventory}, avente come campi \textit{Id} (chiave primaria auto incrementante), \textit{Supplier} (fornitore, chiave esterna che si riferisce a \textit{Cruises\_Lines}, tabella dove sono memorizzati tutti i fornitori), \textit{GroupID}, \textit{CruiseID}, \textit{DepartureDate} (data di partenza della crociera), \textit{Length} (lunghezza in notti della crociera), \textit{N\_Pax} (numero di posti totali), \textit{N\_Cab} (numero di cabine totali), \textit{Data\_Inizio} e \textit{Data\_Fine}.\\
 \\
 Oltre alle informazioni generali relative a ciascun \textit{vuoto per pieno}, è stato necessario memorizzarne anche il contenuto in dettaglio, in termini di cabine acquistate (e quindi da rivendere). Si è deciso di creare la tabella \textbf{Cruises\_InventoryDetail} avente i seguenti campi:
 \begin{itemize}
@@ -439,7 +439,7 @@ Premesso ciò, la struttura di una chiamata \gls{SOAP} accettata da \textit{FDF}
     </ns1:PROCEDURA>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
-\end{lstlisting}
+\end{lstlisting} 
 Il tag \textit{Header} ed il suo contenuto sono comuni a tutte le richieste. Bisogna poi sostituire il nome \textit{PROCEDURA} con quello della funzione che si vuole invocare (ad esempio \textit{SearchBySea}) e, in base a quanto definito nella documentazione, includere una lista di parametri (allo stesso livello del tag \textit{Parametro}). Prima di invocare una procedura generica, però, è necessario fare una chiamata alla funzione di login, che permette di autenticarsi, come mostrato in Figura \ref{figura:flowchart-login-webservice}.
 \begin{figure}[!h] 
 	\centering 
@@ -501,7 +501,6 @@ In questo caso è stato aggiunto il seguente metodo:
 		\hline
 	\end{longtable}
 \end{center}
-
 Le informazioni ritornate da questo metodo includono anche la lista di destinazioni dell'itinerario, ma la lingua in cui i nomi di tali destinazioni (porti, città, stati) vengono restituiti è mista. Ad esempio, per riferirsi alle isole delle Azzorre, viene usato tanto il nome italiano "Azzorre" quanto il nome spagnolo "Azores". La stessa cosa vale per Danimarca, Scozia, Australia, Emirati Arabi, Canarie, Belgio ecc. È stato dunque necessario realizzare un mapping manuale dei nomi, che permettesse di tradurre i nomi in lingua italiana.\\ \\
 Per quanto riguarda l'integrazione nel flusso di prenotazione delle tariffe \textit{FIBOS}, analogamente al lavoro svolto per i \textit{vuoto per pieno}, sono stati creati ed implementati nuovi metodi nel controller \textit{WS\_Cruises} che utilizzano nuovi metodi creati nel model \textit{Royal\_Model}. Sono state utilizzate le seguenti procedure di \textit{RCCL}:
 
