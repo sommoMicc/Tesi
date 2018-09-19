@@ -45,9 +45,9 @@ Come accennato precedentemente, il \bookingEngine\hphantom{i}ha grossi problemi 
 	\label{figura:database-tuning-engine}
 \end{figure}
 
-\subsection{Integrazione delle tariffe vuoto per pieno}
+\subsection{Integrazione delle tariffe \textit{vuoto per pieno}}
 Il partner Primarete ha espresso l'esigenza di poter vendere le proprie tariffe \textit{vuoto per pieno} attraverso il \bookingEngine. Come specificato precedentemente, esse sono dei gruppi di cabine acquistate "al buio" da un'agenzia viaggio ad un prezzo scontato (in quanto ne vengono acquistate più di una in blocco), che poi verranno rivendute dall'agenzia stessa ai clienti. Ovviamente, il guadagno dell'agenzia viaggi è rappresentato dalla differenza tra il prezzo di vendita della cabina e quello di acquisto.\\
-Il problema è che le cabine associate al vuoto per pieno, agli occhi dei \glspl{webservice} delle varie compagnie di crociera, risultano prenotate, quindi non disponibili: è necessario modificare il flusso di prenotazione del \bookingEngine\hphantom{i}permettendo di inserirvi anche i gruppi di cabine acquistate tramite tariffa vuoto per pieno, oltre a quelle ancora effettivamente disponibili; tale modifica dovrà essere fatta sia a livello backend che frontend.
+Il problema è che le cabine associate al \textit{vuoto per pieno}, agli occhi dei \glspl{webservice} delle varie compagnie di crociera, risultano prenotate, quindi non disponibili: è necessario modificare il flusso di prenotazione del \bookingEngine\hphantom{i}permettendo di inserirvi anche i gruppi di cabine acquistate tramite tariffa \textit{vuoto per pieno}, oltre a quelle ancora effettivamente disponibili; tale modifica dovrà essere fatta sia a livello backend che frontend.
 
 \subsection{Aggiunta delle tariffe di un nuovo fornitore}
 La versione di CrociereRegalo sviluppata da WebCola integrava, oltre alle crociere di MSC e Costa, anche quelle di Royal Caribbean (e controllate, ovvero Celebrity e Azamara). Lo stage, quindi, si prefigge di ripristinare questa funzionalità anche sulla nuova versione del \bookingEngine\hphantom{i}CrociereRegalo reintroducendo nel flusso di prenotazione le crociere del gruppo Royal, tramite l'integrazione dei \glspl{webservice} forniti da IST (Fibos). Tale integrazione comporterà modifiche sia alla parte frontend che alla parte backend del \bookingEngine
@@ -115,7 +115,7 @@ Prima dell'inizio dello stage è stata definita, nel piano di lavoro, una scansi
 \begin{itemize}
 	\item \textbf{Prima settimana}: formazione sulle tecnologie utilizzate dal \bookingEngine\hphantom{i}CrociereRegalo, con particolare attenzione alla libreria \textit{Codeigniter} e al \gls{DBMS} \textit{Microsoft SQL Server};
 	\item \textbf{Seconda settimana}: Proseguimento delle attività di formazione iniziate la prima settimana. Ottimizzazione del database tramite gli strumenti forniti da SQL Server;
-	\item \textbf{Terza settimana}: Ottimizzazione del sito tramite implementazione della cache delle query. Studio e progettazione dell'aggiunta delle tariffe vuoto per pieno al flusso dati del \bookingEngine;
+	\item \textbf{Terza settimana}: Ottimizzazione del sito tramite implementazione della cache delle query. Studio e progettazione dell'aggiunta delle tariffe \textit{vuoto per pieno} al flusso dati del \bookingEngine;
 	\item \textbf{Quarta settimana}: Realizzazione, test e redazione di documentazione di quanto progettato la settimana precedente;
 	\item \textbf{Quinta settimana}: Studio e progettazione dell'integrazione dati forniti dal sistema FIBOS (Royal);
 	\item \textbf{Sesta settimana}: Realizzazione dell'integrazione di navi, porti, itinerari, categorie di cabina e prezzi attraverso interrogazioni schedulate ai \glspl{webservice} FIBOS;

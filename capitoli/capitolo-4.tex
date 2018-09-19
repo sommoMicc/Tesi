@@ -14,7 +14,7 @@
 %Tale pianificazione, però, è stata "aggiustata" (ma mai stravolta) in base a quanto svolto settimana per settimana, decidendo di dedicare più o meno ore ad una determinata attività.\\
 %Al termine di ogni settimana, periodo coincidente con il raggiungimento di un obiettivo, infine, è stato deciso che avrei dovuto redarre una %breve relazione, con lo scopo di documentare il lavoro svolto. Tali relazioni, inoltre, sono servite come materiale ausiliario per la %presentazione delle nuove funzionalità sviluppate al proponente. Infine, terminati tutti gli obiettivi e in caso di approvazione da parte del %tutor e del proponente, avrei dovuto trasferire il lavoro svolto dall'ambiente di sviluppo a quello di produzione.
 
-\section{Scelte tecnologiche}
+\section{Scelte tecnologiche e strumenti utilizzati}
 A livello tecnologico, datosi che il \bookingEngine\hphantom{i}è basato sullo stack che in azienda viene chiamato \gls{wisp}, sono stato obbligato ad utilizzare \textit{PHP} su \gls{framework} \textit{Codeigniter} per la parte \textit{backend}, \textit{HTML5}, \textit{CSS3}, \textit{Javascript} (principalmente utilizzando \gls{jquery}) per quanto riguarda il \textit{frontend}. Infine, per la comunicazione tra \textit{backend} e \textit{frontend} ho adoperato richieste \gls{ajax} con \gls{json} come formato per lo scambio di dati. Come ambiente di sviluppo ho deciso di usare \textit{Visual Studio Code} per via della sua semplicità e possibilità di personalizzazione. Infine, tutto il lavoro che ho svolto è stato sottoposto a versionamento utilizzando il server \textit{Git} dell'azienda. 
 
 \section{Funzionamento e struttura del \bookingEngine}
@@ -136,10 +136,10 @@ Se è vero che, al termine degli interventi sulla struttura del database descrit
 La soluzione trovata a tale problema nasce dalla seguente considerazione: è possibile prevedere quando cambia la maggior parte dei dati presenti nel database e utilizzati per le query più lente. Infatti dati inerenti a navi, itinerari, cabine, prezzi e disponibilità vengono rinnovati ad ogni integrazione, che è un'operazione schedulata 4 volte al giorno, ad orari noti. Osservando inoltre che la stessa query sugli stessi dati presenta gli stessi risultati, si è giunti alla conclusione che l'implementazione di un meccanismo di caching delle query permetta di ottimizzare velocità del sito e carico del server.\\
 Il meccanismo progettato ha il seguente funzionamento:
 \begin{itemize}
-	\item La query viene eseguita la prima volta ed il suo risultato viene salvato nella cache;
-	\item Quando la query viene eseguita ancora, invece di interrogare il database viene letto il contenuto della cache;
-	\item Ad ogni integrazione dati la cache viene svuotata, perchè i dati presenti in essa non riflettono più il nuovo contenuto delle tabelle del database;
-	\item Al termine di ogni integrazione, vengono effettuate delle richieste \textit{CURL} alle pagine più utilizzate del sito, in modo tale che la cache venga ricreata.
+	\item la query viene eseguita la prima volta ed il suo risultato viene salvato nella cache;
+	\item quando la query viene eseguita ancora, invece di interrogare il database viene letto il contenuto della cache;
+	\item ad ogni integrazione dati la cache viene svuotata, perchè i dati presenti in essa non riflettono più il nuovo contenuto delle tabelle del database;
+	\item al termine di ogni integrazione, vengono effettuate delle richieste \textit{HTTP} alle pagine più utilizzate del sito, in modo tale che la cache venga ricreata.
 \end{itemize}
 Si è deciso di affidare la gestione della cache a \textit{Codeigniter}, che offre già questa funzionalità. Il modulo di gestione del database di \textit{Codeigniter}, infatti, fornisce già i seguenti metodi:
 \begin{itemize}
@@ -160,9 +160,9 @@ Grazie a \textit{cache\_delete} sarebbe possibile cancellare la cache solo di al
 
 \subsection{Risultati}
 L'implementazione della cache ha giovato molto al \bookingEngine. Basti pensare che ora la pagina di visualizzazione dei risultati ricerca è giunta ad avere un tempo di risposta medio attorno ai 3 secondi, ovvero ora è l'80\% più veloce di prima, ma soprattutto è paragonabile al tempo di risposta dei competitor. Il tempo di risposta della homepage, inoltre, è arrivata a toccare i 500 millisecondi, dai circa 3 secondi prima di implementare la cache.\\
-Tra ottimizzazione del database e cache, comunque, sono stati fatti ingenti miglioramenti alle prestazioni, che riassumo nella tabella sottostante, prendendo come esempio la pagina principale e quella di visualizzazione dei risultati della ricerca (che, per brevità, chiamerò soltanto "ricerca").\\
+Tra ottimizzazione del database e cache, comunque, sono stati fatti ingenti miglioramenti alle prestazioni, che riassumo nella tabella \ref{table:risultati-ottimizzazioni}, prendendo come esempio la pagina principale e quella di visualizzazione dei risultati della ricerca (che, per brevità, chiamerò soltanto "ricerca").\\
 
-\begin{center}
+\begin{table}[!h]
 	\def\arraystretch{1.5}
 	\begin{tabular}{ | l | l | l | l |}
 		\hline
@@ -172,43 +172,48 @@ Tra ottimizzazione del database e cache, comunque, sono stati fatti ingenti migl
 		Ricerca & 45-60 secondi & 15-20 secondi & 3 secondi.  \\
 		\hline
 	\end{tabular}
-\end{center}
+	\caption{Risultati delle ottimizzazioni effettuate sul \bookingEngine}
+	\label{table:risultati-ottimizzazioni}
+\end{table}
+
 
 \newpage
-\section{Integrazione delle tariffe vuoto per pieno}
-\subsection{Il problema}
-Dopo aver preso effettivamente confidenza con il database, mi è stato chiesto come secondo lavoro di creare un sistema che permettesse di inserire nel flusso di prenotazione anche tariffe vuoto per pieno. Precisamente, tale sistema avrebbe dovuto avere le seguenti caratteristiche:
+\section{Integrazione delle tariffe \textit{vuoto per pieno}}
+\subsection{Analisi del problema}
+Dopo aver preso effettivamente confidenza con il database, mi è stato chiesto di creare un sistema che permettesse di inserire nel flusso di prenotazione anche tariffe \textit{vuoto per pieno}. Precisamente, tale sistema avrebbe dovuto avere le seguenti caratteristiche:
 \begin{enumerate}
-	\item Permettere di inserire nel sistema gli acquisti di vuoti pieno effettuati da \textit{Primarete} tramite upload di appositi file;
+	\item Permettere di inserire nel sistema gli acquisti di \textit{vuoto per pieno} effettuati da \textit{Primarete} tramite upload di appositi file;
 	\item Permettere di differenziare i prezzi in base al soggetto a cui si sta vendendo;
-	\item Permettere di prenotare e pagare una cabina con tariffa vuoto per pieno.
+	\item Permettere di prenotare e pagare una cabina con tariffa \textit{vuoto per pieno}.
 \end{enumerate}
 
 \subsubsection{Inserimento degli acquisti nel sistema}
-Il sistema avrebbe dovuto prevedere una funzionalità di "carico" delle tariffe. In fase di acquisto dei vuoti pieno da parte di \textit{Primarete}, il fornitore (ovvero la compagnia di crociera) rilascia un file riepilogativo contenente il dettaglio di quanto acquistato. Tali informazioni avrebbero dovuto potersi caricare in modo assistito nel sistema, che avrebbe dovuto poi inserirle nel flusso di prenotazione.\\
+Il sistema deve prevedere una funzionalità di "carico" delle tariffe. In fase di acquisto di \textit{vuoto per pieno} da parte di \textit{Primarete}, il fornitore (ovvero la compagnia di crociera) rilascia un file riepilogativo contenente il dettaglio di quanto acquistato. Tali informazioni devono potersi caricare in modo assistito nel sistema, che avrebbe dovuto poi inserirle nel flusso di prenotazione.\\
 Il problema principale è stato che il file ritornato da ciascun fornitore aveva (e ha tuttora) il proprio formato dati, quindi si sarebbe dovuto creare un importatore per ogni fornitore. Inoltre, anche la tipologia di dati presente in ciascun file poteva differire: ad esempio, per riferirsi all'età di ogni passeggero, alcuni fornitori utilizzano l'età ed altri la data di nascita. Il sistema avrebbe dunque dovuto uniformare i dati caricati.
 
 \subsubsection{Differenziazione dei prezzi}
 CrociereRegalo è un \bookingEngine\hphantom{i}utilizzato per vendite sia B2C (cioè verso clienti finali) sia B2B (cioè verso altre agenzie). Queste ultime, in base agli accordi commerciali che hanno con \textit{Primarete}, appartengono a determinati \textit{listini}, ovvero hanno diritto a commissioni/tariffe più o meno agevolate.\\Il sistema, quindi, avrebbe dovuto poter differenziare i prezzi di vendita delle cabine in base al listino di appartenenza dell'acquirente (un acquirente non appartenente a nessun listino sarebbe stato identificato al pari di una vendita B2C).
 
 \subsubsection{Inserimento della tariffa nel flusso di prenotazione}
-Il \bookingEngine\hphantom{i}avrebbe dovuto permettere di visualizzare i prezzi delle cabine soggette a tariffe vuoto per pieno nei risultati di ricerca. Inoltre, avrebbe dovuto essere possibile poter prenotare e conseguentemente pagare tali cabine.\\La disponibilità delle stesse, quindi, si sarebbe dovuta aggiornare (decrementare) automaticamente.
+Il \bookingEngine\hphantom{i}avrebbe dovuto permettere di visualizzare i prezzi delle cabine soggette a tariffe \textit{vuoto per pieno} nei risultati di ricerca. Inoltre, avrebbe dovuto essere possibile poter prenotare e conseguentemente pagare tali cabine.\\La disponibilità delle stesse, quindi, si sarebbe dovuta aggiornare (decrementare) automaticamente.
 
-\subsection{La soluzione}
-\subsubsection{Inserimento degli acquisti nel sistema}
-Affinché fosse possibile inserire gli acquisti nel sistema, è stata realizzata una nuova pagina nel pannello di amministrazione del \bookingEngine, accessibile solo tramite l'inserimento di username e password. In tale pagina viene visualizzato un riepilogo dei vuoti pieno caricati con la possibilità, per ognuno di essi, di avere il dettaglio delle cabine vendute e di quelle ancora disponibili. È stato inoltre inserito un tasto che apre una finestra di dialogo all'interno della quale viene data la possibilità di caricare nuovi vuoti pieno, andando quindi a "rifornire" il "magazzino". In base al fornitore selezionato nella finestra di dialogo è possibile: 
+\subsection{Progettazione e codifica della soluzione}
+\subsubsection{Inserimento degli acquisti nel sistema - Progettazione}
+Affinché fosse possibile inserire gli acquisti nel sistema, è stata realizzata una nuova pagina nel pannello di amministrazione del \bookingEngine, accessibile solo tramite l'inserimento di username e password. In tale pagina viene visualizzato un riepilogo dei \textit{vuoto per pieno} caricati con la possibilità, per ognuno di essi, di avere il dettaglio delle cabine vendute e di quelle ancora disponibili. È stato inoltre inserito un tasto che apre una finestra di dialogo all'interno della quale viene data la possibilità di caricare nuovi \textit{vuoto per pieno}, andando quindi a "rifornire" il "magazzino". In base al fornitore selezionato nella finestra di dialogo è possibile: 
 \begin{itemize}
-	\item Caricare il file di riepilogo di quanto acquistato fornito dalla compagnia, in caso di fornitore \textbf{Costa} o \textbf{MSC}. Il primo fornisce un file con estensione \textit{.xls} mentre il secondo un file con estensione \textit{.csv}
+	\item Caricare il file di riepilogo di quanto acquistato fornito dalla compagnia, in caso di fornitore \textbf{Costa} o \textbf{MSC}, come mostrato in Figura \ref{figura:upload-msc-costa}. Il primo fornisce un file con estensione \textit{.xls} mentre il secondo un file con estensione \textit{.csv}
 	\begin{figure}[!h] 
 		\centering 
 		\includegraphics[width=.8\columnwidth]{attivita/vuotopieno_msc} 
 		\caption{Schermata di caricamento del vuoto pieno MSC e Costa.}
+		\label{figura:upload-msc-costa}
 	\end{figure}
-	\item Inserire a mano i dettagli del vuoto pieno che si intende caricare nel caso di fornitore \textbf{Royal Caribbean}, \textbf{Celebrity} o \textbf{Azamara}. Essi infatti forniscono il file di riepilogo di quanto acquistato in formato \textit{.pdf}, che è molto difficile da interpretare.
+	\item Inserire a mano i dettagli del vuoto pieno che si intende caricare nel caso di fornitore \textbf{Royal Caribbean}, \textbf{Celebrity} o \textbf{Azamara}, come mostrato in Figura \ref{figura:upload-royal}. Essi infatti forniscono il file di riepilogo di quanto acquistato in formato \textit{.pdf}, che è molto difficile da interpretare.
 	\begin{figure}[!h] 
 		\centering 
 		\includegraphics[width=.8\columnwidth]{attivita/vuotopieno_royal} 
 		\caption{Schermata di caricamento del vuoto pieno Royal/Celebrity/Azamara.}
+		\label{figura:upload-royal}
 	\end{figure}
 \end{itemize}
 In ogni caso, è stato deciso che per ciascun vuoto pieno si sarebbero memorizzate le seguenti informazioni:
@@ -222,6 +227,7 @@ In ogni caso, è stato deciso che per ciascun vuoto pieno si sarebbero memorizza
 	\item Il \textbf{numero di cabine} totali di quel vuoto pieno,
 	\item La \textbf{data di inizio} e la \textbf{data di fine} validità della tariffa, in modo che sia possibile venderla solo in determinati periodi/intervalli. Ciò significa che, ad esempio, se la data di inizio viene impostata al 20 agosto 2018 e la data di fine al 30 settembre 2018, in caso di una ricerca fatta prima del 20 agosto 2018 o dopo il 30 settembre 2018, la tariffa non comparirà tra i risultati.
 \end{itemize}
+\subsubsection{Inserimento degli acquisti nel sistema - Codifica}
 Per memorizzare queste informazioni è stata creata una nuova tabella in database denominata \textbf{Cruises\_Inventory}, avente come campi \textit{Id} (chiave primaria auto incrementante), \textit{Supplier} (fornitore, chiave esterna che si riferisce a \textit{Cruises\_Lines}, tabella dove sono memorizzati tutti i fornitori), \textit{GroupID}, \textit{CruiseID}, \textit{DepartureDate} (data di partenza della crociera), \textit{Length} (lunghezza in notti della crociera), \textit{N\_Pax} (numero di posti totali), \textit{N\_Cab} (numero di cabine totali), \textit{Data\_Inizio} e \textit{Data\_Fine}.\\
 \\
 Oltre alle informazioni generali relative a ciascun vuoto pieno, è stato necessario memorizzarne anche il contenuto in dettaglio, in termini di cabine acquistate (e quindi da rivendere). Si è deciso di creare la tabella \textbf{Cruises\_InventoryDetail} avente i seguenti campi:
@@ -233,7 +239,7 @@ Oltre alle informazioni generali relative a ciascun vuoto pieno, è stato necess
 	\item \textbf{BookId}, numero di prenotazione del fornitore della cabina a cui la riga corrente si sta riferendo;
 	\item \textbf{Category}, categoria della cabina corrente.
 \end{itemize}
-Per gestire il caricamento dei vuoti pieno nel sistema sono state realizzate tre classi \textit{parser} (una per MSC, una per Costa e una per il trio Royal-Celebrity-Azamara)in grado di interpretare dei dati in input e renderli compatibili con la struttura delle tabelle \textit{Cruises\_Inventory} e \textit{Cruises\_InventoryDetail}. Queste tre classi, \textit{MSCParser}, \textit{CostaParser} e \textit{RoyalParser} implementano tutte l'interfaccia \textbf{ParserInterface}, che ha i seguenti metodi astratti:
+Per gestire il caricamento dei \textit{vuoto per pieno} nel sistema sono state realizzate tre classi \textit{parser} (una per MSC, una per Costa e una per il trio Royal-Celebrity-Azamara)in grado di interpretare dei dati in input e renderli compatibili con la struttura delle tabelle \textit{Cruises\_Inventory} e \textit{Cruises\_InventoryDetail}. Queste tre classi, \textit{MSCParser}, \textit{CostaParser} e \textit{RoyalParser} implementano tutte l'interfaccia \textbf{ParserInterface}, che ha i seguenti metodi astratti:
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{tabularx}{\columnwidth}{XX}
@@ -255,7 +261,7 @@ Per gestire il caricamento dei vuoti pieno nel sistema sono state realizzate tre
 		\hline
 	\end{tabularx}
 \end{center}
-È stata poi creata una nuova classe, \textbf{Cruises\_Inventory}, "figlia" di \textit{CI\_Model} (classe base dei modelli di Codeigniter), che si occupa principalmente del caricamento del vuoto pieno nel database, avvalendosi dei parser prima elencati. Di preciso, ha i seguenti metodi:
+È stata poi creata una nuova classe, \textbf{Cruises\_Inventory}, derivata da \textit{CI\_Model} (classe base dei modelli di Codeigniter), che si occupa principalmente del caricamento del vuoto pieno nel database, avvalendosi dei parser prima elencati. Più precisamente, la classe ha i seguenti metodi:
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
@@ -277,8 +283,10 @@ Per gestire il caricamento dei vuoti pieno nel sistema sono state realizzate tre
 \end{center}
 La gestione del pannello di amministrazione è affidata ad un unico \textit{controller}, chiamato \textbf{Back}. In questa classe è stato aggiunto un metodo chiamato \textit{caricaVuotoPieno} che prende l'input dal frontend e lo passa al metodo \textit{loadFromFile} della classe \textit{Cruises\_Inventory} appena descritta, che si occuperà dell'elaborazione e della restituzione del risultato della stessa sotto forma di \gls{json}.
 
-\subsubsection{Differenziazione dei prezzi}
-I prezzi di ogni cabina presente nel sistema risiedono nella tabella \textit{Cruises\_Prices}. Tale tabella permette di conoscere il prezzo di ogni categoria di cabina (per ogni combinazione di età dei passeggeri tollerata dal sistema) per ogni \gls{tariffa} disponibile. Il problema è che \textit{Cruises\_Prices} viene svuotata e ripopolata ad ogni integrazione: per questo motivo si è deciso di separare la gestione dei prezzi delle cabine soggette a tariffa vuoto per pieno in una nuova tabella, che è stata chiamata \textit{Cruises\_InventoryPrices}. Di preciso:
+\subsubsection{Differenziazione dei prezzi - Progettazione}
+I prezzi di ogni cabina presente nel sistema risiedono nella tabella \textit{Cruises\_Prices}. Tale tabella permette di conoscere il prezzo di ogni categoria di cabina (per ogni combinazione di età dei passeggeri tollerata dal sistema) per ogni \gls{tariffa} disponibile. Il problema è che \textit{Cruises\_Prices} viene svuotata e ripopolata ad ogni integrazione: per questo motivo si è deciso di separare la gestione dei prezzi delle cabine soggette a tariffa \textit{vuoto per pieno} in una nuova tabella, che è stata chiamata \textit{Cruises\_InventoryPrices}. 
+\subsubsection{Differenziazione dei prezzi - Codifica}
+Per realizzare quanto progettato, sono stati fatti i seguenti interventi:
 \begin{itemize}
 	\item Nella tabella \textit{Cruises\_Prices} è stata inserita una nuova colonna di tipo intero, \textbf{Manuale}, che indica se la riga si sta riferendo ad una tariffa passata dal fornitore o presa da un vuoto pieno. Quando viene fatta un'integrazione, vengono eliminate solo le righe aventi valore di tale colonna pari a 0, in modo da non perdere le informazioni relative al vuoto pieno;
 	\item È stata creata la tabella \textbf{Cruises\_InventoryPrices}, avente i seguenti campi:
@@ -312,23 +320,25 @@ Per l'interazione con la tabella \textit{Cruises\_InventoryPrices} è stato crea
 	\end{longtable}
 \end{center}
 È stato inoltre creato un metodo \textit{salvaPrezzi} nel controller \textit{Back}, che si limita ad invocare il metodo \textit{salvaPrezzi} del model \textit{Cruises\_InventoryPrices} con i parametri passati tramite POST.\\
-A livello frontend, si è fatto in modo che, al termine del caricamento del vuoto pieno, si venga reindirizzati ad una pagina di inserimento prezzi, che permette appunto di specificare ogni combinazione di prezzo tollerata dal sistema per ogni categoria di cabina per ciascun listino. 
+A livello frontend, si è fatto in modo che, al termine del caricamento del vuoto pieno, si venga reindirizzati ad una pagina di inserimento prezzi (come quella mostrata in Figura \ref{figura:inserimento-prezzi-vuotopieno}), che permette appunto di specificare ogni combinazione di prezzo tollerata dal sistema per ogni categoria di cabina per ciascun listino. 
 	\begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=1\columnwidth]{attivita/vuotopieno_prezzi} 
 	\caption{Schermata di inserimento dei prezzi di un vuoto pieno.}
+	\label{figura:inserimento-prezzi-vuotopieno}
 \end{figure}\\
 I prezzi poi vengono salvati tramite una chiamata \gls{ajax} che invoca il metodo \textit{salvaPrezzi} del controller \textit{Back} precedentemente descritto.
 
-\subsubsection{Inserimento della tariffa nel flusso di prenotazione}
-Come già accennato nella \hyperref[section:flusso-prenotazione]{sezione \ref*{section:flusso-prenotazione}}, il flusso di prenotazione si compone di 6 step, a ciascuno dei quali corrisponde un metodo nel controller \textbf{WS\_Cruises} del \textit{dataExchange}. Questi 6 metodi venivano (e vengono tuttora) chiamati tramite richieste \gls{ajax} dal frontend e al loro interno chiamavano l'omologo metodo in grado di interfacciarsi con i \gls{webservice} del fornitore considerato.\\
+\subsubsection{Inserimento della tariffa nel flusso di prenotazione - Progettazione}
+Come già accennato nella \hyperref[section:flusso-prenotazione]{Sezione \ref*{section:flusso-prenotazione}}, il flusso di prenotazione si compone di 6 step, a ciascuno dei quali corrisponde un metodo nel controller \textbf{WS\_Cruises} del \textit{dataExchange}. Questi 6 metodi venivano (e vengono tuttora) chiamati tramite richieste \gls{ajax} dal frontend e al loro interno chiamavano l'omologo metodo in grado di interfacciarsi con i \gls{webservice} del fornitore considerato. Si è deciso quindi di creare 6 nuovi metodi, uno per ogni step del flusso che, invece di interfacciarsi con qualche \gls{webservice}, leggesse i dati delle tariffe \textit{vuoto per pieno} direttamente dal database.\\
+\subsubsection{Inserimento della tariffa nel flusso di prenotazione - Codifica}
 Sono stati quindi creati i seguenti metodi:
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
 		\hline
 		\textbf{Metodo} & \textbf{Descrizione} \\ \hline
-		+ Inventory\_categoryAvailabilty (inout wsResult:array) : void & Concatena al risultato eventualmente restituito dai \gls{webservice} del fornitore le categorie di cabine, se presenti, aventi tariffa vuoto per pieno. Il codice della tariffa restituita (dato che servirà alle successive funzioni) è "INVENTORY".\\
+		+ Inventory\_categoryAvailabilty (inout wsResult:array) : void & Concatena al risultato eventualmente restituito dai \gls{webservice} del fornitore le categorie di cabine, se presenti, aventi tariffa \textit{vuoto per pieno}. Il codice della tariffa restituita (dato che servirà alle successive funzioni) è "INVENTORY".\\
 		\hline
 		+ Inventory\_cabinAvailabilty () : array & Legge dal database (facendo delle query su Cruises\_Inventory, Cruises\_InventoryDetail e Cruises\_InventoryPrices) e restituisce le singole cabine disponibili, compreso il prezzo, secondo i qualificatori che legge dal payload della richiesta, quali numero ed età dei passeggeri, cruiseID considerato, categoria delle cabine di cui si vuole controllare la disponibilità e listino di appartenenza dell'utente.\\
 		\hline
@@ -340,13 +350,24 @@ Sono stati quindi creati i seguenti metodi:
 		\hline
 	\end{longtable}
 \end{center}
-Il primo metodo del flusso, \textit{categoryAvailability}, in base al valore del parametro \textit{supplier} (letto dal payload della richiesta), invocava i metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability}, che interrogano i rispettivi \glspl{webservice}. È stato sufficiente quindi che il nuovo metodo creato \textit{Inventory\_categoryAvailabilty} venisse invocato da \textit{categoryAvailabilty} a prescindere dal \textit{supplier}, concatenando all'output dei metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability} le categorie di cabine eventualmente disponibili con tariffa vuoto per pieno.\\
-Nei metodi \textit{cabinAvailability}, \textit{requestPricing}, \textit{requestBooking} e \textit{requestBookingInformation}, è stata introdotta un'istruzione condizionale che, in base al \textbf{fareCode} (codice della tariffa) passato come parametro, decida se invocare l'omologo metodo che legga dal database delle tariffe vuoto per pieno (in caso di fareCode = "INVENTORY") o dai \glspl{webservice} del fornitore.\\
+Il primo metodo del flusso, \textit{categoryAvailability}, in base al valore del parametro \textit{supplier} (letto dal payload della richiesta), invocava i metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability}, che interrogano i rispettivi \glspl{webservice}. È stato sufficiente quindi che il nuovo metodo creato \textit{Inventory\_categoryAvailabilty} venisse invocato da \textit{categoryAvailabilty} a prescindere dal \textit{supplier}, concatenando all'output dei metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability} le categorie di cabine eventualmente disponibili con tariffa \textit{vuoto per pieno}.\\
+Nei metodi \textit{cabinAvailability}, \textit{requestPricing}, \textit{requestBooking} e \textit{requestBookingInformation}, è stata introdotta un'istruzione condizionale che, in base al \textbf{fareCode} (codice della tariffa) passato come parametro, decida se invocare l'omologo metodo che legga dal database delle tariffe \textit{vuoto per pieno} (in caso di fareCode = "INVENTORY") o dai \glspl{webservice} del fornitore.\\
 Al frontend, infine, non è stato necessario fare alcuna modifica.
-\subsubsection{Test}
-Al termine della realizzazione, sono stati effettuati test manuali sulla congruenza dei dati tra le nuove tabelle e i vuoti pieno importati. 
-Infine si è verificato che i dati presenti nelle tabelle fossero interpretati in maniera adeguata dalle varie query presenti nel flusso di prenotazione, dal primo all'ultimo dei sei step.
-\newpage
+\subsection{Test}
+Al termine della realizzazione, sono stati effettuati test manuali sulla congruenza dei dati tra le nuove tabelle e i \textit{vuoto per pieno} importati. Nello specifico:
+\begin{itemize}
+	\item Per i \textit{vuoto per pieno} \textbf{MSC} e \textbf{Costa}, si è verificato che il file venisse correttamente importato, interpretato e salvato nelle nuove tabelle realizzate \textit{Cruises\_Inventory} e \textit{Cruises\_InventoryDetail};
+	\item Per i \textit{vuoto per pieno} \textbf{Royal}, \textbf{Celebrity} e \textbf{Azamara} si è verificato che la schermata di caricamento funzionasse e i dati venissero correttamente salvati nelle tabelle \textit{Cruises\_Inventory} e \textit{Cruises\_InventoryDetail}.
+\end{itemize} 
+Infine si è verificato che i dati presenti nelle tabelle fossero interpretati in maniera adeguata dalle varie query presenti nel flusso di prenotazione, dal primo all'ultimo dei sei step. Nello specifico: 
+\begin{itemize}
+	\item Si è verificato che il metodo \textbf{Inventory\_categoryAvailabilty} restituisse correttamente le categorie di cabine di un \textit{vuoto per pieno} preventivamente importato;
+	\item Si è verificato che il metodo \textbf{Inventory\_cabinAvailabilty} restituisse correttamente le cabine di un \textit{vuoto per pieno} preventivamente importato;
+	\item Si è verificato che il metodo \textbf{Inventory\_requestPricing} restituisse un preventivo corretto per una cabina disponibile di un \textit{vuoto per pieno} preventivamente importato, tenendo conto correttamente dei qualificatori passati (come l'età dei passeggeri);
+	\item Si è verificato che il metodo \textbf{Inventory\_requestBooking} effettuasse e salvasse correttamente una nuova prenotazione a database, restituendone il codice corretto;
+	\item Si è verificato che il metodo \textbf{Inventory\_requestBookingInformation} restituisse i dettagli corretti di un \textit{vuoto per pieno} preventivamente prenotato, in base a quanto presente nel database.
+\end{itemize}
+
 \section{Aggiunta delle tariffe di un nuovo fornitore}
 \subsection{Il problema}
 L'ultimo argomento affrontato durante lo stage è stato aggiungere la possibilità di prenotare una crociera con \textit{Royal Caribbean},\textit{Celebrity} e \textit{Azamara}. Queste tre compagnie, per fortuna, forniscono, grazie alla società \textit{ISTINFOR}, dei \glspl{webservice} chiamati \textbf{FIBOS}, che sono unici per le tre compagnie di crociera sopra citate. \\
@@ -467,7 +488,7 @@ Per, dunque, evitare tanto lavoro si è deciso di implementare, all'interno del 
 	\caption{Dettaglio dell'itinerario visualizzato dal frontend.}
 \end{figure}
 Le informazioni ritornate da questo metodo includono anche la lista di destinazioni dell'itinerario, ma la lingua in cui i nomi di tali destinazioni (porti, città, stati) vengono restituiti è mista. Ad esempio, per riferirsi alle isole delle Azzorre, viene usato tanto il nome italiano "Azzorre" quanto il nome spagnolo "Azores". La stessa cosa vale per Danimarca, Scozia, Australia, Emirati Arabi, Canarie, Belgio ecc. È stato dunque necessario realizzare un mapping manuale dei nomi, che permettesse di tradurre i nomi in lingua italiana.\\ \\
-Per quanto riguarda l'integrazione nel flusso di prenotazione delle tariffe \textit{FIBOS}, analogamente al lavoro svolto per i vuoti pieno, sono stati creati ed implementati nuovi metodi nel controller \textit{WS\_Cruises} che utilizzano nuovi metodi creati nel model \textit{Royal\_Model}. Sono state utilizzate le seguenti procedure di \textit{RCCL}:
+Per quanto riguarda l'integrazione nel flusso di prenotazione delle tariffe \textit{FIBOS}, analogamente al lavoro svolto per i \textit{vuoto per pieno}, sono stati creati ed implementati nuovi metodi nel controller \textit{WS\_Cruises} che utilizzano nuovi metodi creati nel model \textit{Royal\_Model}. Sono state utilizzate le seguenti procedure di \textit{RCCL}:
 
 \begin{center}
 	\def\arraystretch{1.5}
