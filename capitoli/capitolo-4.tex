@@ -208,32 +208,32 @@ Affinché fosse possibile inserire gli acquisti nel sistema, è stata realizzata
 		\caption{Schermata di caricamento del vuoto pieno MSC e Costa.}
 		\label{figura:upload-msc-costa}
 	\end{figure}
-	\item Inserire a mano i dettagli del vuoto pieno che si intende caricare nel caso di fornitore \textbf{Royal Caribbean}, \textbf{Celebrity} o \textbf{Azamara}, come mostrato in Figura \ref{figura:upload-royal}. Essi infatti forniscono il file di riepilogo di quanto acquistato in formato \textit{.pdf}, che è molto difficile da interpretare.
+	\item Inserire a mano i dettagli del \textit{vuoto per pieno} che si intende caricare nel caso di fornitore \textbf{Royal Caribbean}, \textbf{Celebrity} o \textbf{Azamara}, come mostrato in Figura \ref{figura:upload-royal}. Essi infatti forniscono il file di riepilogo di quanto acquistato in formato \textit{.pdf}, che è molto difficile da interpretare.
 	\begin{figure}[!h] 
 		\centering 
 		\includegraphics[width=.8\columnwidth]{attivita/vuotopieno_royal} 
-		\caption{Schermata di caricamento del vuoto pieno Royal/Celebrity/Azamara.}
+		\caption{Schermata di caricamento del \textit{vuoto per pieno} Royal/Celebrity/Azamara.}
 		\label{figura:upload-royal}
 	\end{figure}
 \end{itemize}
-In ogni caso, è stato deciso che per ciascun vuoto pieno si sarebbero memorizzate le seguenti informazioni:
+In ogni caso, è stato deciso che per ciascun \textit{vuoto per pieno} si sarebbero memorizzate le seguenti informazioni:
 \begin{itemize}
 	\item Il \textbf{fornitore}, ovvero MSC, Costa, Royal Caribbean, Celebrity o Azamara;
-	\item Il \textbf{groupID}, ovvero un identificatore univoco per ciascun fornitore del vuoto pieno acquistato;
-	\item Il \textbf{cruiseID}, ovvero un identificatore univoco per ciascun fornitore della crociera a cui tale vuoto pieno si riferisce;
+	\item Il \textbf{groupID}, ovvero un identificatore univoco per ciascun fornitore del \textit{vuoto per pieno} acquistato;
+	\item Il \textbf{cruiseID}, ovvero un identificatore univoco per ciascun fornitore della crociera a cui tale \textit{vuoto per pieno} si riferisce;
 	\item La \textbf{data di partenza} della crociera;
 	\item La \textbf{lunghezza} (in numero di notti) della crociera;
-	\item Il \textbf{numero di posti} (ovvero la capienza massima di persone) totali in quel vuoto pieno;
-	\item Il \textbf{numero di cabine} totali di quel vuoto pieno,
+	\item Il \textbf{numero di posti} (ovvero la capienza massima di persone) totali in quel \textit{vuoto per pieno};
+	\item Il \textbf{numero di cabine} totali di quel \textit{vuoto per pieno},
 	\item La \textbf{data di inizio} e la \textbf{data di fine} validità della tariffa, in modo che sia possibile venderla solo in determinati periodi/intervalli. Ciò significa che, ad esempio, se la data di inizio viene impostata al 20 agosto 2018 e la data di fine al 30 settembre 2018, in caso di una ricerca fatta prima del 20 agosto 2018 o dopo il 30 settembre 2018, la tariffa non comparirà tra i risultati.
 \end{itemize}
 \subsubsection{Inserimento degli acquisti nel sistema - Codifica}
 Per memorizzare queste informazioni è stata creata una nuova tabella in database denominata \textbf{Cruises\_Inventory}, avente come campi \textit{Id} (chiave primaria auto incrementante), \textit{Supplier} (fornitore, chiave esterna che si riferisce a \textit{Cruises\_Lines}, tabella dove sono memorizzati tutti i fornitori), \textit{GroupID}, \textit{CruiseID}, \textit{DepartureDate} (data di partenza della crociera), \textit{Length} (lunghezza in notti della crociera), \textit{N\_Pax} (numero di posti totali), \textit{N\_Cab} (numero di cabine totali), \textit{Data\_Inizio} e \textit{Data\_Fine}.\\
 \\
-Oltre alle informazioni generali relative a ciascun vuoto pieno, è stato necessario memorizzarne anche il contenuto in dettaglio, in termini di cabine acquistate (e quindi da rivendere). Si è deciso di creare la tabella \textbf{Cruises\_InventoryDetail} avente i seguenti campi:
+Oltre alle informazioni generali relative a ciascun \textit{vuoto per pieno}, è stato necessario memorizzarne anche il contenuto in dettaglio, in termini di cabine acquistate (e quindi da rivendere). Si è deciso di creare la tabella \textbf{Cruises\_InventoryDetail} avente i seguenti campi:
 \begin{itemize}
 	\item \textbf{Id}, chiave primaria auto incrementante;
-	\item \textbf{Cruises\_Inventory}, chiave esterna collegata all'\textit{Id} dell'omonima tabella \textit{Cruises\_Inventory}, che serve per collegare ogni riga del dettaglio al vuoto pieno corrispondente;
+	\item \textbf{Cruises\_Inventory}, chiave esterna collegata all'\textit{Id} dell'omonima tabella \textit{Cruises\_Inventory}, che serve per collegare ogni riga del dettaglio al \textit{vuoto per pieno} corrispondente;
 	\item \textbf{Cruises\_PricesID}, chiave esterna collegata all'\textit{Id} di \textit{Cruises\_Prices}, tabella il cui scopo verrà analizzato nel dettaglio nella sezione successiva;
 	\item \textbf{Cabin}, numero di cabina (univoco nel dominio del fornitore) a cui la riga corrente si sta riferendo;
 	\item \textbf{BookId}, numero di prenotazione del fornitore della cabina a cui la riga corrente si sta riferendo;
@@ -245,23 +245,23 @@ Per gestire il caricamento dei \textit{vuoto per pieno} nel sistema sono state r
 	\begin{tabularx}{\columnwidth}{XX}
 		\hline
 		\textbf{Metodo} & \textbf{Descrizione} \\ \hline
-		+ getCruiseID() : string & Ritorna il CruiseID corrispondente al vuoto pieno considerato\\
+		+ getCruiseID() : string & Ritorna il CruiseID corrispondente al \textit{vuoto per pieno} considerato\\
 		\hline
-		+ getGroupID() : string & Ritorna il GroupID corrispondente al vuoto pieno considerato\\
+		+ getGroupID() : string & Ritorna il GroupID corrispondente al \textit{vuoto per pieno} considerato\\
 		\hline
-		+ getDepartureDate() : string & Ritorna la data di partenza corrispondente al vuoto pieno considerato, in formato "Y-m-d" (esempio 2018-09-27).\\
+		+ getDepartureDate() : string & Ritorna la data di partenza corrispondente al \textit{vuoto per pieno} considerato, in formato "Y-m-d" (esempio 2018-09-27).\\
 		\hline
-		+ getLength() : int & Ritorna la lunghezza (in numero di notti) corrispondente al vuoto pieno considerato.\\
+		+ getLength() : int & Ritorna la lunghezza (in numero di notti) corrispondente al \textit{vuoto per pieno} considerato.\\
 		\hline
-		+ getNPax() : int & Ritorna la capienza totale (in numero di persone) corrispondente al vuoto pieno considerato.\\
+		+ getNPax() : int & Ritorna la capienza totale (in numero di persone) corrispondente al \textit{vuoto per pieno} considerato.\\
 		\hline
-		+ getNCab() : int & Ritorna la capienza totale (in numero di cabine) corrispondente al vuoto pieno considerato.\\
+		+ getNCab() : int & Ritorna la capienza totale (in numero di cabine) corrispondente al \textit{vuoto per pieno} considerato.\\
 		\hline
-		+ popolaDettaglioTabella() : array & Ritorna un array che, per ciascuna riga del vuoto pieno, associa a ciascun campo della tabella \textit{Cruises\_InventoryDetail} il relativo valore.\\
+		+ popolaDettaglioTabella() : array & Ritorna un array che, per ciascuna riga del \textit{vuoto per pieno}, associa a ciascun campo della tabella \textit{Cruises\_InventoryDetail} il relativo valore.\\
 		\hline
 	\end{tabularx}
 \end{center}
-È stata poi creata una nuova classe, \textbf{Cruises\_Inventory}, derivata da \textit{CI\_Model} (classe base dei modelli di Codeigniter), che si occupa principalmente del caricamento del vuoto pieno nel database, avvalendosi dei parser prima elencati. Più precisamente, la classe ha i seguenti metodi:
+È stata poi creata una nuova classe, \textbf{Cruises\_Inventory}, derivata da \textit{CI\_Model} (classe base dei modelli di Codeigniter), che si occupa principalmente del caricamento del \textit{vuoto per pieno} nel database, avvalendosi dei parser prima elencati. Più precisamente, la classe ha i seguenti metodi:
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
@@ -269,13 +269,13 @@ Per gestire il caricamento dei \textit{vuoto per pieno} nel sistema sono state r
 		\textbf{Metodo} & \textbf{Descrizione} \\ \hline
 		+ validId(id:int) : boolean & Ritorna \textit{true} se il parametro passato è un valore presente nella colonna "Id" della tabella \textit{Cruises\_Inventory}\\
 		\hline
-		+ loadFromFile (supplier: int, fileContent: string, dataInizio: Date, dataFine: Date) : void & In base al fornitore passato come parametro (\textit{supplier}), carica il contenuto del vuoto pieno (presente in \textit{fileContent}) nel database, avvalendosi del parser associato al fornitore.\\
+		+ loadFromFile (supplier: int, fileContent: string, dataInizio: Date, dataFine: Date) : void & In base al fornitore passato come parametro (\textit{supplier}), carica il contenuto del \textit{vuoto per pieno} (presente in \textit{fileContent}) nel database, avvalendosi del parser associato al fornitore.\\
 		\hline
-		- loadRoyalInput (supplier: int, content: array) : boolean & Carica il vuoto pieno Royal/Celebrity/Azamara (in base al valore della variabile \textit{supplier}) leggendo il contenuto dall'array associativo \textit{content} ed elaborandolo grazie al parser \textit{RoyalParser}.\\
+		- loadRoyalInput (supplier: int, content: array) : boolean & Carica il \textit{vuoto per pieno} Royal/Celebrity/Azamara (in base al valore della variabile \textit{supplier}) leggendo il contenuto dall'array associativo \textit{content} ed elaborandolo grazie al parser \textit{RoyalParser}.\\
 		\hline
-		- loadCostaFile (fileContent: string) : boolean & Carica il vuoto pieno Costa nel database; \textit{fileContent} rappresenta il contenuto del file del vuoto pieno caricato, che verrà elaborato dal parser \textit{CostaParser}.\\
+		- loadCostaFile (fileContent: string) : boolean & Carica il \textit{vuoto per pieno} Costa nel database; \textit{fileContent} rappresenta il contenuto del file del \textit{vuoto per pieno} caricato, che verrà elaborato dal parser \textit{CostaParser}.\\
 		\hline
-		- loadMSCFile (fileContent: string) : boolean & Carica il vuoto pieno MSC nel database; \textit{fileContent} rappresenta il contenuto del file del vuoto pieno caricato, che verrà elaborato dal parser \textit{MSCParser}.\\
+		- loadMSCFile (fileContent: string) : boolean & Carica il \textit{vuoto per pieno} MSC nel database; \textit{fileContent} rappresenta il contenuto del file del \textit{vuoto per pieno} caricato, che verrà elaborato dal parser \textit{MSCParser}.\\
 		\hline
 		- saveParsedFile(parser: ParserInterface, supplier: int) : boolean & Metodo che viene chiamato da \textit{loadRoyalInput}, \textit{loadCostaFile}, \textit{loadMSCFile}; serve a popolare la tabella \textit{Cruises\_InventoryDetail} e la tabella \textit{Cruises\_Prices}.\\
 		\hline
@@ -288,11 +288,11 @@ I prezzi di ogni cabina presente nel sistema risiedono nella tabella \textit{Cru
 \subsubsection{Differenziazione dei prezzi - Codifica}
 Per realizzare quanto progettato, sono stati fatti i seguenti interventi:
 \begin{itemize}
-	\item Nella tabella \textit{Cruises\_Prices} è stata inserita una nuova colonna di tipo intero, \textbf{Manuale}, che indica se la riga si sta riferendo ad una tariffa passata dal fornitore o presa da un vuoto pieno. Quando viene fatta un'integrazione, vengono eliminate solo le righe aventi valore di tale colonna pari a 0, in modo da non perdere le informazioni relative al vuoto pieno;
+	\item Nella tabella \textit{Cruises\_Prices} è stata inserita una nuova colonna di tipo intero, \textbf{Manuale}, che indica se la riga si sta riferendo ad una tariffa passata dal fornitore o presa da un \textit{vuoto per pieno}. Quando viene fatta un'integrazione, vengono eliminate solo le righe aventi valore di tale colonna pari a 0, in modo da non perdere le informazioni relative al \textit{vuoto per pieno};
 	\item È stata creata la tabella \textbf{Cruises\_InventoryPrices}, avente i seguenti campi:
 		\begin{itemize}
 			\item \textit{Id}, identificatore univoco della riga;
-			\item \textit{Cruises\_Inventory}, chiave esterna che si riferisce al campo \textit{Id} di \textit{Cruises\_Inventory} e specifica il vuoto pieno di appartenenza di tale riga;
+			\item \textit{Cruises\_Inventory}, chiave esterna che si riferisce al campo \textit{Id} di \textit{Cruises\_Inventory} e specifica il \textit{vuoto per pieno} di appartenenza di tale riga;
 			\item \textit{Listino}, chiave esterna di \textit{Cruises\_Listini}, tabella appena creata che verrà descrittà nel prossimo paragrafo. In caso di valori NULL, il listino si intende essere \textit{B2C}, ovvero vendita al dettaglio;
 			\item \textit{Categoria}, che rappresenta la categoria della cabina a cui ci si sta riferendo;
 			\item \textit{Cabina}, che rappresenta il numero di cabina a cui ci si sta riferendo;
@@ -311,7 +311,7 @@ Per l'interazione con la tabella \textit{Cruises\_InventoryPrices} è stato crea
 		\textbf{Metodo} & \textbf{Descrizione} \\ \hline
 		+ getColonnePrezzi() : array & Ritorna un array contentente la lista di tutte le combinazioni di prezzi tollerata dal sistema. Questo metodo è stato scritto per rendere poi dinamico l'inserimento dei prezzi in questa tabella, ovvero in caso si voglia aggiungere un nuovo campo non presente (ad esempio \textit{Price6Adult}), sarà sufficiente aggiungerlo come colonna della tabella, e interfaccia grafica e query di inserimento si adatteranno automaticamente. \\
 		\hline
-		+ tentaAggiornamentoPrezzi (tabella: array, inventoryId: int) : void & Metodo che prova ad aggiornare i prezzi nel caso di caricamento di un vuoto pieno contenente cabine già presenti nel sistema.\\
+		+ tentaAggiornamentoPrezzi (tabella: array, inventoryId: int) : void & Metodo che prova ad aggiornare i prezzi nel caso di caricamento di un \textit{vuoto per pieno} contenente cabine già presenti nel sistema.\\
 		\hline
 		+ salvaPrezzi (input: array) : boolean & Metodo che salva i prezzi di ogni cabina, per ogni listino, presenti nel parametro \textit{input}. Ritorna \textit{true} in caso di successo, \textit{false} altrimenti.\\
 		\hline
@@ -320,11 +320,11 @@ Per l'interazione con la tabella \textit{Cruises\_InventoryPrices} è stato crea
 	\end{longtable}
 \end{center}
 È stato inoltre creato un metodo \textit{salvaPrezzi} nel controller \textit{Back}, che si limita ad invocare il metodo \textit{salvaPrezzi} del model \textit{Cruises\_InventoryPrices} con i parametri passati tramite POST.\\
-A livello frontend, si è fatto in modo che, al termine del caricamento del vuoto pieno, si venga reindirizzati ad una pagina di inserimento prezzi (come quella mostrata in Figura \ref{figura:inserimento-prezzi-vuotopieno}), che permette appunto di specificare ogni combinazione di prezzo tollerata dal sistema per ogni categoria di cabina per ciascun listino. 
+A livello frontend, si è fatto in modo che, al termine del caricamento del \textit{vuoto per pieno}, si venga reindirizzati ad una pagina di inserimento prezzi (come quella mostrata in Figura \ref{figura:inserimento-prezzi-vuotopieno}), che permette appunto di specificare ogni combinazione di prezzo tollerata dal sistema per ogni categoria di cabina per ciascun listino. 
 	\begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=1\columnwidth]{attivita/vuotopieno_prezzi} 
-	\caption{Schermata di inserimento dei prezzi di un vuoto pieno.}
+	\caption{Schermata di inserimento dei prezzi di un \textit{vuoto per pieno}.}
 	\label{figura:inserimento-prezzi-vuotopieno}
 \end{figure}\\
 I prezzi poi vengono salvati tramite una chiamata \gls{ajax} che invoca il metodo \textit{salvaPrezzi} del controller \textit{Back} precedentemente descritto.
@@ -369,8 +369,8 @@ Infine si è verificato che i dati presenti nelle tabelle fossero interpretati i
 \end{itemize}
 
 \section{Aggiunta delle tariffe di un nuovo fornitore}
-\subsection{Il problema}
-L'ultimo argomento affrontato durante lo stage è stato aggiungere la possibilità di prenotare una crociera con \textit{Royal Caribbean},\textit{Celebrity} e \textit{Azamara}. Queste tre compagnie, per fortuna, forniscono, grazie alla società \textit{ISTINFOR}, dei \glspl{webservice} chiamati \textbf{FIBOS}, che sono unici per le tre compagnie di crociera sopra citate. \\
+\subsection{Analisi del problema}
+L'ultimo argomento affrontato durante lo stage è stato aggiungere la possibilità di prenotare una crociera con \textit{Royal Caribbean}, \textit{Celebrity} e \textit{Azamara}. Queste tre compagnie, per fortuna, forniscono, grazie alla società \textit{ISTINFOR}, dei \glspl{webservice} chiamati \textbf{FIBOS}, che sono unici per le tre compagnie di crociera sopra citate. \\
 \textit{FIBOS} prevede l'utilizzo di due tipologie di \glspl{webservice}: \textbf{FDF} (Fibos Data Feed) e \textbf{RCCL} (Royal Caribbean Cruise Line).
 \subsubsection{Importazione di aree geografiche, navi, porti e categorie di cabine}
 Per poter interfacciarsi con i \glspl{webservice}, è stato necessario aggiungere al \bookingEngine\hphantom{i}le informazioni (codici, descrizioni) di aree geografiche, navi, porti e categorie di cabine utilizzate da FIBOS.
