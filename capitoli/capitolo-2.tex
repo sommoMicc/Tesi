@@ -7,7 +7,7 @@
 \label{cap:processi-metodologie}
 
 \section{Profilo}
-Web PD s.a.s. è una software house nata nel 2009, con sede a Padova ma con clienti in tutta Italia (logo in Figura \ref{figura:logo-webpd}). La società nasce con lo scopo di gestire portali e-commerce, ma negli anni ha modificato la sua key activity in sviluppo di soluzioni software personalizzate. Ad oggi si occupa di consulenza informatica su software gestionali, applicazioni web e mobile (sia Android che iOS).\\
+Web PD s.a.s. è una software house nata nel 2009, con sede a Padova ma con clienti in tutta Italia (logo in Figura \ref{figura:logo-webpd}). La società nasce con lo scopo di gestire portali e-commerce, ma negli anni ha modificato la sua \textit{key activity} in sviluppo di soluzioni software personalizzate. Ad oggi si occupa di consulenza informatica su software gestionali, applicazioni web e mobile (sia Android che iOS).\\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.4\columnwidth]{azienda/logo_webpd} 
@@ -29,7 +29,7 @@ Nel 2016 il network e franchising di agenzie di viaggio Primarete Viaggi e Vacan
 L'azienda offre un ampio ventaglio di prodotti, che coinvolgono diverse piattaforme. È opportuno esaminare le tecnologie adoperate raggruppandole nelle seguenti categorie: \textit{Web}, \textit{Mobile} e \textit{Desktop}.
 
 \subsection{Web}
-In WebPD, la realizzazione di prodotti basati su piattaforma Web avviene, a livello di backend, utilizzando come linguaggio di programmazione PHP (versione 5 o 7). Molto spesso, per i progetti più complessi, viene usato il framework \textit{Codeigniter} (versione 3, il cui funzionamento è illustrato in Figura \ref{figura:flow-chart-codeigniter}), che agevola l'implementazione del design pattern MVC e fornisce numerosi strumenti per facilitare (dunque accellerare) lo sviluppo. Codeigniter, tra le altre cose, infatti, implementa una serie di classi che facilitano l'esecuzione ed il debug delle query, oltre ad un meccanismo che permette di salvarle in cache (aumentando notevolmente le prestazioni del prodotto).\\
+In WebPD, la realizzazione di prodotti basati su piattaforma Web avviene, a livello di backend, utilizzando come linguaggio di programmazione PHP (versione 5 o 7). Molto spesso, per i progetti più complessi, viene usato il framework \textit{Codeigniter} (versione 3, il cui funzionamento è illustrato in Figura \ref{figura:flow-chart-codeigniter}), che agevola l'implementazione del design pattern MVC e fornisce numerosi strumenti per facilitare (dunque accelerare) lo sviluppo. Codeigniter, tra le altre cose, infatti, implementa una serie di classi che facilitano l'esecuzione ed il debug delle query, oltre ad un meccanismo che permette di salvarle in cache (aumentando notevolmente le prestazioni del prodotto).\\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=1.0\columnwidth]{azienda/codeigniter_flow} 
@@ -37,7 +37,7 @@ In WebPD, la realizzazione di prodotti basati su piattaforma Web avviene, a live
 	\label{figura:flow-chart-codeigniter}
 \end{figure}\\
 Per quanto riguarda il frontend, invece, viene utilizzato HTML5, CSS3 e Javascript (jQuery), senza usare framework che implementino Single Page Application (come React.js o Angular).\\\\\
-Come server web, infine, vengono usati \textit{Apache2}, in caso di hosting su piattaforma Linux, o  \textit{IIS}, in caso di hosting su piattaforma Windows.\\\\
+Come server web, infine, vengono usati \textit{Apache2}, in caso di \textit{hosting} su piattaforma Linux, o  \textit{IIS}, in caso di \textit{hosting} su piattaforma Windows.\\\\
 Per la realizzazione di siti web semplici, dove per semplici si intende senza esigenze di svolgimento di operazioni complesse, viene prediletto l'utilizzo di CMS, quali Wordpress (nel caso di blog, vetrine o forum) e OpenChart (nel caso di siti di e-commerce).
 \\
 \\
@@ -50,7 +50,7 @@ Per lo sviluppo di prodotti software, WebPD si appoggia a due \gls{DBMS}: \texti
 \end{itemize}
 
 \subsection{Mobile}
-Il know-how accumulato da WebPD nella realizzazione di applicazioni web ha portato all'adozione del framework \textit{Cordova} (il cui schema di funzionamento è illustrato in Figura \ref{figura:funzionamento-cordova}) per la creazione di applicazioni mobile, il quale offre la possibilità di creare app ibride cross platform utilizzando HTML/CSS e Javascript. Tali applicazioni, grazie ad alcune interfacce messe a disposizione da Cordova, possono accedere alle funzionalità native del dispositivo, come fotocamera, storage o sensoristica varia (accellerometro, giroscopio e GPS, se presenti).
+Il \textit{know-how} accumulato da WebPD nella realizzazione di applicazioni web ha portato all'adozione del framework \textit{Cordova} (il cui schema di funzionamento è illustrato in Figura \ref{figura:funzionamento-cordova}) per la creazione di applicazioni mobile, il quale offre la possibilità di creare app ibride cross platform utilizzando HTML/CSS e Javascript. Tali applicazioni, grazie ad alcune interfacce messe a disposizione da Cordova, possono accedere alle funzionalità native del dispositivo, come fotocamera, storage o sensoristica varia (accelerometro, giroscopio e GPS, se presenti).
 
 \begin{figure}[!h] 
 	\centering 
@@ -68,7 +68,7 @@ Java, di contro, viene usato quando si ha l'esigenza di creare applicazioni cros
 \subsection{Ciclo di vita}
 \label{sec:modello-evolutivo}
 In WebPD, la \textit{way-of-working} inerente al ciclo di vita del software aderisce al \textit{modello Evolutivo}, le cui caratteristiche sono illustrate in Figura \ref{figura:modello-evolutivo}.\\
-L'adozione di tale modello deriva principalmente dall'esigenza di dover adattarsi alla mutevolezza dei requisiti. È un dato di fatto, purtroppo, che molto spesso neanche il cliente stesso ha chiare le sue esigenze, quindi solo "toccando con mano" l'istanza del suo pensiero esso sa dire se effettivamente è ciò che fa per lui o no.\\
+L'adozione di tale modello deriva principalmente dall'esigenza di doversi adattare alla mutevolezza dei requisiti. È un dato di fatto, purtroppo, che molto spesso neanche il cliente stesso ha chiare le proprie esigenze, quindi solo "toccando con mano" l'istanza del suo pensiero esso sa dire se effettivamente è ciò che fa per lui o no.\\
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=0.6\columnwidth]{azienda/modello_evolutivo} 
@@ -95,7 +95,7 @@ Nella way-of-working aziendale è presente una forte attenzione alla qualità de
 	\item \textbf{Plan}, ovvero pianificare, prima dell'inizio del processo, attraverso una attenta analisi di esso, eventuali problematiche e azioni di miglioramento;
 	\item \textbf{Do}, ovvero eseguire il processo monitorato agendo secondo quanto pianificato nella fase precedente;
 	\item \textbf{Check}, ovvero valutare (in modo retrospettivo) l'esito delle azioni derivanti da quanto pianificato all'inizio;
-	\item \textbf{Act}, ovvero agire standardizzando ciò che è andato a buon fine e correggendo le carenze.
+	\item \textbf{Act}, ovvero agire standardizzando ciò che è andato a buon fine e colmando le carenze.
 \end{enumerate}
 \begin{figure}[!h] 
 	\centering 
@@ -116,9 +116,9 @@ Trello è uno software di amministrazione di progetto web-based, con numerose ap
 	\caption{Screenshot dell'interfaccia web di Trello.}
 	\label{figura:trello}
 \end{figure}\\
-Su ogni compito è possibile pubblicare dei commenti per, ad esempio, porre domande o fare determinate osservazioni e aggiungere checklist, etichiette (tag) e allegati.\\ 
+Su ogni compito è possibile pubblicare dei commenti per, ad esempio, porre domande o fare determinate osservazioni e aggiungere checklist, etichette (tag) e allegati.\\ 
 I \textit{task} possono inoltre essere agilmente spostati tra una \textit{card} e un'altra, funzionalità utile, ad esempio, per tenere quanto più pulita possibile la bacheca, nascondendo i \textit{task} già svolti o raggruppandoli in apposite \textit{cards} aventi funzione di storico.\\
-Una feature molto interessante è la sincronizzazione live delle modifiche, che permette a più persone di agire e collaborare sulla bacheca contemporaneamente, senza incorrere nel rischio di visualizzare o modificare dati non aggiornati.\\
+Una feature molto interessante è la sincronizzazione in tempo reale delle modifiche, che permette a più persone di agire e collaborare sulla bacheca contemporaneamente, senza incorrere nel rischio di visualizzare o modificare dati non aggiornati.\\
 Trello, infine, prevede anche numerosi \textit{Power-up}, ovvero estensioni (a pagamento) che permettono di interagire con numerosi servizi, quali, ad esempio, Google Drive, Onedrive, Google Calendar, GitHub, BitBucket, Slack ecc.\\
 \\
 Per avere una più immediata visualizzazione dell'andamento dei \textit{task}, assieme a Trello viene usato \textit{Trellogantt}. Quest'ultimo, come forse già suggerisce il nome, permette di visualizzare i dati contenuti in una bacheca di Trello sotto forma di diagrammi di Gantt, come mostrato in Figura \ref{figura:trellogantt}. Inoltre permette, con un semplice drag-and-drop, di modificare le date di scadenza dei vari task.\\
