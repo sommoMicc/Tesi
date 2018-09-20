@@ -47,10 +47,10 @@ Come accennato precedentemente, il \bookingEngine\hphantom{i}ha grossi problemi 
 
 \subsection{Integrazione delle tariffe \textit{vuoto per pieno}}
 Il partner Primarete ha espresso l'esigenza di poter vendere le proprie tariffe \textit{vuoto per pieno} attraverso il \bookingEngine. Come specificato precedentemente, esse sono dei gruppi di cabine acquistate "al buio" da un'agenzia viaggio ad un prezzo scontato (in quanto ne vengono acquistate più di una in blocco), che poi verranno rivendute dall'agenzia stessa ai clienti. Ovviamente, il guadagno dell'agenzia viaggi è rappresentato dalla differenza tra il prezzo di vendita della cabina e quello di acquisto.\\
-Il problema è che le cabine associate al \textit{vuoto per pieno}, agli occhi dei \glspl{webservice} delle varie compagnie di crociera, risultano prenotate, quindi non disponibili: è necessario modificare il flusso di prenotazione del \bookingEngine\hphantom{i}permettendo di inserirvi anche i gruppi di cabine acquistate tramite tariffa \textit{vuoto per pieno}, oltre a quelle ancora effettivamente disponibili; tale modifica dovrà essere fatta sia a livello backend che frontend.
+Il problema è che le cabine associate al \textit{vuoto per pieno}, agli occhi dei \glspl{webservice} delle varie compagnie di crociera, risultano prenotate, quindi non disponibili: è necessario modificare il flusso di prenotazione del \bookingEngine\hphantom{i}permettendo di inserirvi anche i gruppi di cabine acquistate tramite tariffa \textit{vuoto per pieno}, oltre a quelle ancora effettivamente disponibili; tale modifica dovrà essere fatta sia a livello \textit{backend} che \textit{frontend}.
 
 \subsection{Aggiunta delle tariffe di un nuovo fornitore}
-La versione di CrociereRegalo sviluppata da WebCola integrava, oltre alle crociere di MSC e Costa, anche quelle di Royal Caribbean (e controllate, ovvero Celebrity e Azamara). Lo stage, quindi, si prefigge di ripristinare questa funzionalità anche sulla nuova versione del \bookingEngine\hphantom{i}CrociereRegalo reintroducendo nel flusso di prenotazione le crociere del gruppo Royal, tramite l'integrazione dei \glspl{webservice} forniti da IST (Fibos). Tale integrazione comporterà modifiche sia alla parte frontend che alla parte backend del \bookingEngine
+La versione di CrociereRegalo sviluppata da WebCola integrava, oltre alle crociere di MSC e Costa, anche quelle di Royal Caribbean (e controllate, ovvero Celebrity e Azamara). Lo stage, quindi, si prefigge di ripristinare questa funzionalità anche sulla nuova versione del \bookingEngine\hphantom{i}CrociereRegalo reintroducendo nel flusso di prenotazione le crociere del gruppo Royal, tramite l'integrazione dei \glspl{webservice} forniti da IST (Fibos). Tale integrazione comporterà modifiche sia alla parte \textit{frontend} che alla parte \textit{backend} del \bookingEngine
 
 
 \subsection{Altri interventi minori}
@@ -80,17 +80,17 @@ In fase di definizione contenutistica dello stage, i punti sopra descritti sono 
 	\hline
 	Ob2 & Realizzazione integrazione flat-file di un nuovo fornitore con il Data Exchange del \bookingEngine\\
 	\hline
-	Ob3 & Aggiunta prodotti e tariffe del nuovo fornitore ai risultati della ricerca lato Front-End del \bookingEngine\\
+	Ob3 & Aggiunta prodotti e tariffe del nuovo fornitore ai risultati della ricerca lato \textit{frontend} del \bookingEngine\\
 	\hline
 	Ob4 & Esecuzione test e redazione documentazione sul lavoro svolto\\
 	\hline
 	\multicolumn{2}{|c|}{\textbf{Desiderabili}}\\
 	\hline
-	D1 & Realizzazione del registro carichi/scarichi tariffe “vuoto per pieno” come	funzionalità lato Back-End del \bookingEngine\\
+	D1 & Realizzazione del registro carichi/scarichi tariffe “vuoto per pieno” come	funzionalità lato \textit{backend} del \bookingEngine\\
 	\hline
 	D2 & Interrogazione web-service in tempo reale per sincronizzare prezzi e disponibilità del nuovo fornitore con il Data Exchange\\
 	\hline
-	D3 & Realizzazione conferma prenotazione al fornitore come funzionalità lato Front-End del \bookingEngine\\
+	D3 & Realizzazione conferma prenotazione al fornitore come funzionalità lato \textit{frontend} del \bookingEngine\\
 	\hline
 	\multicolumn{2}{|c|}{\textbf{Opzionali}}\\
 	\hline

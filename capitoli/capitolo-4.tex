@@ -281,7 +281,7 @@ Per gestire il caricamento dei \textit{vuoto per pieno} nel sistema sono state r
 		\hline
 	\end{longtable}
 \end{center}
-La gestione del pannello di amministrazione è affidata ad un unico \textit{controller}, chiamato \textbf{Back}. In questa classe è stato aggiunto un metodo chiamato \textit{caricaVuotoPieno} che prende l'input dal frontend e lo passa al metodo \textit{loadFromFile} della classe \textit{Cruises\_Inventory} appena descritta, che si occuperà dell'elaborazione e della restituzione del risultato della stessa sotto forma di \gls{json}.
+La gestione del pannello di amministrazione è affidata ad un unico \textit{controller}, chiamato \textbf{Back}. In questa classe è stato aggiunto un metodo chiamato \textit{caricaVuotoPieno} che prende l'input dal \textit{frontend} e lo passa al metodo \textit{loadFromFile} della classe \textit{Cruises\_Inventory} appena descritta, che si occuperà dell'elaborazione e della restituzione del risultato della stessa sotto forma di \gls{json}.
 
 \subsubsection{Differenziazione dei prezzi - Progettazione}
 I prezzi di ogni cabina presente nel sistema risiedono nella tabella \textit{Cruises\_Prices}. Tale tabella permette di conoscere il prezzo di ogni categoria di cabina (per ogni combinazione di età dei passeggeri tollerata dal sistema) per ogni \gls{tariffa} disponibile. Il problema è che \textit{Cruises\_Prices} viene svuotata e ripopolata ad ogni integrazione: per questo motivo si è deciso di separare la gestione dei prezzi delle cabine soggette a tariffa \textit{vuoto per pieno} in una nuova tabella, che è stata chiamata \textit{Cruises\_InventoryPrices}. 
@@ -320,7 +320,7 @@ Per l'interazione con la tabella \textit{Cruises\_InventoryPrices} è stato crea
 	\end{longtable}
 \end{center}
 È stato inoltre creato un metodo \textit{salvaPrezzi} nel controller \textit{Back}, che si limita ad invocare il metodo \textit{salvaPrezzi} del model \textit{Cruises\_InventoryPrices} con i parametri passati tramite POST.\\
-A livello frontend, si è fatto in modo che, al termine del caricamento del \textit{vuoto per pieno}, si venga reindirizzati ad una pagina di inserimento prezzi (come quella mostrata in Figura \ref{figura:inserimento-prezzi-vuotopieno}), che permette appunto di specificare ogni combinazione di prezzo tollerata dal sistema per ogni categoria di cabina per ciascun listino. 
+A livello \textit{frontend}, si è fatto in modo che, al termine del caricamento del \textit{vuoto per pieno}, si venga reindirizzati ad una pagina di inserimento prezzi (come quella mostrata in Figura \ref{figura:inserimento-prezzi-vuotopieno}), che permette appunto di specificare ogni combinazione di prezzo tollerata dal sistema per ogni categoria di cabina per ciascun listino. 
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=1\columnwidth]{attivita/vuotopieno_prezzi} 
@@ -330,7 +330,7 @@ A livello frontend, si è fatto in modo che, al termine del caricamento del \tex
 I prezzi poi vengono salvati tramite una chiamata \gls{ajax} che invoca il metodo \textit{salvaPrezzi} del controller \textit{Back} precedentemente descritto.
 
 \subsubsection{Inserimento della tariffa nel flusso di prenotazione - Progettazione}
-Come già accennato nella \hyperref[section:flusso-prenotazione]{Sezione \ref*{section:flusso-prenotazione}}, il flusso di prenotazione si compone di 6 step, a ciascuno dei quali corrisponde un metodo nel controller \textbf{WS\_Cruises} del \textit{dataExchange}. Questi 6 metodi venivano (e vengono tuttora) chiamati tramite richieste \gls{ajax} dal frontend e al loro interno chiamavano l'omologo metodo in grado di interfacciarsi con i \gls{webservice} del fornitore considerato. Si è deciso quindi di creare 6 nuovi metodi, uno per ogni step del flusso che, invece di interfacciarsi con qualche \gls{webservice}, leggesse i dati delle tariffe \textit{vuoto per pieno} direttamente dal database.\\
+Come già accennato nella \hyperref[section:flusso-prenotazione]{Sezione \ref*{section:flusso-prenotazione}}, il flusso di prenotazione si compone di 6 step, a ciascuno dei quali corrisponde un metodo nel controller \textbf{WS\_Cruises} del \textit{dataExchange}. Questi 6 metodi venivano (e vengono tuttora) chiamati tramite richieste \gls{ajax} dal \textit{frontend} e al loro interno chiamavano l'omologo metodo in grado di interfacciarsi con i \gls{webservice} del fornitore considerato. Si è deciso quindi di creare 6 nuovi metodi, uno per ogni step del flusso che, invece di interfacciarsi con qualche \gls{webservice}, leggesse i dati delle tariffe \textit{vuoto per pieno} direttamente dal database.\\
 \subsubsection{Inserimento della tariffa nel flusso di prenotazione - Codifica}
 Sono stati quindi creati i seguenti metodi:
 \begin{center}
@@ -352,7 +352,7 @@ Sono stati quindi creati i seguenti metodi:
 \end{center}
 Il primo metodo del flusso, \textit{categoryAvailability}, in base al valore del parametro \textit{supplier} (letto dal \textit{payload} della richiesta), invocava i metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability}, che interrogano i rispettivi \glspl{webservice}. È stato sufficiente quindi che il nuovo metodo creato \textit{Inventory\_categoryAvailabilty} venisse invocato da \textit{categoryAvailabilty} a prescindere dal \textit{supplier}, concatenando all'output dei metodi \textit{MSC\_categoryAvailability} o \textit{Costa\_categoryAvailability} le categorie di cabine eventualmente disponibili con tariffa \textit{vuoto per pieno}.\\
 Nei metodi \textit{cabinAvailability}, \textit{requestPricing}, \textit{requestBooking} e \textit{requestBookingInformation}, è stata introdotta un'istruzione condizionale che, in base al \textbf{fareCode} (codice della tariffa) passato come parametro, decide se invocare l'omologo metodo che legga dal database delle tariffe \textit{vuoto per pieno} (in caso di fareCode = "INVENTORY") o dai \glspl{webservice} del fornitore.\\
-Al frontend, infine, non è stato necessario fare alcuna modifica.
+Al \textit{frontend}, infine, non è stato necessario fare alcuna modifica.
 \subsection{Test}
 Al termine della realizzazione, sono stati effettuati test manuali sulla congruenza dei dati tra le nuove tabelle ed i \textit{vuoto per pieno} importati. Nello specifico:
 \begin{itemize}
@@ -384,17 +384,17 @@ Per far fronte ai dati richiesti in tempo reale dal flusso di prenotazione, inve
 \subsection{Progettazione e codifica della soluzione}
 \subsubsection{Importazione delle informazioni statiche - Progettazione}
 Informazioni circa codici di aree geografiche, navi, porti, categorie di cabine, ponti ci sono state fornite da \textit{ISTINFOR} in un file formato \textit{.xlsx}. In caso di variazioni di tali informazioni, per contratto, ci sarebbe stato mandato un nuovo file aggiornato. Proprio per questo è stato deciso, invece di importare a mano i dati, di realizzare un importatore.\\
-A livello grafico, si è deciso di realizzare una semplice finestra di dialogo che permettesse di caricare il file in oggetto e mandarlo al backend per l'elaborazione. A livello backend, si è deciso di realizzare una nuova classe che gestisse l'importazione del file ed il suo corretto salvataggio nel database.
+A livello grafico, si è deciso di realizzare una semplice finestra di dialogo che permettesse di caricare il file in oggetto e mandarlo al \textit{backend} per l'elaborazione. A livello \textit{backend}, si è deciso di realizzare una nuova classe che gestisse l'importazione del file ed il suo corretto salvataggio nel database.
 
 \subsubsection{Importazione delle informazioni statiche - Codifica}
-A livello frontend, si è realizzata la finestra di dialogo descritta in precedenza. Il risultato è mostrato in Figura \ref{figura:upload-fibos}.
+A livello \textit{frontend}, si è realizzata la finestra di dialogo descritta in precedenza. Il risultato è mostrato in Figura \ref{figura:upload-fibos}.
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=.6\columnwidth]{attivita/upload_royal} 
 	\caption{Schermata di caricamento del file passato da ISTINFOR}
 	\label{figura:upload-fibos}
 \end{figure} \\
-A livello backend, per gestire l'importazione del file, è stato realizzato un nuovo model nella parte \textit{OTA}, chiamato semplicemente \textit{Royal}, avente i seguenti metodi:
+A livello \textit{backend}, per gestire l'importazione del file, è stato realizzato un nuovo model nella parte \textit{OTA}, chiamato semplicemente \textit{Royal}, avente i seguenti metodi:
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
@@ -412,7 +412,7 @@ A livello backend, per gestire l'importazione del file, è stato realizzato un n
 		\hline
 	\end{longtable}
 \end{center}
-È stato poi creato un nuovo metodo \textit{caricaRoyal} sul controller \textit{Back} dell'\textit{OTA}, che prende il file caricato dal frontend e lo passa al metodo \textit{parse} del model \textit{Royal} sopra descritto.
+È stato poi creato un nuovo metodo \textit{caricaRoyal} sul controller \textit{Back} dell'\textit{OTA}, che prende il file caricato dal \textit{frontend} e lo passa al metodo \textit{parse} del model \textit{Royal} sopra descritto.
 
 \subsubsection{Utilizzo di FDF - Progettazione}
 Nel file \textit{.xlsx} fornito da \textit{ISTINFOR} mancano tutte le informazioni inerenti a itinerari, prezzi e partenze delle crociere. Queste sono invece fornite dal \gls{webservice} \textbf{FDF}, che quindi si è dovuto implementare. L'interazione con tale \gls{webservice} avviene tramite chiamate \gls{SOAP} ad appositi URL forniti da \textit{ISTINFOR}.\\ Essendoci stati forniti solo degli URL di sviluppo, le chiamate restituiscono dati verosimili ma non veri. Inoltre, \textit{ISTINFOR} utilizza un firewall: vengono accettate richieste provenienti solo da IP noti. Siccome il server di sviluppo utilizzato era all'interno della rete dell'ufficio, con IP dinamico e non esposto, è stato necessario creare un ambiente online di test, da affiancare a quello di produzione (all'indirizzo \cite{site:sviluppo-crociereregalo} e \cite{site:sviluppo-dataexchange}).\\
@@ -487,7 +487,7 @@ Il metodo \textit{RequestSearchBySeaPricing} di \textit{FDF}, ai fini dell'integ
 \begin{figure}[!h] 
 	\centering 
 	\includegraphics[width=.9\columnwidth]{attivita/dettaglio_itinerario} 
-	\caption{Dettaglio dell'itinerario visualizzato dal frontend.}
+	\caption{Dettaglio dell'itinerario visualizzato dal \textit{frontend}.}
 	\label{figura:destinazioni-crociera}
 \end{figure}\\ \\Per evitare tanto lavoro si è deciso di implementare, all'interno del metodo \textit{load\_PricesSea} della classe \textit{Royal\_WS}, delle \gls{RPC} a \textit{RequestItinerary}, fornito dal \gls{webservice} \textit{RCCL}, che restituisce le informazioni dettagliate dell'itinerario corrispondente ai parametri passati (codice della nave, data di partenza e codice itinerario).  Dato che il protocollo di comunicazione è analogo a quello utilizzato per \textit{FDF}, si è deciso (per questo e per tutti le altre \gls{RPC} utilizzate di \textit{RCCL}) di riutilizzare la classe \textit{Royal\_Model}, andando a definire nuovi metodi in base alle necessità. 
 
