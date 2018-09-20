@@ -450,6 +450,7 @@ Il tag \textit{Header} ed il suo contenuto sono comuni a tutte le richieste. Bis
 \subsubsection{Utilizzo di FDF - Codifica}
 Tutte le chiamate ai \gls{webservice} vengono gestite dal \textit{DataExchange}, all'interno del quale sono state create due nuove classi per semplificarne l'interazione: \textit{Royal\_Model} e \textit{Royal\_WS}.\\
 La prima è un model che serve ad effettuare le chiamate ai \gls{webservice} forniti, e si compone dei seguenti metodi:
+\newpage
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
@@ -469,6 +470,7 @@ La prima è un model che serve ad effettuare le chiamate ai \gls{webservice} for
 Il metodo \textit{RequestSearchBySeaPricing} di \textit{FDF} permette di effettuare una ricerca del miglior prezzo per ogni categoria di cabina di tutte le partenze di tutte le navi gestite dal sistema (quindi Royal, Celebrity e Azamara). Nella ricerca possono essere inserite delle restrizioni sul numero di passeggeri, sull'area geografica (mare) di navigazione e su un intervallo di date (ad esempio crociere che partono dal 3 settembre 2018 al 10 ottobre 2019). \\
 La chiamata a \textit{RequestSearchBySeaPricing} (quindi al metodo \textit{requestPricesSea} di \textit{Royal\_Model}) viene utilizzata dal meccanismo schedulato di integrazione per popolare le informazioni inerenti agli itinerari disponibili, alle date di partenza di ogni itinerario e ai prezzi di ogni categoria di cabina di ogni data di partenza di ogni itinerario. Tale elaborazione richiede molto tempo (fino a 40 minuti), per tanto viene eseguita durante la notte (è stato deciso di schedularla alle 2 del mattino, dato che non c'é un orario preciso di rilascio dei nuovi aggiornamenti). \\
 Per permettere l'invocazione di tale metodo è stato realizzato un controller apposito, chiamato \textit{Royal\_WS}, il cui contenuto è il seguente:
+\newpage
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{longtable}{ >{\raggedright}p{5.5cm} p{6.8cm}} 
